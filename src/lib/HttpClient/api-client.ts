@@ -28,7 +28,7 @@ export default class apiClient {
 
     this.axiosInstance.interceptors.response.use(
       (response) => this.handleSuccessResponse(response),
-      (error) => this.handleErrorResponse(error),
+      (error) => this.handleErrorResponse(error)
     );
   }
 
