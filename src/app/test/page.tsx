@@ -1,66 +1,66 @@
 "use client";
 
-import { TiptapCollabProvider } from "@hocuspocus/provider";
-// import "iframe-resizer/js/iframeResizer.contentWindow";
+// import { TiptapCollabProvider } from "@hocuspocus/provider";
+import { Suspense } from "react";
+import "iframe-resizer/js/iframeResizer.contentWindow";
 import { useSearchParams } from "next/navigation";
 import {
-  useCallback,
+  // useCallback,
   useEffect,
-  useLayoutEffect,
-  useMemo,
+  // useLayoutEffect,
+  // useMemo,
   useState,
 } from "react";
-import { Doc as YDoc } from "yjs";
+// import { Doc as YDoc } from "yjs";
 
 import { BlockEditor } from "@/components/editor/BlockEditor";
-import { createPortal } from "react-dom";
-import { Surface } from "@/components/editor/ui/Surface";
-import { Toolbar } from "@/components/editor/ui/Toolbar";
-import { Icon } from "@/components/editor/ui/Icon";
+// import { createPortal } from "react-dom";
+// import { Surface } from "@/components/editor/ui/Surface";
+// import { Toolbar } from "@/components/editor/ui/Toolbar";
+// import { Icon } from "@/components/editor/ui/Icon";
 import { useCollaboration } from "@/hooks/editor/useCollaboration";
 
-const useDarkmode = () => {
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(
-    typeof window !== "undefined"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-      : false,
-  );
+// const useDarkmode = () => {
+//   const [isDarkMode, setIsDarkMode] = useState<boolean>(
+//     typeof window !== "undefined"
+//       ? window.matchMedia("(prefers-color-scheme: dark)").matches
+//       : false,
+//   );
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => setIsDarkMode(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
+// useEffect(() => {
+//   const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+//   // const handleChange = () => setIsDarkMode(mediaQuery.matches);
+//   mediaQuery.addEventListener("change", handleChange);
+//   return () => mediaQuery.removeEventListener("change", handleChange);
+// }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDarkMode);
-  }, [isDarkMode]);
+// useEffect(() => {
+//   document.documentElement.classList.toggle("dark", isDarkMode);
+// }, [isDarkMode]);
 
-  const toggleDarkMode = useCallback(
-    () => setIsDarkMode((isDark) => !isDark),
-    [],
-  );
-  const lightMode = useCallback(() => setIsDarkMode(false), []);
-  const darkMode = useCallback(() => setIsDarkMode(true), []);
+// const toggleDarkMode = useCallback(
+//   () => setIsDarkMode((isDark) => !isDark),
+//   [],
+// );
+// const lightMode = useCallback(() => setIsDarkMode(false), []);
+// const darkMode = useCallback(() => setIsDarkMode(true), []);
 
-  return {
-    isDarkMode,
-    toggleDarkMode,
-    lightMode,
-    darkMode,
-  };
-};
+//   return {
+//     isDarkMode,
+//     toggleDarkMode,
+//     lightMode,
+//     darkMode,
+//   };
+// };
 
-export default function Document({ params }: { params: { room: string } }) {
-  const { isDarkMode, darkMode, lightMode } = useDarkmode();
+function Document({ params }: { params: { room: string } }) {
+  // const { isDarkMode, darkMode, lightMode } = useDarkmode();
   const [aiToken, setAiToken] = useState<string | null | undefined>();
   const searchParams = useSearchParams();
   const providerState = useCollaboration({
     docId: params.room,
     enabled: parseInt(searchParams?.get("noCollab") as string) !== 1,
   });
-
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
@@ -97,26 +97,36 @@ export default function Document({ params }: { params: { room: string } }) {
 
   if (providerState.state === "loading" || aiToken === undefined) return;
 
-  const DarkModeSwitcher = createPortal(
-    <Surface className="fixed bottom-6 right-6 z-[99999] flex items-center gap-1 p-1">
-      <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
-        <Icon name="Sun" />
-      </Toolbar.Button>
-      <Toolbar.Button onClick={darkMode} active={isDarkMode}>
-        <Icon name="Moon" />
-      </Toolbar.Button>
-    </Surface>,
-    document.body,
-  );
+  // const DarkModeSwitcher = createPortal(
+  //   <Surface className="fixed bottom-6 right-6 z-[99999] flex items-center gap-1 p-1">
+  //     <Toolbar.Button onClick={lightMode} active={!isDarkMode}>
+  //       <Icon name="Sun" />
+  //     </Toolbar.Button>
+  //     <Toolbar.Button onClick={darkMode} active={isDarkMode}>
+  //       <Icon name="Moon" />
+  //     </Toolbar.Button>
+  //   </Surface>,
+  //   document.body,
+  // );
 
   return (
     <>
-      {DarkModeSwitcher}
+      {/* {DarkModeSwitcher} */}
       <BlockEditor
         aiToken={aiToken ?? undefined}
         ydoc={providerState.yDoc}
         provider={providerState.provider}
       />
+    </>
+  );
+}
+
+export default function Page() {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <Document params={{ room: "test" }} />
+      </Suspense>
     </>
   );
 }

@@ -42,7 +42,7 @@ export const EditorHeader = ({
   }, [editor]);
 
   return (
-    <div className="flex flex-none flex-row items-center justify-between border-b border-neutral-200 bg-white py-2 pl-6 pr-3 text-black dark:border-neutral-800 dark:bg-black dark:text-white">
+    <div className="absolute left-0 right-0 top-0 z-50 flex flex-none flex-row items-center justify-between border-b border-neutral-200 bg-white py-2 pl-6 pr-3 text-black dark:border-neutral-800 dark:bg-black dark:text-white">
       <div className="flex flex-row items-center gap-x-1.5">
         <div className="flex items-center gap-x-1.5">
           <Toolbar.Button
@@ -61,6 +61,11 @@ export const EditorHeader = ({
           </Toolbar.Button>
         </div>
       </div>
+
+      <div className="text-base font-semibold text-neutral-500 dark:text-neutral-400">
+        Blog Title
+      </div>
+
       <EditorInfo
         characters={characters}
         words={words}

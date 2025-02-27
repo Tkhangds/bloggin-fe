@@ -96,21 +96,42 @@ function BackgroundPaths({
             ))}
           </h1>
 
-          <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b from-black/10 to-white/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl dark:from-white/10 dark:to-black/10">
-            <Button
-              onClick={() => {
-                router.push("/wip");
-              }}
-              variant="ghost"
-              className="rounded-[1.15rem] border border-black/10 bg-white/95 px-8 py-6 text-lg font-semibold text-black backdrop-blur-md transition-all duration-300 hover:bg-white/100 hover:shadow-md group-hover:-translate-y-0.5 dark:border-white/10 dark:bg-black/95 dark:text-white dark:hover:bg-black/100 dark:hover:shadow-neutral-800/50"
-            >
-              <span className="opacity-90 transition-opacity group-hover:opacity-100">
-                Explore More Blog
-              </span>
-              <span className="ml-3 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
-                →
-              </span>
-            </Button>
+          <div className="flex items-center justify-center gap-2">
+            {/* White Button */}
+            <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b from-black/5 to-black/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl">
+              <Button
+                onClick={() => {
+                  router.push("/wip");
+                }}
+                variant="ghost"
+                className="rounded-[1.15rem] border border-black/10 bg-white px-8 py-6 text-lg font-semibold text-black backdrop-blur-md transition-all duration-300 hover:bg-white hover:shadow-lg group-hover:-translate-y-0.5"
+              >
+                <span className="opacity-90 transition-opacity group-hover:opacity-100">
+                  Explore More
+                </span>
+                <span className="ml-3 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
+                  →
+                </span>
+              </Button>
+            </div>
+
+            {/* Black Button */}
+            <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b from-white/5 to-white/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl">
+              <Button
+                onClick={() => {
+                  router.push("/test");
+                }}
+                variant="ghost"
+                className="rounded-[1.15rem] border border-white/10 bg-black px-8 py-6 text-lg font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg group-hover:-translate-y-0.5"
+              >
+                <span className="opacity-90 transition-opacity group-hover:opacity-100">
+                  Start Writing
+                </span>
+                <span className="ml-3 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
+                  →
+                </span>
+              </Button>
+            </div>
           </div>
         </motion.div>
       </div>

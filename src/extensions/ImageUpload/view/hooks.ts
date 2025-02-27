@@ -16,6 +16,7 @@ export const useUploader = ({
         const url = await API.uploadImage(file);
 
         onUpload(url);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (errPayload: any) {
         const error =
           errPayload?.response?.data?.error || "Something went wrong";

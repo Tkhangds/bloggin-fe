@@ -38,57 +38,25 @@ export const useBlockEditor = ({
     provider ? WebSocketStatus.Connecting : WebSocketStatus.Disconnected,
   );
 
+  // A simpler approach using just the HTML content
+  const STORAGE_KEY = "editor-content-html";
+
   const editor = useEditor(
     {
       ...editorOptions,
       immediatelyRender: true,
       shouldRerenderOnTransaction: false,
       autofocus: true,
-      onCreate: (ctx) => {
-        if (provider && !provider.isSynced) {
-          provider.on("synced", () => {
-            setTimeout(() => {
-              if (ctx.editor.isEmpty) {
-                ctx.editor.commands.setContent(initialContent);
-              }
-            }, 0);
-          });
-        } else if (ctx.editor.isEmpty) {
-          ctx.editor.commands.setContent(initialContent);
-          ctx.editor.commands.focus("start", { scrollIntoView: true });
-        }
+      content: localStorage.getItem(STORAGE_KEY) || initialContent,
+      onUpdate: ({ editor }) => {
+        // Save HTML directly
+        const html = editor.getHTML();
+        localStorage.setItem(STORAGE_KEY, html);
+        console.log("Saved HTML content:", html.substring(0, 100) + "...");
       },
       extensions: [
-        ...ExtensionKit({
-          provider,
-        }),
-        provider && ydoc
-          ? Collaboration.configure({
-              document: ydoc,
-            })
-          : undefined,
-        provider
-          ? CollaborationCursor.configure({
-              provider,
-              user: {
-                name: randomElement(userNames),
-                color: randomElement(userColors),
-              },
-            })
-          : undefined,
-        aiToken
-          ? AiWriter.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken
-          ? AiImage.configure({
-              authorId: userId,
-              authorName: userName,
-            })
-          : undefined,
-        aiToken ? Ai.configure({ token: aiToken }) : undefined,
+        ...ExtensionKit({}),
+        // Your other extensions...
       ].filter((e): e is AnyExtension => e !== undefined),
       editorProps: {
         attributes: {
@@ -99,7 +67,7 @@ export const useBlockEditor = ({
         },
       },
     },
-    [ydoc, provider],
+    [],
   );
   const users = useEditorState({
     editor,
