@@ -10,7 +10,7 @@ export const LandingLayout = ({ children }: LandingLayoutProps) => {
   return (
     <div>
       <Header />
-      {children}
+      <div className="mt-[52px]">{children}</div>
       <Footer />
     </div>
   );

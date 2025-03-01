@@ -57,7 +57,8 @@ const SplitText: React.FC<SplitTextProps> = ({
     letters.map((_, i) => ({
       from: animationFrom,
       to: inView
-        ? async (next: (props: any) => Promise<void>) => {
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          async (next: (props: any) => Promise<void>) => {
             await next(animationTo);
             animatedCount.current += 1;
             if (

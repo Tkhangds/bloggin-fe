@@ -109,8 +109,8 @@ function BackgroundPaths({
                 <span className="opacity-90 transition-opacity group-hover:opacity-100">
                   Explore More
                 </span>
-                <span className="ml-3 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
-                  →
+                <span className="ml-2 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
+                  🕮
                 </span>
               </Button>
             </div>
@@ -127,7 +127,7 @@ function BackgroundPaths({
                 <span className="opacity-90 transition-opacity group-hover:opacity-100">
                   Start Writing
                 </span>
-                <span className="ml-3 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
+                <span className="ml-2 opacity-70 transition-all duration-300 group-hover:translate-x-1.5 group-hover:opacity-100">
                   →
                 </span>
               </Button>

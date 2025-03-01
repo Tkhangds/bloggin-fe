@@ -15,16 +15,11 @@ import { EditorHeader } from "./components/EditorHeader";
 import { TextMenu } from "../menus/TextMenu";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { useSidebar } from "@/hooks/editor/useSidebar";
-import * as Y from "yjs";
 import { TiptapCollabProvider } from "@hocuspocus/provider";
 
 export const BlockEditor = ({
-  aiToken,
-  ydoc,
   provider,
 }: {
-  aiToken?: string;
-  ydoc: Y.Doc | null;
   provider?: TiptapCollabProvider | null | undefined;
 }) => {
   const [isEditable, setIsEditable] = useState(true);
@@ -32,8 +27,6 @@ export const BlockEditor = ({
 
   const leftSidebar = useSidebar();
   const { editor, users, collabState } = useBlockEditor({
-    aiToken,
-    ydoc,
     provider,
     onTransaction({ editor: currentEditor }) {
       setIsEditable(currentEditor.isEditable);

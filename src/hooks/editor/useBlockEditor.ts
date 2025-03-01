@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { useEditor, useEditorState } from "@tiptap/react";
 import type { AnyExtension, Editor, EditorOptions } from "@tiptap/core";
-import Collaboration from "@tiptap/extension-collaboration";
-import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import { TiptapCollabProvider, WebSocketStatus } from "@hocuspocus/provider";
-import type { Doc as YDoc } from "yjs";
 
 import { ExtensionKit } from "@/extensions/extension-kit";
-import { userColors, userNames } from "@/lib/editor/constants";
-import { randomElement } from "@/lib/editor/utils";
 import type { EditorUser } from "@/components/editor/BlockEditor/types";
 import { initialContent } from "@/lib/editor/data/initialContent";
-import { Ai } from "@/extensions/Ai";
-import { AiImage, AiWriter } from "@/extensions";
 
 declare global {
   interface Window {
@@ -21,18 +14,10 @@ declare global {
 }
 
 export const useBlockEditor = ({
-  aiToken,
-  ydoc,
   provider,
-  userId,
-  userName = "Maxi",
   ...editorOptions
 }: {
-  aiToken?: string;
-  ydoc: YDoc | null;
   provider?: TiptapCollabProvider | null | undefined;
-  userId?: string;
-  userName?: string;
 } & Partial<Omit<EditorOptions, "extensions">>) => {
   const [collabState, setCollabState] = useState<WebSocketStatus>(
     provider ? WebSocketStatus.Connecting : WebSocketStatus.Disconnected,
