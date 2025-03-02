@@ -6,29 +6,85 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SplitText from "@/components/ui/split-text";
+import { useState, useEffect, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function LoginPage(): JSX.Element {
   return (
-    <div className="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+    <div className="flex min-h-svh flex-col items-center justify-center bg-muted p-6 md:p-10">
       <div className="w-full max-w-sm md:max-w-3xl">
         <LoginForm />
       </div>
     </div>
   );
 }
-function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+
+interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
+
+function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn === "true") {
+      router.push("/"); // Redirect to dashboard if already logged in
+    }
+  }, [router]);
+
+  const handleLogin = (e: FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    // Simple validation
+    if (!email || !password) {
+      setError("Please enter both email and password");
+      setLoading(false);
+      return;
+    }
+
+    // Simulate API call delay
+    setTimeout(() => {
+      // For prototype, just check if email contains @ and password length
+      if (email.includes("@") && password.length >= 6) {
+        // Store user info in localStorage
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("loginTime", new Date().toISOString());
+
+        // Redirect or show success
+        router.push("/");
+      } else {
+        setError("Invalid email or password (prototype validation)");
+      }
+      setLoading(false);
+    }, 1500);
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form className="p-6 md:p-8" onSubmit={handleLogin}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
-                <p className="text-muted-foreground text-balance">
+                <p className="text-balance text-muted-foreground">
                   Login to your Bloggin account
                 </p>
               </div>
+              {error && (
+                <div className="relative rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700">
+                  {error}
+                </div>
+              )}
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -36,6 +92,8 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                   type="email"
                   placeholder="m@example.com"
                   required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
@@ -48,10 +106,20 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
-              <Button type="submit" className="w-full">
-                Login
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? (
+                  <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                ) : (
+                  "Login"
+                )}
               </Button>
 
               <div className="text-center text-sm">
@@ -62,7 +130,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
               </div>
             </div>
           </form>
-          <div className="magicpattern from-primary/20 to-primary/40 relative hidden flex-col items-center justify-center overflow-hidden p-8 md:flex">
+          <div className="magicpattern relative hidden flex-col items-center justify-center overflow-hidden from-primary/20 to-primary/40 p-8 md:flex">
             <div className="bg-grid-white/10 animate-grid-fade absolute inset-0 bg-[size:20px_20px]"></div>
             <div className="relative z-10 space-y-6 text-center">
               <SplitText
@@ -78,14 +146,14 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                 rootMargin="-50px"
                 onLetterAnimationComplete={() => {}}
               />
-              <p className="text-muted-foreground max-w-sm">
+              <p className="max-w-sm text-muted-foreground">
                 Share your ideas with the world. Create beautiful, engaging
                 content that connects with your audience.
               </p>
               <div className="flex items-center justify-center gap-2">
-                <span className="bg-primary h-2 w-2 animate-pulse rounded-full"></span>
-                <span className="bg-primary h-2 w-2 animate-pulse rounded-full delay-300"></span>
-                <span className="bg-primary h-2 w-2 animate-pulse rounded-full delay-700"></span>
+                <span className="h-2 w-2 animate-pulse rounded-full bg-primary"></span>
+                <span className="h-2 w-2 animate-pulse rounded-full bg-primary delay-300"></span>
+                <span className="h-2 w-2 animate-pulse rounded-full bg-primary delay-700"></span>
               </div>
               <div className="mt-8 flex flex-col gap-2">
                 <div className="flex items-center gap-2">
@@ -144,7 +212,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
           </div>
         </CardContent>
       </Card>
-      <div className="text-muted-foreground hover:[&_a]:text-primary text-balance text-center text-xs [&_a]:underline [&_a]:underline-offset-4">
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </div>

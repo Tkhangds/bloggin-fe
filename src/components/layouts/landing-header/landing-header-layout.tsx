@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import {Header} from "@/components/layouts/landing/header";
+import { Header } from "@/components/layouts/landing/header";
 
 type LandingLayoutProps = {
   children: ReactNode;

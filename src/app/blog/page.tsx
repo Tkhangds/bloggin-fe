@@ -1,153 +1,176 @@
-"use client"
+"use client";
 
-import { useState, useRef,useEffect } from "react"
-import Link from "next/link"
-import {  ChevronDown } from "lucide-react"
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { ChevronDown } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
-import BlogCard from "@/components/blog/blog-card"
-import { LandingHeaderLayout } from "@/components/layouts/landing-header"
+import BlogCard from "@/components/blog/blog-card";
+import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 
 export default function BlogBrowsing() {
-  const [posts, setPosts] = useState<BlogPost[]>(initialPosts)
-  const [loading, setLoading] = useState(false)
-  const loaderRef = useRef<HTMLDivElement>(null)
+  const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
+  const [loading, setLoading] = useState(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
 
-    // Infinite scroll implementation
-    useEffect(() => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const first = entries[0]
-          if (first.isIntersecting && !loading) {
-            loadMorePosts()
-          }
-        },
-        { threshold: 1.0 },
-      )
-  
-      if (loaderRef.current) {
-        observer.observe(loaderRef.current)
-      }
-  
-      return () => {
-        if (loaderRef.current) {
-          observer.unobserve(loaderRef.current)
+  // Infinite scroll implementation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && !loading) {
+          loadMorePosts();
         }
-      }
-    }, [loading])
-  
-    const loadMorePosts = () => {
-      setLoading(true)
-      // Simulate loading more posts
-      setTimeout(() => {
-        setPosts((prevPosts) => [...prevPosts, ...morePosts])
-        setLoading(false)
-      }, 1500)
+      },
+      { threshold: 1.0 },
+    );
+
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
     }
+
+    return () => {
+      if (loaderRef.current) {
+        observer.unobserve(loaderRef.current);
+      }
+    };
+  }, [loading]);
+
+  const loadMorePosts = () => {
+    setLoading(true);
+    // Simulate loading more posts
+    setTimeout(() => {
+      setPosts((prevPosts) => [...prevPosts, ...morePosts]);
+      setLoading(false);
+    }, 1500);
+  };
 
   return (
     <LandingHeaderLayout>
-    <div className="min-h-screen bg-white px-4 text-gray-900 flex flex-col sm:px-6 lg:px-20">
-      {/* Main Content */}
-      <main className="flex-1 container py-6 md:py-8 flex flex-col md:flex-row gap-8">
-        {/* Blog Posts */}
-        <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-6">For You</h1>
+      <div className="flex min-h-screen flex-col bg-white px-4 text-gray-900 sm:px-6 lg:px-20">
+        {/* Main Content */}
+        <main className="container flex flex-1 flex-col gap-8 py-6 md:flex-row md:py-8">
+          {/* Blog Posts */}
+          <div className="flex-1">
+            <h1 className="mb-6 text-2xl font-bold">For You</h1>
 
-          <div className="grid grid-cols-1 gap-8">
-            {posts.map((post, index) => (
-              <BlogCard key={index} post={post} index={index}></BlogCard>
-            ))}
-
-            {/* Loader for infinite scroll */}
-            <div ref={loaderRef} className="py-4 flex justify-center">
-              {loading && (
-                <div className="flex items-center justify-center space-x-2">
-                  <div
-                    className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                    style={{ animationDelay: "0ms" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                    style={{ animationDelay: "150ms" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-                    style={{ animationDelay: "300ms" }}
-                  ></div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Sidebar */}
-        <aside className="w-full md:w-80 lg:w-96 space-y-8 md:sticky md:top-20 md:self-start">
-          {/* Trending Topics */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-lg font-bold mb-4">Trending Topics</h2>
-            <div className="space-y-3">
-              {trendingTopics.map((topic, index) => (
-                <Link href="#" key={index} className="flex items-center gap-3 group">
-                  <span className="text-gray-400 text-sm font-medium">0{index + 1}</span>
-                  <div>
-                    <h3 className="font-medium group-hover:text-gray-700 transition-colors">{topic.title}</h3>
-                    <p className="text-sm text-gray-500">{topic.reads} readers</p>
-                  </div>
-                </Link>
+            <div className="grid grid-cols-1 gap-8">
+              {posts.map((post, index) => (
+                <BlogCard key={index} post={post} index={index}></BlogCard>
               ))}
+
+              {/* Loader for infinite scroll */}
+              <div ref={loaderRef} className="flex justify-center py-4">
+                {loading && (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div
+                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                      style={{ animationDelay: "0ms" }}
+                    ></div>
+                    <div
+                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                      style={{ animationDelay: "150ms" }}
+                    ></div>
+                    <div
+                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                      style={{ animationDelay: "300ms" }}
+                    ></div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Recommended Writers */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-lg font-bold mb-4">Recommended Writers</h2>
-            <div className="space-y-4">
-              {recommendedWriters.map((writer, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={writer.avatar} alt={writer.name} />
-                      <AvatarFallback>{writer.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
+          {/* Sidebar */}
+          <aside className="w-full space-y-8 md:sticky md:top-20 md:w-80 md:self-start lg:w-96">
+            {/* Trending Topics */}
+            <div className="rounded-lg bg-gray-50 p-6">
+              <h2 className="mb-4 text-lg font-bold">Trending Topics</h2>
+              <div className="space-y-3">
+                {trendingTopics.map((topic, index) => (
+                  <Link
+                    href="#"
+                    key={index}
+                    className="group flex items-center gap-3"
+                  >
+                    <span className="text-sm font-medium text-gray-400">
+                      0{index + 1}
+                    </span>
                     <div>
-                      <h3 className="font-medium">{writer.name}</h3>
-                      <p className="text-sm text-gray-500">{writer.bio}</p>
+                      <h3 className="font-medium transition-colors group-hover:text-gray-700">
+                        {topic.title}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {topic.reads} readers
+                      </p>
                     </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Recommended Writers */}
+            <div className="rounded-lg bg-gray-50 p-6">
+              <h2 className="mb-4 text-lg font-bold">Recommended Writers</h2>
+              <div className="space-y-4">
+                {recommendedWriters.map((writer, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={writer.avatar} alt={writer.name} />
+                        <AvatarFallback>{writer.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h3 className="font-medium">{writer.name}</h3>
+                        <p className="text-sm text-gray-500">{writer.bio}</p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 rounded-full"
+                    >
+                      Follow
+                    </Button>
                   </div>
-                  <Button variant="outline" size="sm" className="h-8 rounded-full">
-                    Follow
-                  </Button>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Topics to Follow */}
-          <div className="bg-gray-50 p-6 rounded-lg">
-            <h2 className="text-lg font-bold mb-4">Topics to Follow</h2>
-            <div className="flex flex-wrap gap-2">
-              {topicsToFollow.map((topic, index) => (
-                <Badge key={index} variant="outline" className="px-3 py-1 bg-white hover:bg-gray-100 cursor-pointer">
-                  {topic}
-                </Badge>
-              ))}
+            {/* Topics to Follow */}
+            <div className="rounded-lg bg-gray-50 p-6">
+              <h2 className="mb-4 text-lg font-bold">Topics to Follow</h2>
+              <div className="flex flex-wrap gap-2">
+                {topicsToFollow.map((topic, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+                  >
+                    {topic}
+                  </Badge>
+                ))}
+              </div>
+              <Button
+                variant="ghost"
+                className="mt-4 w-full text-gray-500 hover:text-gray-700"
+              >
+                See More Topics
+                <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
             </div>
-            <Button variant="ghost" className="w-full mt-4 text-gray-500 hover:text-gray-700">
-              See More Topics
-              <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-        </aside>
-      </main>
-    </div>
+          </aside>
+        </main>
+      </div>
     </LandingHeaderLayout>
-  )
+  );
 }
-
 
 // Sample Data
 const initialPosts: BlogPost[] = [
@@ -214,7 +237,7 @@ const initialPosts: BlogPost[] = [
     likes: 276,
     comments: 48,
   },
-]
+];
 
 const morePosts: BlogPost[] = [
   {
@@ -249,7 +272,7 @@ const morePosts: BlogPost[] = [
     likes: 327,
     comments: 63,
   },
-]
+];
 
 const trendingTopics = [
   { title: "The Rise of AI in Creative Industries", reads: "12.5K" },
@@ -257,7 +280,7 @@ const trendingTopics = [
   { title: "Remote Work Culture: Lessons from 2024", reads: "7.1K" },
   { title: "Digital Privacy in the Age of Big Data", reads: "6.8K" },
   { title: "The Science of Habit Formation", reads: "5.4K" },
-]
+];
 
 const recommendedWriters = [
   {
@@ -275,7 +298,7 @@ const recommendedWriters = [
     bio: "Climate scientist & educator",
     avatar: "/placeholder.svg?height=40&width=40",
   },
-]
+];
 
 const topicsToFollow = [
   "Technology",
@@ -287,5 +310,4 @@ const topicsToFollow = [
   "Productivity",
   "Politics",
   "Health",
-]
-
+];

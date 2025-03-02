@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import Footer from "./footer";
-import {Header} from "@/components/layouts/landing/header";
+import { Header } from "@/components/layouts/landing/header";
 
 type LandingLayoutProps = {
   children: ReactNode;
