@@ -21,13 +21,15 @@ export const Header = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/">
-            <Image
-              width={120}
-              height={240}
-              src={`/image/Blogging-ngang.svg`}
-              alt="logo"
-              className="w-24 sm:w-32 lg:w-[150px]"
-            />
+            <div className="w-24 overflow-hidden sm:w-32 lg:h-[40px] lg:w-[150px]">
+              <Image
+                width={120}
+                height={240}
+                src={`/image/Blogging-ngang.svg`}
+                alt="logo"
+                className="h-full w-full scale-150 object-cover transition-transform duration-300"
+              />
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

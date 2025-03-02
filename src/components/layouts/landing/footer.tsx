@@ -12,7 +12,7 @@ export default function Footer() {
           height={150}
           src={`/image/Blogging.svg`}
           alt="logo"
-          className="mx-auto mb-6 lg:mx-0 lg:mb-0"
+          className="mx-auto mb-6 scale-[3] lg:mx-0 lg:mb-0"
         />
 
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
