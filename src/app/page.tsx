@@ -101,7 +101,7 @@ function BackgroundPaths({
             <div className="group relative inline-block overflow-hidden rounded-2xl bg-gradient-to-b from-black/5 to-black/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl">
               <Button
                 onClick={() => {
-                  router.push("/wip");
+                  router.push("/blog");
                 }}
                 variant="ghost"
                 className="rounded-[1.15rem] border border-black/10 bg-white px-8 py-6 text-lg font-semibold text-black backdrop-blur-md transition-all duration-300 hover:bg-white hover:shadow-lg group-hover:-translate-y-0.5"

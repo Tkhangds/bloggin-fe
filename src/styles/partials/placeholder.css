@@ -5,6 +5,8 @@
   }
 
   &.ProseMirror-focused {
+    @apply outline-none;
+
     /* Slashmenu Placeholder */
     > p.has-focus.is-empty::before {
       content: 'Type  /  to browse options';

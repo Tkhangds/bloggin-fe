@@ -1,81 +1,73 @@
+'use client'
+
 import Image from "next/image";
-import Link from "next/link";
-import { Bookmark, MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button"
+import {  Bookmark, MessageCircle, Heart} from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { useRouter } from "next/navigation";
 
-export default function BlogCard() {
+export default function BlogCard({index, post } : {index: number, post: BlogPost}) {
+  const router = useRouter(); 
+  
   return (
-    <div className="mx-auto max-w-2xl px-4">
-      {/* Blog Post Card */}
-      <div className="border-b py-3 sm:py-4">
-        {/* Author Info */}
-        <div className="mb-2 flex items-center">
-          <div className="mr-2 h-5 w-5 rounded-sm bg-gray-900 sm:h-6 sm:w-6"></div>
-          <span className="text-xs">
-            In The Slow Life by{" "}
-            <Link href="#" className="font-medium">
-              Scott-Ryan Abt
-            </Link>
-          </span>
-        </div>
+    <article key={index} className="border-b pb-8 last:border-0 cursor-pointer">
+                <div onClick={() => router.push("/wip")}>
+                <div className="flex items-center gap-2 mb-3">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={post.author.avatar} alt={post.author.name} />
+                    <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm font-medium">{post.author.name}</span>
+                  <span className="text-sm text-gray-500">·</span>
+                  <span className="text-sm text-gray-500">{post.date}</span>
+                </div>
 
-        {/* Post Content */}
-        <div className="flex flex-col sm:flex-row sm:justify-between">
-          <div className="order-2 flex-1 sm:order-1 sm:pr-4">
-            <h2 className="mb-1 mt-3 text-lg font-bold sm:mt-0 sm:text-xl">
-              Bye Bye, Spotify
-            </h2>
-            <p className="mb-3 text-sm text-gray-600">
-              And see ya later, all you subscription services in my little
-              empire
-            </p>
+                <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex-1">
+                    
+                      <h2 className="text-xl font-bold mb-2 hover:text-gray-700 transition-colors">{post.title}</h2>
+                    
+                    <p className="text-gray-700 line-clamp-3 mb-3">{post.excerpt}</p>
 
-            {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500 sm:gap-3">
-              <div className="flex items-center">
-                <span className="mr-1.5 text-amber-500">★</span>
-                <span>Aug 20, 2023</span>
-              </div>
-              <div className="flex items-center">
-                <span className="mr-1">👁️</span>
-                <span>25K</span>
-              </div>
-              <div className="flex items-center">
-                <span className="mr-1">💬</span>
-                <span>555</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button className="rounded-full p-0.5 hover:bg-gray-100">
-                  <span className="sr-only">Dislike</span>
-                  <div className="flex h-5 w-5 items-center justify-center rounded-full border border-gray-300">
-                    <span className="text-gray-400">−</span>
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {post.tags.map((tag, idx) => (
+                        <Badge
+                          key={idx}
+                          variant="secondary"
+                          className="font-normal bg-gray-100 hover:bg-gray-200 text-gray-700"
+                        >
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <Heart className="h-4 w-4" />
+                          <span className="text-xs">{post.likes}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-500">
+                          <MessageCircle className="h-4 w-4" />
+                          <span className="text-xs">{post.comments}</span>
+                        </div>
+                        <span className="text-xs text-gray-500">{post.readTime} min read</span>
+                      </div>
+
+                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Bookmark className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                </button>
-                <button className="p-0.5">
-                  <span className="sr-only">Bookmark</span>
-                  <Bookmark className="h-4 w-4 text-gray-400" />
-                </button>
-                <button className="p-0.5">
-                  <span className="sr-only">More options</span>
-                  <MoreHorizontal className="h-4 w-4 text-gray-400" />
-                </button>
-              </div>
-            </div>
-          </div>
 
-          {/* Image */}
-          <div className="order-1 h-32 w-full flex-shrink-0 sm:order-2 sm:w-32">
-            <div className="relative h-full w-full overflow-hidden rounded-sm bg-gray-900">
-              <Image
-                src="https://placehold.co/400.png"
-                alt="Spotify logo"
-                fill
-                className="object-cover"
-                sizes="(max-width: 640px) 100vw, 128px"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+                  {post.image && (
+                    <div className="md:w-1/3 h-48 md:h-32 relative rounded-md overflow-hidden">
+                      <Image src={post.image || "/placeholder.svg"} alt={post.title} fill className="object-cover" />
+                    </div>
+                  )}
+                </div>
+                </div>
+              </article>
   );
 }
