@@ -15,6 +15,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Create .npmrc file
+        run: |
+          echo "@tiptap-pro:registry=https://registry.tiptap.dev/" > .npmrc
+          echo "//registry.tiptap.dev/:_authToken=${{ secrets.TIPTAP_NPM_TOKEN }}" >> .npmrc
+          
       - name: Install dependencies
         run: npm install
       - name: Linting
