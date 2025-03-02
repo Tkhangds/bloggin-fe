@@ -11,9 +11,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export default function Header() {
+export const Header = () => {
   return (
-    <div className="fixed z-50 flex w-full flex-col border-b-[1px] border-black/20 bg-white/90 px-4 py-2 sm:px-6 lg:px-20 lg:py-4">
+    <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-black/20 bg-white px-4 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/">
@@ -39,10 +39,16 @@ export default function Header() {
 
         {/* Desktop Auth Buttons */}
         <div className="hidden lg:flex lg:justify-end lg:gap-1">
-          <Button variant={"secondary"} className="font-semibold">
-            Sign Up
+          <Button variant={"secondary"} className="py-1 font-semibold">
+            <Link className="text-xs" href="/sign-up">
+              Sign Up
+            </Link>
           </Button>
-          <Button className="font-semibold">Log In</Button>
+          <Button className="py-1 font-semibold">
+            <Link className="text-xs" href="/sign-in">
+              Log In
+            </Link>
+          </Button>
         </div>
 
         {/* Mobile Menu */}
