@@ -18,7 +18,7 @@ export default function BlogCard({
 
   return (
     <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
-      <div onClick={() => router.push("/wip")}>
+      <div onClick={() => router.push("/blog/" + post.id)}>
         <div className="mb-3 flex items-center gap-2">
           <Avatar className="h-6 w-6">
             <AvatarImage src={post.author.avatar} alt={post.author.name} />

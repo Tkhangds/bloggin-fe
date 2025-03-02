@@ -9,7 +9,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 import BlogCard from "@/components/blog/blog-card";
-import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 
 export default function BlogBrowsing() {
   const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
@@ -49,126 +48,121 @@ export default function BlogBrowsing() {
   };
 
   return (
-    <LandingHeaderLayout>
-      <div className="flex min-h-screen flex-col bg-white px-4 text-gray-900 sm:px-6 lg:px-20">
-        {/* Main Content */}
-        <main className="container flex flex-1 flex-col gap-8 py-6 md:flex-row md:py-8">
-          {/* Blog Posts */}
-          <div className="flex-1">
-            <h1 className="mb-6 text-2xl font-bold">For You</h1>
+    <div className="flex min-h-screen flex-col bg-white px-4 text-gray-900 sm:px-6 lg:px-20">
+      {/* Main Content */}
+      <main className="container flex flex-1 flex-col gap-8 py-6 md:flex-row md:py-8">
+        {/* Blog Posts */}
+        <div className="flex-1">
+          <h1 className="mb-6 text-2xl font-bold">For You</h1>
 
-            <div className="grid grid-cols-1 gap-8">
-              {posts.map((post, index) => (
-                <BlogCard key={index} post={post} index={index}></BlogCard>
-              ))}
+          <div className="grid grid-cols-1 gap-8">
+            {posts.map((post, index) => (
+              <BlogCard key={index} post={post} index={index}></BlogCard>
+            ))}
 
-              {/* Loader for infinite scroll */}
-              <div ref={loaderRef} className="flex justify-center py-4">
-                {loading && (
-                  <div className="flex items-center justify-center space-x-2">
-                    <div
-                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "0ms" }}
-                    ></div>
-                    <div
-                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "150ms" }}
-                    ></div>
-                    <div
-                      className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
-                      style={{ animationDelay: "300ms" }}
-                    ></div>
+            {/* Loader for infinite scroll */}
+            <div ref={loaderRef} className="flex justify-center py-4">
+              {loading && (
+                <div className="flex items-center justify-center space-x-2">
+                  <div
+                    className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                    style={{ animationDelay: "0ms" }}
+                  ></div>
+                  <div
+                    className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                    style={{ animationDelay: "150ms" }}
+                  ></div>
+                  <div
+                    className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
+                    style={{ animationDelay: "300ms" }}
+                  ></div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <aside className="w-full space-y-8 md:sticky md:top-20 md:w-80 md:self-start lg:w-96">
+          {/* Trending Topics */}
+          <div className="rounded-lg bg-gray-50 p-6">
+            <h2 className="mb-4 text-lg font-bold">Trending Topics</h2>
+            <div className="space-y-3">
+              {trendingTopics.map((topic, index) => (
+                <Link
+                  href="#"
+                  key={index}
+                  className="group flex items-center gap-3"
+                >
+                  <span className="text-sm font-medium text-gray-400">
+                    0{index + 1}
+                  </span>
+                  <div>
+                    <h3 className="font-medium transition-colors group-hover:text-gray-700">
+                      {topic.title}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      {topic.reads} readers
+                    </p>
                   </div>
-                )}
-              </div>
+                </Link>
+              ))}
             </div>
           </div>
 
-          {/* Sidebar */}
-          <aside className="w-full space-y-8 md:sticky md:top-20 md:w-80 md:self-start lg:w-96">
-            {/* Trending Topics */}
-            <div className="rounded-lg bg-gray-50 p-6">
-              <h2 className="mb-4 text-lg font-bold">Trending Topics</h2>
-              <div className="space-y-3">
-                {trendingTopics.map((topic, index) => (
-                  <Link
-                    href="#"
-                    key={index}
-                    className="group flex items-center gap-3"
-                  >
-                    <span className="text-sm font-medium text-gray-400">
-                      0{index + 1}
-                    </span>
+          {/* Recommended Writers */}
+          <div className="rounded-lg bg-gray-50 p-6">
+            <h2 className="mb-4 text-lg font-bold">Recommended Writers</h2>
+            <div className="space-y-4">
+              {recommendedWriters.map((writer, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage src={writer.avatar} alt={writer.name} />
+                      <AvatarFallback>{writer.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
                     <div>
-                      <h3 className="font-medium transition-colors group-hover:text-gray-700">
-                        {topic.title}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        {topic.reads} readers
-                      </p>
+                      <h3 className="font-medium">{writer.name}</h3>
+                      <p className="text-sm text-gray-500">{writer.bio}</p>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Recommended Writers */}
-            <div className="rounded-lg bg-gray-50 p-6">
-              <h2 className="mb-4 text-lg font-bold">Recommended Writers</h2>
-              <div className="space-y-4">
-                {recommendedWriters.map((writer, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage src={writer.avatar} alt={writer.name} />
-                        <AvatarFallback>{writer.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="font-medium">{writer.name}</h3>
-                        <p className="text-sm text-gray-500">{writer.bio}</p>
-                      </div>
-                    </div>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8 rounded-full"
-                    >
-                      Follow
-                    </Button>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Topics to Follow */}
-            <div className="rounded-lg bg-gray-50 p-6">
-              <h2 className="mb-4 text-lg font-bold">Topics to Follow</h2>
-              <div className="flex flex-wrap gap-2">
-                {topicsToFollow.map((topic, index) => (
-                  <Badge
-                    key={index}
+                  <Button
                     variant="outline"
-                    className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+                    size="sm"
+                    className="h-8 rounded-full"
                   >
-                    {topic}
-                  </Badge>
-                ))}
-              </div>
-              <Button
-                variant="ghost"
-                className="mt-4 w-full text-gray-500 hover:text-gray-700"
-              >
-                See More Topics
-                <ChevronDown className="ml-2 h-4 w-4" />
-              </Button>
+                    Follow
+                  </Button>
+                </div>
+              ))}
             </div>
-          </aside>
-        </main>
-      </div>
-    </LandingHeaderLayout>
+          </div>
+
+          {/* Topics to Follow */}
+          <div className="rounded-lg bg-gray-50 p-6">
+            <h2 className="mb-4 text-lg font-bold">Topics to Follow</h2>
+            <div className="flex flex-wrap gap-2">
+              {topicsToFollow.map((topic, index) => (
+                <Badge
+                  key={index}
+                  variant="outline"
+                  className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+                >
+                  {topic}
+                </Badge>
+              ))}
+            </div>
+            <Button
+              variant="ghost"
+              className="mt-4 w-full text-gray-500 hover:text-gray-700"
+            >
+              See More Topics
+              <ChevronDown className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </aside>
+      </main>
+    </div>
   );
 }
 
