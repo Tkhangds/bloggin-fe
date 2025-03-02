@@ -144,6 +144,7 @@ export default function Page() {
       <div className="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-center gap-28 px-4 py-6 sm:px-6 md:px-8">
         <ImageGallery></ImageGallery>
         <TemplateGallery></TemplateGallery>
+        <div>More content coming</div>
       </div>
     </LandingLayout>
   );
