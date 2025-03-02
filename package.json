@@ -6,7 +6,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "vercel-build": "echo '@tiptap-pro:registry=https://registry.tiptap.dev/' > .npmrc && echo '//registry.tiptap.dev/:_authToken='$TIPTAP_NPM_TOKEN >> .npmrc && npm run build",
     "lint": "next lint"
     
   },
