@@ -4,6 +4,8 @@ import { LandingLayout } from "@/components/layouts/landing";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import ImageGallery from "@/components/gallery/image-gallery";
+import TemplateGallery from "@/components/gallery/template-gallery";
 
 function FloatingPaths({ position }: { position: number }) {
   const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -52,11 +54,7 @@ function FloatingPaths({ position }: { position: number }) {
   );
 }
 
-function BackgroundPaths({
-  title = "Welcome To Blogging",
-}: {
-  title?: string;
-}) {
+function BackgroundPaths({ title = "Welcome To Bloggin" }: { title?: string }) {
   const words = title.split(" ");
   const router = useRouter();
   return (
@@ -143,8 +141,9 @@ export default function Page() {
   return (
     <LandingLayout>
       <BackgroundPaths></BackgroundPaths>
-      <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-6 sm:px-6 md:px-8">
-        More content Incoming
+      <div className="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-center gap-28 px-4 py-6 sm:px-6 md:px-8">
+        <ImageGallery></ImageGallery>
+        <TemplateGallery></TemplateGallery>
       </div>
     </LandingLayout>
   );
