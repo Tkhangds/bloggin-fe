@@ -78,9 +78,15 @@ export const Header = () => {
               </Button>
               <Separator className="my-2" />
               <Button variant={"secondary"} className="w-full font-semibold">
-                Sign Up
+              <Link  href="/sign-up">
+              Sign Up
+            </Link>
               </Button>
-              <Button className="w-full font-semibold">Log In</Button>
+              <Button className="w-full font-semibold">
+              <Link  href="/sign-in">
+              Log In
+            </Link>
+              </Button>
             </div>
           </SheetContent>
         </Sheet>
