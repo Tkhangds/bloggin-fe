@@ -39,11 +39,6 @@ export const BlockEditor = ({
 
   return (
     <div className="flex h-full" ref={menuContainerRef}>
-      <Sidebar
-        isOpen={leftSidebar.isOpen}
-        onClose={leftSidebar.close}
-        editor={editor}
-      />
       <div className="relative flex h-full flex-1 flex-col overflow-hidden">
         <EditorHeader
           editor={editor}
@@ -61,6 +56,11 @@ export const BlockEditor = ({
         <TableColumnMenu editor={editor} appendTo={menuContainerRef} />
         <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
       </div>
+      <Sidebar
+        isOpen={leftSidebar.isOpen}
+        onClose={leftSidebar.close}
+        editor={editor}
+      />
     </div>
   );
 };

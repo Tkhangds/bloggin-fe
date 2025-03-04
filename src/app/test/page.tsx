@@ -120,7 +120,7 @@ function Document({ params }: { params: { room: string } }) {
 export default function Page() {
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<div>Loading...</div>}>
         <Document params={{ room: "test" }} />
       </Suspense>
     </>

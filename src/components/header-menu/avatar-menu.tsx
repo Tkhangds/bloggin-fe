@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Bell, LogOut, Moon, Settings, Sun, User } from "lucide-react";
+import { LogOut, Moon, Sun, User, FileText, Heart } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -42,7 +42,7 @@ export function AvatarMenu({
 
     if (typeof window !== "undefined") {
       localStorage.setItem("isLoggedIn", "false");
-      router.push("/");
+      router.push("/setting");
     }
   };
 
@@ -67,9 +67,6 @@ export function AvatarMenu({
               {initials}
             </AvatarFallback>
           </Avatar>
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-            3
-          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -83,20 +80,17 @@ export function AvatarMenu({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/setting")}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Bell className="mr-2 h-4 w-4" />
-            <span>Notifications</span>
-            <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-              3
-            </span>
+          <DropdownMenuItem onClick={() => router.push("/setting")}>
+            <FileText className="mr-2 h-4 w-4" />
+            <span>Your Blog</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
+          <DropdownMenuItem onClick={() => router.push("/setting")}>
+            <Heart className="mr-2 h-4 w-4" />
+            <span>Favorite</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={toggleTheme}>
             {theme === "light" ? (
@@ -104,7 +98,9 @@ export function AvatarMenu({
             ) : (
               <Sun className="mr-2 h-4 w-4" />
             )}
-            <span>{theme === "light" ? "Dark Mode" : "Light Mode"}</span>
+            <span>
+              {theme === "light" ? "Dark Mode (wip)" : "Light Mode (wip)"}
+            </span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
