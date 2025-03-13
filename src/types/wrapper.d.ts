@@ -8,7 +8,14 @@ type PaginationResponseWrapper<T = null> = {
 };
 
 type BloggingSuccessResponseWrapper<T = null> = {
-  success: boolean;
+  // success: boolean;
   message: string;
   data: T;
+};
+
+type BloggingErrorResponseWrapper = {
+  message: string;
+  statusCode: string;
+  errors: string;
+  path: string;
 };

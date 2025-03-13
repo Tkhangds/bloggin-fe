@@ -1,8 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Bookmark, MessageCircle, Heart } from "lucide-react";
+import { MessageCircle, Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
@@ -63,10 +62,6 @@ export default function BlogCard({
                   {post.readTime} min read
                 </span>
               </div>
-
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Bookmark className="h-4 w-4" />
-              </Button>
             </div>
           </div>
 

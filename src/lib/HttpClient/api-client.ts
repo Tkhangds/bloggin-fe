@@ -21,14 +21,14 @@ export default class apiClient {
 
   private constructor() {
     this.axiosInstance = axios.create({
-      baseURL: ENV.API_BASE_URL,
+      baseURL: ENV.NEXT_PUBLIC_API_BASE_URL,
       timeout: 15000,
       withCredentials: true,
     });
 
     this.axiosInstance.interceptors.response.use(
       (response) => this.handleSuccessResponse(response),
-      (error) => this.handleErrorResponse(error)
+      (error) => this.handleErrorResponse(error),
     );
   }
 

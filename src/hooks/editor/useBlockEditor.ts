@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
-import { useEditor, useEditorState } from "@tiptap/react";
+"use client";
+
+import { useEditor } from "@tiptap/react";
 import type { AnyExtension, Editor, EditorOptions } from "@tiptap/core";
-import { TiptapCollabProvider, WebSocketStatus } from "@hocuspocus/provider";
 
 import { ExtensionKit } from "@/extensions/extension-kit";
-import type { EditorUser } from "@/components/editor/BlockEditor/types";
 import { initialContent } from "@/lib/editor/data/initialContent";
+import { useEffect, useState } from "react";
+import debounce from "lodash/debounce";
+import { useDraft } from "../apis/useDraft";
 
 declare global {
   interface Window {
@@ -14,35 +16,42 @@ declare global {
 }
 
 export const useBlockEditor = ({
-  provider,
+  id,
   ...editorOptions
-}: {
-  provider?: TiptapCollabProvider | null | undefined;
-} & Partial<Omit<EditorOptions, "extensions">>) => {
-  const [collabState, setCollabState] = useState<WebSocketStatus>(
-    provider ? WebSocketStatus.Connecting : WebSocketStatus.Disconnected,
-  );
+}: { id: string | undefined } & Partial<Omit<EditorOptions, "extensions">>) => {
+  const { useGetDraftById, useUpdateDraftById } = useDraft();
 
-  // A simpler approach using just the HTML content
-  const STORAGE_KEY = "editor-content-html";
+  const { data: draft } = useGetDraftById(id || "");
+
+  const saveContent = debounce((editor: Editor) => {
+    const jsonContent = editor.getJSON();
+    const json = JSON.stringify(jsonContent);
+    if (!id) {
+      return;
+    }
+    updateDraft({ id, data: { content: json } });
+
+    setIsSaving(false);
+  }, 3000);
+
+  const { mutate: updateDraft } = useUpdateDraftById();
+
+  const [isSaving, setIsSaving] = useState(false);
 
   const editor = useEditor(
     {
       ...editorOptions,
-      immediatelyRender: true,
+      immediatelyRender: false,
       shouldRerenderOnTransaction: false,
       autofocus: true,
-      content: localStorage.getItem(STORAGE_KEY) || initialContent,
+      content: draft ? JSON.parse(draft.content) : initialContent,
       onUpdate: ({ editor }) => {
-        // Save HTML directly
-        const html = editor.getHTML();
-        localStorage.setItem(STORAGE_KEY, html);
-        console.log("Saved HTML content:", html.substring(0, 100) + "...");
+        setIsSaving(true);
+        saveContent(editor);
       },
-      extensions: [
-        ...ExtensionKit({}),
-        // Your other extensions...
-      ].filter((e): e is AnyExtension => e !== undefined),
+      extensions: [...ExtensionKit({})].filter(
+        (e): e is AnyExtension => e !== undefined,
+      ),
       editorProps: {
         attributes: {
           autocomplete: "off",
@@ -54,33 +63,20 @@ export const useBlockEditor = ({
     },
     [],
   );
-  const users = useEditorState({
-    editor,
-    selector: (ctx): (EditorUser & { initials: string })[] => {
-      if (!ctx.editor?.storage.collaborationCursor?.users) {
-        return [];
-      }
-
-      return ctx.editor.storage.collaborationCursor.users.map(
-        (user: EditorUser) => {
-          const names = user.name?.split(" ");
-          const firstName = names?.[0];
-          const lastName = names?.[names.length - 1];
-          const initials = `${firstName?.[0] || "?"}${lastName?.[0] || "?"}`;
-
-          return { ...user, initials: initials.length ? initials : "?" };
-        },
-      );
-    },
-  });
 
   useEffect(() => {
-    provider?.on("status", (event: { status: WebSocketStatus }) => {
-      setCollabState(event.status);
-    });
-  }, [provider]);
+    if (editor && draft && draft.content) {
+      const parsedContent = JSON.parse(draft.content);
 
-  window.editor = editor;
+      if (editor.getJSON() !== parsedContent) {
+        editor.commands.setContent(parsedContent);
+      }
+    }
+  }, [editor, draft]);
 
-  return { editor, users, collabState };
+  if (typeof window !== "undefined") {
+    window.editor = editor;
+  }
+
+  return { editor, isSaving };
 };
