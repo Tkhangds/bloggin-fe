@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import postAction from "@/apis/post.action";
 import { Post } from "@/types/post";
+import { CreatePostDto } from "@/types/dtos/create-post.dto";
 
 export const usePost = () => {
   const queryClient = useQueryClient();
@@ -29,12 +30,12 @@ export const usePost = () => {
 
   const useCreatePost = () => {
     return useMutation({
-      mutationFn: ({ data }: { data: Post }) => {
-        return postAction.createPost(data);
+      mutationFn: async ({ data }: { data: CreatePostDto }) => {
+        return await postAction.createPost(data);
       },
-      onSuccess: (_, variable) => {
+      onSuccess: (result) => {
         queryClient.invalidateQueries({
-          queryKey: ["sample", variable.data.id],
+          queryKey: ["sample", result.id],
         });
       },
     });

@@ -33,10 +33,10 @@ const draftAction = {
     return res;
   },
   async deleteDraftById(id: string) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper<Draft>>(
+    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
       `/draft/${id}`,
     );
-    return res;
+    return res.data.message;
   },
 };
 

@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "@/components/editor/ui/Textarea";
 import { usePost } from "@/hooks/apis/usePost";
 import { useParams } from "next/navigation";
@@ -290,21 +290,33 @@ export default function BlogReadingPage() {
 
   const { data, isPending } = useGetPostById(params.id);
 
+  const html = generateHTML(
+    json,
+    [...ExtensionKit({})].filter((e): e is AnyExtension => e !== undefined),
+  );
+
+  const [content, setContent] = useState<string>(html);
+
+  useEffect(() => {
+    if (data) {
+      setContent(
+        generateHTML(
+          JSON.parse(data.content),
+          [...ExtensionKit({})].filter(
+            (e): e is AnyExtension => e !== undefined,
+          ),
+        ),
+      );
+    }
+  }, [data]);
+
   if (isPending) {
     return <h1>Loading...</h1>;
   }
 
-  if (!data) {
+  if (!data || isPending) {
     return <h1>No posts found</h1>;
   }
-
-  const html = generateHTML(
-    json,
-    [
-      ...ExtensionKit({}),
-      // Your other extensions...
-    ].filter((e): e is AnyExtension => e !== undefined),
-  );
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
@@ -356,9 +368,6 @@ export default function BlogReadingPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bookmark className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
             <Play className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -368,7 +377,7 @@ export default function BlogReadingPage() {
       </div>
       <div
         className="prose prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: html }}
+        dangerouslySetInnerHTML={{ __html: content }}
       />
       {/*Featured Image*/}
       {/* <div className="mb-8">

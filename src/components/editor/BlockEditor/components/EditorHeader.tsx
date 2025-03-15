@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
+import { useRouter, usePathname } from "next/navigation";
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean;
@@ -23,6 +24,8 @@ export const EditorHeader = ({
   toggleSidebar,
   isSaving,
 }: EditorHeaderProps) => {
+  const router = useRouter();
+  const pathname = usePathname();
   const { characters, words } = useEditorState({
     editor,
     selector: (ctx): { characters: number; words: number } => {
@@ -46,7 +49,13 @@ export const EditorHeader = ({
 
       <div className="flex flex-row items-center gap-x-1.5">
         <div className="flex items-center gap-x-1.5">
-          <Button size={"sm"} className="mr-2 hidden lg:flex">
+          <Button
+            onClick={() => {
+              router.push("/publish/" + pathname.split("/").pop());
+            }}
+            size={"sm"}
+            className="mr-2 hidden lg:flex"
+          >
             Publish
             <Icon name="CloudUpload" />
           </Button>

@@ -45,16 +45,16 @@ export const useDraft = () => {
     });
   };
 
-  // const useDeleteDraftById = () => {
-  //   return useMutation({
-  //     mutationFn: ({ id }: { id: string }) => {
-  //       return draftAction.deleteDraftById(id);
-  //     },
-  //     onSuccess: (_, variable) => {
-  //       queryClient.invalidateQueries({ queryKey: ["sample", variable.id] });
-  //     },
-  //   });
-  // };
+  const useDeleteDraftById = () => {
+    return useMutation({
+      mutationFn: async ({ id }: { id: string }) => {
+        return await draftAction.deleteDraftById(id);
+      },
+      onSuccess: (_, variable) => {
+        queryClient.invalidateQueries({ queryKey: ["sample", variable.id] });
+      },
+    });
+  };
 
   const useGetDraftById = (id: string) => {
     return useQuery({
@@ -70,5 +70,6 @@ export const useDraft = () => {
     useUpdateDraftById,
     useCreateDraft,
     useGetDraftById,
+    useDeleteDraftById,
   };
 };

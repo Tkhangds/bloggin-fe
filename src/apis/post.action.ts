@@ -1,4 +1,5 @@
 import { bloggingApi } from "@/lib/HttpClient/index";
+import { CreatePostDto } from "@/types/dtos/create-post.dto";
 import { Post } from "@/types/post";
 
 const postAction = {
@@ -16,12 +17,15 @@ const postAction = {
     );
     return res.data.data;
   },
-  async createPost(data: Post) {
+  async createPost(data: CreatePostDto) {
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Post>>(
       "/post",
       data,
     );
-    return res;
+
+    console.log(res.data.data);
+
+    return res.data.data;
   },
   async updatePostById(id: string, data: Post) {
     const res = await bloggingApi.put<BloggingSuccessResponseWrapper<Post>>(

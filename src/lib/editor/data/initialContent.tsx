@@ -2,25 +2,6 @@ export const initialContent = {
   type: "doc",
   content: [
     {
-      type: "heading",
-      attrs: {
-        textAlign: "left",
-        level: 1,
-      },
-      content: [
-        {
-          type: "emoji",
-          attrs: {
-            name: "fire",
-          },
-        },
-        {
-          type: "text",
-          text: " Welcome to Bloggin",
-        },
-      ],
-    },
-    {
       type: "paragraph",
       attrs: {
         class: null,
@@ -285,21 +266,6 @@ export const initialContent = {
           ],
         },
       ],
-    },
-    {
-      type: "imageBlock",
-      attrs: {
-        src: "/placeholder-image.jpg",
-        width: "100%",
-        align: "center",
-      },
-    },
-    {
-      type: "paragraph",
-      attrs: {
-        class: null,
-        textAlign: "left",
-      },
     },
   ],
 };
