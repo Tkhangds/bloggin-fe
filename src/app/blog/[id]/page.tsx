@@ -3,7 +3,6 @@
 import {
   Heart,
   MessageCircle,
-  Bookmark,
   Play,
   Share2,
   ThumbsUp,

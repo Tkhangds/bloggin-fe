@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import authAction from "@/apis/auth.action";
 import { LoginDto } from "@/types/dtos/login.dto";
 import { useRouter } from "next/navigation";

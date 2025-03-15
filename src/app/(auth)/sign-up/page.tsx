@@ -71,7 +71,6 @@ function SignUpForm({ className, ...props }: React.ComponentProps<"div">) {
   const {
     control,
     handleSubmit,
-    setValue,
     formState: {},
   } = form;
 

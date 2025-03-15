@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SplitText from "@/components/ui/split-text";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,17 +35,14 @@ function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
 
   const {
     control,
-    setValue,
     handleSubmit,
     formState: {},
   } = form;
 
   const { mutateAsync: login } = useAuth().useLogin();
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [loading] = useState<boolean>(false);
+  const [error] = useState<string>("");
   const router = useRouter();
 
   // Check if user is already logged in
