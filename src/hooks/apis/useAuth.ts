@@ -39,19 +39,9 @@ export const useAuth = () => {
     });
   };
 
-  const useValidateToken = () => {
-    return useQuery({
-      queryKey: ["validateToken"],
-      queryFn: async () => await authAction.validateToken(),
-      staleTime: 1000 * 60 * 5,
-      retry: 1,
-    });
-  };
-
   return {
     queryClient,
     useLogin,
     useRegister,
-    useValidateToken,
   };
 };

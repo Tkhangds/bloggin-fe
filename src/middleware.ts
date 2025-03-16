@@ -1,7 +1,6 @@
 // middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ENV } from "./configs/env";
 
 // Define which routes should be protected
 const protectedRoutes = ["/draft", "/profile", "/publish", "/setting"];
