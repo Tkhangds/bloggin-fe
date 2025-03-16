@@ -1,14 +1,18 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import authAction from "@/apis/auth.action";
 import { LoginDto } from "@/types/dtos/login.dto";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { RegisterDto } from "@/types/dtos/register.dto";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/";
+
   const useLogin = () => {
     return useMutation({
       mutationFn: async ({ data }: { data: LoginDto }) => {
@@ -17,7 +21,7 @@ export const useAuth = () => {
       onSuccess: () => {
         // Fix this later
         queryClient.invalidateQueries({ queryKey: ["login"] });
-        router.push("/");
+        router.push(redirect);
       },
     });
   };
@@ -35,9 +39,19 @@ export const useAuth = () => {
     });
   };
 
+  const useValidateToken = () => {
+    return useQuery({
+      queryKey: ["validateToken"],
+      queryFn: async () => await authAction.validateToken(),
+      staleTime: 1000 * 60 * 5,
+      retry: 1,
+    });
+  };
+
   return {
     queryClient,
     useLogin,
     useRegister,
+    useValidateToken,
   };
 };

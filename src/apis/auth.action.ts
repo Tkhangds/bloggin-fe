@@ -1,6 +1,7 @@
 import { bloggingApi } from "@/lib/HttpClient/index";
 import { LoginDto } from "@/types/dtos/login.dto";
 import { RegisterDto } from "@/types/dtos/register.dto";
+import { ValidSession } from "@/types/validSession";
 
 const authAction = {
   async login(data: LoginDto) {
@@ -16,6 +17,12 @@ const authAction = {
       "/auth/signin",
       data,
     );
+    return res.data;
+  },
+  async validateToken() {
+    const res = await bloggingApi.get<
+      BloggingSuccessResponseWrapper<ValidSession>
+    >("/auth/validate-token");
     return res.data;
   },
 };
