@@ -33,9 +33,15 @@ export const usePost = () => {
       mutationFn: async ({ data }: { data: CreatePostDto }) => {
         return await postAction.createPost(data);
       },
-      onSuccess: (result) => {
+      onSuccess: (result, variable) => {
         queryClient.invalidateQueries({
           queryKey: ["sample", result.id],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["draft", variable.data.authorId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["post", "author"],
         });
       },
     });
@@ -61,11 +67,21 @@ export const usePost = () => {
     });
   };
 
+  const useGetPostByAuthor = () => {
+    return useQuery({
+      queryKey: ["post", "author"],
+      queryFn: () => {
+        return postAction.getPostByAuthor();
+      },
+    });
+  };
+
   return {
     queryClient,
     useGetAllPosts,
     useUpdatePostById,
     useCreatePost,
     useGetPostById,
+    useGetPostByAuthor,
   };
 };

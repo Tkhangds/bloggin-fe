@@ -5,16 +5,14 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
-import { useEffect, useState } from "react";
+import { useAuthProvider } from "@/context/AuthContext";
 
 export const Header = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { user, loading } = useAuthProvider();
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setLoggedIn(localStorage.getItem("isLoggedIn") == "true");
-    }
-  }, []);
+  if (loading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-black/20 bg-white px-4 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
@@ -43,17 +41,23 @@ export const Header = () => {
           </div>
         </div>
 
-        {loggedIn ? (
+        {user ? (
           <AvatarMenu />
         ) : (
           <div className="hidden lg:flex lg:justify-end lg:gap-1">
-            <Button variant="secondary" className="py-1 font-semibold">
-              <Link className="text-xs" href="/sign-up">
+            <Button variant="secondary" className="p-0 py-1 font-semibold">
+              <Link
+                className="flex h-full w-full items-center justify-center px-4 py-2 text-xs"
+                href="/sign-up"
+              >
                 Sign Up
               </Link>
             </Button>
-            <Button className="py-1 font-semibold">
-              <Link className="text-xs" href="/sign-in">
+            <Button className="p-0 py-1 font-semibold">
+              <Link
+                className="flex h-full w-full items-center justify-center px-4 py-2 text-xs"
+                href="/sign-in"
+              >
                 Log In
               </Link>
             </Button>

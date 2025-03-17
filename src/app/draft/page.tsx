@@ -8,10 +8,13 @@ import { useState, useEffect } from "react";
 import { useDraft } from "@/hooks/apis/useDraft";
 import { useRouter } from "next/navigation";
 import { initialContent } from "@/lib/editor/data/initialContent";
+import firstSentenceJson from "@/utils/first-sentence-json";
+import { useAuthProvider } from "@/context/AuthContext";
 
 export default function Page() {
   const router = useRouter();
   const { useCreateDraft } = useDraft();
+  const { user } = useAuthProvider();
 
   const { mutateAsync: createDraft } = useCreateDraft();
 
@@ -19,11 +22,16 @@ export default function Page() {
 
   useEffect(() => {
     async function fetchDraft() {
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+      const content = JSON.stringify(initialContent);
       const draft = await createDraft({
         data: {
-          content: JSON.stringify(initialContent),
-          title: "Untitled",
-          authorId: "123",
+          content: content,
+          title: firstSentenceJson(content) || "Untitled",
+          authorId: user.id,
         },
       });
 

@@ -15,20 +15,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useAuthProvider } from "@/context/AuthContext";
 
-interface AvatarMenuProps {
-  user?: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
-
-export function AvatarMenu({
-  user = { name: "John Doe", email: "john@example.com" },
-}: AvatarMenuProps) {
+export function AvatarMenu({}) {
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  const { user, logout } = useAuthProvider();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -36,23 +29,23 @@ export function AvatarMenu({
     document.documentElement.classList.toggle("dark");
   };
 
-  const handleSignOut = () => {
-    // Handle sign out logic here
-    console.log("Signing out...");
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("isLoggedIn", "false");
-      router.push("/setting");
-    }
+  const handleSignOut = async () => {
+    await logout();
   };
 
   // Get initials from name
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .substring(0, 2);
+  function initials(str: string): string {
+    return str
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .substring(0, 2);
+  }
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <DropdownMenu>
@@ -62,9 +55,12 @@ export function AvatarMenu({
           className="relative hidden h-10 w-10 rounded-full lg:flex"
         >
           <Avatar className="h-10 w-10 border border-border">
-            <AvatarImage src={user.image} alt={user.name} />
+            <AvatarImage
+              src={"https://placehold.co/40x40/png"}
+              alt={user.username}
+            />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {initials}
+              {initials(user.username)}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -72,7 +68,7 @@ export function AvatarMenu({
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.name}</p>
+            <p className="text-sm font-medium leading-none">{user.username}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -80,15 +76,15 @@ export function AvatarMenu({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/setting")}>
+          <DropdownMenuItem onClick={() => router.push("/setting/profile")}>
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/setting")}>
+          <DropdownMenuItem onClick={() => router.push("/setting/posts")}>
             <FileText className="mr-2 h-4 w-4" />
             <span>Your Blog</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/setting")}>
+          <DropdownMenuItem onClick={() => router.push("/setting/favorites")}>
             <Heart className="mr-2 h-4 w-4" />
             <span>Favorite</span>
           </DropdownMenuItem>

@@ -17,13 +17,18 @@ const postAction = {
     );
     return res.data.data;
   },
+  async getPostByAuthor() {
+    const res =
+      await bloggingApi.get<BloggingSuccessResponseWrapper<Post[]>>(
+        `/post/author`,
+      );
+    return res.data.data;
+  },
   async createPost(data: CreatePostDto) {
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Post>>(
       "/post",
       data,
     );
-
-    console.log(res.data.data);
 
     return res.data.data;
   },

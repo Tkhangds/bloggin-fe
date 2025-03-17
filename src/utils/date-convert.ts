@@ -1,9 +1,27 @@
 export function formatDate(isoString: string): string {
+  if (!isoString) return "";
+
   const date = new Date(isoString);
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "short",
-    day: "2-digit",
-  };
-  return date.toLocaleDateString("en-US", options);
+
+  const day = String(date.getUTCDate()).padStart(2, "0");
+
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const month = months[date.getUTCMonth()];
+
+  const year = date.getUTCFullYear();
+
+  return `${month} ${day}, ${year}`;
 }

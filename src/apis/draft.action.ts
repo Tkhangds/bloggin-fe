@@ -17,6 +17,12 @@ const draftAction = {
     );
     return res.data.data;
   },
+  async getAllDraftByUserId(authorId: string) {
+    const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Draft[]>>(
+      `/draft/author/${authorId}`,
+    );
+    return res.data.data ?? [];
+  },
   async createDraft(data: CreateDraftDto) {
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Draft>>(
       "/draft",
