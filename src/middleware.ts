@@ -5,6 +5,7 @@ import type { NextRequest } from "next/server";
 // Define which routes should be protected
 const protectedRoutes = ["/draft", "/profile", "/publish", "/setting"];
 const authRoutes = ["/sign-in", "/sign-up"];
+const editRoutes = ["/blog/edit", "/draft"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -24,7 +25,9 @@ export async function middleware(request: NextRequest) {
   );
   const isAuthRoute = authRoutes.includes(pathname);
 
-  if (!isProtectedRoute && !isAuthRoute) {
+  const isEditRoute = editRoutes.some((route) => pathname.startsWith(route));
+
+  if (!isProtectedRoute && !isAuthRoute && !isEditRoute) {
     return NextResponse.next();
   }
 
@@ -63,7 +66,41 @@ export async function middleware(request: NextRequest) {
   if (isAuthRoute && isSessionValid) {
     return NextResponse.redirect(new URL("/blog", request.url));
   }
+  if (isSessionValid && isEditRoute) {
+    try {
+      const userResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`,
+        {
+          headers: {
+            Cookie: `bloggin-session=${sessionCookie!.value}`,
+          },
+        },
+      );
 
+      const postIdMatch = pathname.match(/\/([a-f0-9-]+)$/i);
+      const postId = postIdMatch ? postIdMatch[1] : null;
+
+      const postResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/${postId}`,
+        {
+          headers: {
+            Cookie: `bloggin-session=${sessionCookie!.value}`,
+          },
+        },
+      );
+
+      if (userResponse.ok && postResponse.ok) {
+        const user = await userResponse.json();
+        const post = await postResponse.json();
+        if (user.data.id === post.data.authorId) {
+          return NextResponse.next();
+        }
+        return NextResponse.redirect(new URL("/error/forbidden", request.url));
+      }
+    } catch (error) {
+      console.error("Forbidden validation error:", error);
+    }
+  }
   return NextResponse.next();
 }
 

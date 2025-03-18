@@ -5,13 +5,16 @@ import { MessageCircle, Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { Post } from "@/types/post";
+import { formatDate } from "@/utils/date-convert";
+import firstSentenceJson from "@/utils/first-sentence-json";
 
 export default function BlogCard({
   index,
   post,
 }: {
   index: number;
-  post: BlogPost;
+  post: Post;
 }) {
   const router = useRouter();
 
@@ -20,12 +23,14 @@ export default function BlogCard({
       <div onClick={() => router.push("/blog/" + post.id)}>
         <div className="mb-3 flex items-center gap-2">
           <Avatar className="h-6 w-6">
-            <AvatarImage src={post.author.avatar} alt={post.author.name} />
-            <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
+            <AvatarImage src={post.author.avatarUrl} alt={"Avatar"} />
+            <AvatarFallback>{post.author.displayName.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium">{post.author.name}</span>
+          <span className="text-sm font-medium">{post.author.displayName}</span>
           <span className="text-sm text-gray-500">·</span>
-          <span className="text-sm text-gray-500">{post.date}</span>
+          <span className="text-sm text-gray-500">
+            {formatDate(post.createdAt)}
+          </span>
         </div>
 
         <div className="flex flex-col gap-4 md:flex-row">
@@ -34,41 +39,44 @@ export default function BlogCard({
               {post.title}
             </h2>
 
-            <p className="mb-3 line-clamp-3 text-gray-700">{post.excerpt}</p>
+            <p className="mb-3 line-clamp-3 text-gray-700">
+              {firstSentenceJson(post.content)}
+            </p>
 
             <div className="mb-4 flex flex-wrap gap-2">
-              {post.tags.map((tag, idx) => (
-                <Badge
-                  key={idx}
-                  variant="secondary"
-                  className="bg-gray-100 font-normal text-gray-700 hover:bg-gray-200"
-                >
-                  {tag}
-                </Badge>
-              ))}
+              {post.tags &&
+                post.tags.map((tag, idx) => (
+                  <Badge
+                    key={idx}
+                    variant="secondary"
+                    className="bg-gray-100 font-normal text-gray-700 hover:bg-gray-200"
+                  >
+                    {tag.name}
+                  </Badge>
+                ))}
             </div>
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1 text-gray-500">
                   <Heart className="h-4 w-4" />
-                  <span className="text-xs">{post.likes}</span>
+                  <span className="text-xs">{"1"}</span>
                 </div>
                 <div className="flex items-center gap-1 text-gray-500">
                   <MessageCircle className="h-4 w-4" />
-                  <span className="text-xs">{post.comments}</span>
+                  <span className="text-xs">{"2"}</span>
                 </div>
-                <span className="text-xs text-gray-500">
+                {/* <span className="text-xs text-gray-500">
                   {post.readTime} min read
-                </span>
+                </span> */}
               </div>
             </div>
           </div>
 
-          {post.image && (
+          {true && (
             <div className="relative h-48 overflow-hidden rounded-md md:h-32 md:w-1/3">
               <Image
-                src={post.image || "/placeholder.svg"}
+                src={"https://placehold.co/600x400/png"}
                 alt={post.title}
                 fill
                 className="object-cover"

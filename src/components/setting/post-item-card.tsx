@@ -13,9 +13,18 @@ import { Post } from "@/types/post";
 import { formatDate } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useRouter } from "next/navigation";
+import { usePost } from "@/hooks/apis/usePost";
+import { toast } from "sonner";
 
 export default function PostItemCard({ post }: { post: Post }) {
   const router = useRouter();
+  const { mutateAsync: deletePost } = usePost().useDeletePostById();
+
+  const handleDeletePost = async (id: string) => {
+    await deletePost(id);
+    toast.success("Post deleted successfully");
+  };
+
   return (
     <Card>
       <CardHeader className="p-4">
@@ -39,12 +48,20 @@ export default function PostItemCard({ post }: { post: Post }) {
           {firstSentenceJson(post.content)}
         </p>
       </CardContent>
-      <div className="flex items-center justify-between border-t p-4">
+      <div className="flex items-center justify-end border-t p-4">
         <div className="flex space-x-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push(`/blog/edit/${post.id}`)}
+          >
             Edit
           </Button>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDeletePost(post.id)}
+          >
             Delete
           </Button>
         </div>

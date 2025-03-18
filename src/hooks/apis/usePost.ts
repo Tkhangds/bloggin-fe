@@ -1,29 +1,37 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import postAction from "@/apis/post.action";
-import { Post } from "@/types/post";
 import { CreatePostDto } from "@/types/dtos/create-post.dto";
+import { UpdatePostDto } from "@/types/dtos/update-post.dto";
 
 export const usePost = () => {
   const queryClient = useQueryClient();
-  // const useGetAllPosts = (page?: number, limit?: number) => {
-  const useGetAllPosts = () => {
+
+  const useGetAllPosts = (page?: number, limit?: number) => {
     return useQuery({
-      queryKey: ["post"],
+      queryKey: ["post", "all", page, limit],
       queryFn: () => {
-        return postAction.getAllPost();
+        return postAction.getAllPost(page, limit);
       },
+      placeholderData: keepPreviousData,
     });
   };
 
   const useUpdatePostById = () => {
     return useMutation({
-      mutationFn: ({ id, data }: { id: string; data: Post }) => {
+      mutationFn: ({ id, data }: { id: string; data: UpdatePostDto }) => {
         return postAction.updatePostById(id, data);
       },
       onSuccess: (_, variable) => {
-        queryClient.invalidateQueries({ queryKey: ["sample", variable.id] });
+        queryClient.invalidateQueries({ queryKey: ["post", variable.id] });
+        queryClient.invalidateQueries({ queryKey: ["post", "all"] });
+        queryClient.invalidateQueries({ queryKey: ["post", "author"] });
       },
     });
   };
@@ -35,7 +43,7 @@ export const usePost = () => {
       },
       onSuccess: (result, variable) => {
         queryClient.invalidateQueries({
-          queryKey: ["sample", result.id],
+          queryKey: ["post", result.id],
         });
         queryClient.invalidateQueries({
           queryKey: ["draft", variable.data.authorId],
@@ -43,24 +51,33 @@ export const usePost = () => {
         queryClient.invalidateQueries({
           queryKey: ["post", "author"],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["post", "all"],
+        });
       },
     });
   };
 
-  // const useDeletePostById = () => {
-  //   return useMutation({
-  //     mutationFn: ({ id }: { id: string }) => {
-  //       return postAction.deletePostById(id);
-  //     },
-  //     onSuccess: (_, variable) => {
-  //       queryClient.invalidateQueries({ queryKey: ["sample", variable.id] });
-  //     },
-  //   });
-  // };
+  const useDeletePostById = () => {
+    return useMutation({
+      mutationFn: async (id: string) => {
+        return await postAction.deletePostById(id);
+      },
+      onSuccess: (_, id) => {
+        queryClient.invalidateQueries({ queryKey: ["post", id] });
+        queryClient.invalidateQueries({
+          queryKey: ["post", "author"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["post", "all"],
+        });
+      },
+    });
+  };
 
   const useGetPostById = (id: string) => {
     return useQuery({
-      queryKey: ["sample", id],
+      queryKey: ["post", id],
       queryFn: () => {
         return postAction.getPostById(id);
       },
@@ -83,5 +100,6 @@ export const usePost = () => {
     useCreatePost,
     useGetPostById,
     useGetPostByAuthor,
+    useDeletePostById,
   };
 };

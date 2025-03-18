@@ -12,19 +12,18 @@ import DraftItemCard from "@/components/setting/draft-item-card";
 import { useDraft } from "@/hooks/apis/useDraft";
 import { useAuthProvider } from "@/context/AuthContext";
 import { NotepadTextDashed } from "lucide-react";
+import FullPageLoading from "@/components/loading/loading";
 
 export default function DraftsPage() {
   const { user, loading } = useAuthProvider();
 
-  const { data, isLoading, error } = useDraft().useGetAllDraftsByAuthorId(
-    user?.id ?? "",
-  );
+  const { data, isLoading, error } = useDraft().useGetAllDraftsByAuthorId();
 
-  if (loading) return <p>Loading...</p>;
   if (!user) {
     return <p>Please log in to view your drafts.</p>;
   }
-  if (isLoading) return <p>Loading your drafts...</p>;
+  if (loading || isLoading)
+    return <FullPageLoading text="We are preparing everything for you." />;
   if (error) return <p>Error loading drafts: {error.message}</p>;
 
   return (

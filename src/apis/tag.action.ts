@@ -2,17 +2,12 @@ import { bloggingApi } from "@/lib/HttpClient/index";
 import { Tag } from "@/types/tag";
 
 const tagAction = {
-  // async getAllTags(name?: string, page?: number, limit?: number) {
-  async getAllTags(name?: string) {
-    const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Tag[]>>(
+  async getAllTags(name?: string, page?: number, limit?: number) {
+    const res = await bloggingApi.get<PaginationResponseWrapper<Tag[]>>(
       "/tag",
-      {
-        params: {
-          name,
-        },
-      },
+      { params: { name, page, limit } },
     );
-    return res.data.data ?? [];
+    return res.data.data;
   },
 };
 

@@ -8,13 +8,12 @@ import { CreateDraftDto } from "@/types/dtos/create-draft.dto";
 export const useDraft = () => {
   const queryClient = useQueryClient();
 
-  const useGetAllDraftsByAuthorId = (authorId: string) => {
+  const useGetAllDraftsByAuthorId = () => {
     return useQuery({
-      queryKey: ["draft", authorId],
+      queryKey: ["draft", "author"],
       queryFn: () => {
-        return draftAction.getAllDraftByUserId(authorId);
+        return draftAction.getAllDraftByUserId();
       },
-      enabled: !!authorId,
     });
   };
 
@@ -38,17 +37,23 @@ export const useDraft = () => {
         queryClient.invalidateQueries({
           queryKey: ["draft", result.data.authorId],
         });
+        queryClient.invalidateQueries({
+          queryKey: ["draft", "author"],
+        });
       },
     });
   };
 
   const useDeleteDraftById = () => {
     return useMutation({
-      mutationFn: async ({ id }: { id: string }) => {
+      mutationFn: async (id: string) => {
         return await draftAction.deleteDraftById(id);
       },
-      onSuccess: (_, variable) => {
-        queryClient.invalidateQueries({ queryKey: ["draft", variable.id] });
+      onSuccess: (_, id) => {
+        queryClient.invalidateQueries({ queryKey: ["draft", id] });
+        queryClient.invalidateQueries({
+          queryKey: ["draft", "author"],
+        });
       },
     });
   };

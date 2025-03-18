@@ -3,13 +3,13 @@
 import { Suspense } from "react";
 import "iframe-resizer/js/iframeResizer.contentWindow";
 
-import { BlockEditor } from "@/components/editor/BlockEditor";
 import { useState, useEffect } from "react";
 import { useDraft } from "@/hooks/apis/useDraft";
 import { useRouter } from "next/navigation";
 import { initialContent } from "@/lib/editor/data/initialContent";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useAuthProvider } from "@/context/AuthContext";
+import FullPageLoading from "@/components/loading/loading";
 
 export default function Page() {
   const router = useRouter();
@@ -49,8 +49,12 @@ export default function Page() {
 
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <BlockEditor id={undefined} />
+      <Suspense
+        fallback={
+          <FullPageLoading text="We are preparing everything for you." />
+        }
+      >
+        <FullPageLoading text="We are preparing everything for you." />
       </Suspense>
     </>
   );

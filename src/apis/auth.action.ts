@@ -12,7 +12,6 @@ const authAction = {
     return res.data;
   },
   async register(data: RegisterDto) {
-    // Fix this later
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper>(
       "/auth/register",
       data,

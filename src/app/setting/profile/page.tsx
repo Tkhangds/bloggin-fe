@@ -24,16 +24,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuthProvider } from "@/context/AuthContext";
+import FullPageLoading from "@/components/loading/loading";
 
 export default function ProfilePage() {
-  const [avatar, setAvatar] = useState<string>(
-    "/placeholder.svg?height=100&width=100",
-  );
-  const [username, setUsername] = useState<string>("johndoe");
+  const [avatar, setAvatar] = useState<string>("/typescript.svg");
   const [gender, setGender] = useState<string>("male");
   const [location, setLocation] = useState<string>("New York, USA");
-  const [email, setEmail] = useState<string>("john.doe@example.com");
   const [phone, setPhone] = useState<string>("+1 (555) 123-4567");
+
+  const { user, loading } = useAuthProvider();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -47,6 +47,12 @@ export default function ProfilePage() {
       reader.readAsDataURL(file);
     }
   };
+
+  if (loading) {
+    return (
+      <FullPageLoading text="We are preparing everything for you!"></FullPageLoading>
+    );
+  }
 
   return (
     <Card>
@@ -102,8 +108,7 @@ export default function ProfilePage() {
                   id="username"
                   placeholder="Username"
                   className="pl-9"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={user?.displayName}
                 />
               </div>
             </div>
@@ -148,8 +153,7 @@ export default function ProfilePage() {
                   type="email"
                   placeholder="Email address"
                   className="pl-9"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={user?.email}
                 />
               </div>
             </div>

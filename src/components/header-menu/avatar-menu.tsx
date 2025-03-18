@@ -2,7 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Moon, Sun, User, FileText, Heart } from "lucide-react";
+import {
+  LogOut,
+  Moon,
+  Sun,
+  User,
+  FileText,
+  Heart,
+  BadgeHelp,
+} from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -55,10 +63,7 @@ export function AvatarMenu({}) {
           className="relative hidden h-10 w-10 rounded-full lg:flex"
         >
           <Avatar className="h-10 w-10 border border-border">
-            <AvatarImage
-              src={"https://placehold.co/40x40/png"}
-              alt={user.username}
-            />
+            <AvatarImage src={"/typescript.svg"} alt={user.username} />
             <AvatarFallback className="bg-primary/10 text-primary">
               {initials(user.username)}
             </AvatarFallback>
@@ -97,6 +102,10 @@ export function AvatarMenu({}) {
             <span>
               {theme === "light" ? "Dark Mode (wip)" : "Light Mode (wip)"}
             </span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/")}>
+            <BadgeHelp className="mr-2 h-4 w-4" />
+            <span>About Us</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

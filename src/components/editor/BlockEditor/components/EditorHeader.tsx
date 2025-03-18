@@ -16,6 +16,7 @@ export type EditorHeaderProps = {
   toggleSidebar?: () => void;
   editor: Editor;
   isSaving?: boolean;
+  mode?: string;
 };
 
 export const EditorHeader = ({
@@ -23,6 +24,7 @@ export const EditorHeader = ({
   isSidebarOpen,
   toggleSidebar,
   isSaving,
+  mode,
 }: EditorHeaderProps) => {
   const router = useRouter();
   const pathname = usePathname();
@@ -49,16 +51,29 @@ export const EditorHeader = ({
 
       <div className="flex flex-row items-center gap-x-1.5">
         <div className="flex items-center gap-x-1.5">
-          <Button
-            onClick={() => {
-              router.push("/publish/" + pathname.split("/").pop());
-            }}
-            size={"sm"}
-            className="mr-2 hidden lg:flex"
-          >
-            Publish
-            <Icon name="CloudUpload" />
-          </Button>
+          {mode === "draft" ? (
+            <Button
+              onClick={() => {
+                router.push("/publish/" + pathname.split("/").pop());
+              }}
+              size={"sm"}
+              className="mr-2 hidden lg:flex"
+            >
+              Publish
+              <Icon name="CloudUpload" />
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                router.push("/blog/" + pathname.split("/").pop());
+              }}
+              size={"sm"}
+              className="mr-2 hidden lg:flex"
+            >
+              Done
+              <Icon name="Save" />
+            </Button>
+          )}
 
           <Toolbar.Button
             tooltip={editor.isEditable ? "Disable editing" : "Enable editing"}

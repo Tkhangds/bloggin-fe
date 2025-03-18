@@ -126,7 +126,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
   const onSubmitHandle = async (data: CreatePostDto) => {
     const blog = await createPost({ data });
-    await deleteDraft({ id: params.id });
+    await deleteDraft(params.id);
     router.push("/blog/" + blog.id);
   };
 

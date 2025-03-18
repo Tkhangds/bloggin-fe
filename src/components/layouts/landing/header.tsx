@@ -6,8 +6,11 @@ import Link from "next/link";
 import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
 import { useAuthProvider } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { Icon } from "@/components/editor/ui/Icon";
 
 export const Header = () => {
+  const router = useRouter();
   const { user, loading } = useAuthProvider();
 
   if (loading) {
@@ -18,7 +21,7 @@ export const Header = () => {
     <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-black/20 bg-white px-4 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Link href="/">
+          <Link href="/blog">
             <div className="w-24 overflow-hidden sm:w-32 lg:h-[40px] lg:w-[150px]">
               <Image
                 width={120}
@@ -42,7 +45,21 @@ export const Header = () => {
         </div>
 
         {user ? (
-          <AvatarMenu />
+          <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
+            <div className="lg:pt-2">
+              <Button
+                onClick={() => {
+                  router.push("/draft");
+                }}
+                size={"sm"}
+                className="mr-2 hidden lg:flex"
+              >
+                Write
+                <Icon name="Pen" />
+              </Button>
+            </div>
+            <AvatarMenu />
+          </div>
         ) : (
           <div className="hidden lg:flex lg:justify-end lg:gap-1">
             <Button variant="secondary" className="p-0 py-1 font-semibold">

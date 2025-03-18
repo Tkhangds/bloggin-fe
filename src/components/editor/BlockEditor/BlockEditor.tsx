@@ -18,13 +18,20 @@ import { TextMenu } from "../menus/TextMenu";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { useSidebar } from "@/hooks/editor/useSidebar";
 
-export const BlockEditor = ({ id }: { id: string | undefined }) => {
+export const BlockEditor = ({
+  id,
+  mode,
+}: {
+  id: string | undefined;
+  mode: string;
+}) => {
   const [isEditable, setIsEditable] = useState(true);
   const menuContainerRef = useRef(null);
 
   const rightSidebar = useSidebar();
   const { editor, isSaving } = useBlockEditor({
     id,
+    mode: mode,
     onTransaction({ editor: currentEditor }) {
       setIsEditable(currentEditor.isEditable);
     },
@@ -38,6 +45,7 @@ export const BlockEditor = ({ id }: { id: string | undefined }) => {
     <div className="flex h-full" ref={menuContainerRef}>
       <div className="relative flex h-full flex-1 flex-col overflow-hidden">
         <EditorHeader
+          mode={mode}
           isSaving={isSaving}
           editor={editor}
           isSidebarOpen={rightSidebar.isOpen}

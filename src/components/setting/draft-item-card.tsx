@@ -13,10 +13,16 @@ import { Draft } from "@/types/draft";
 import { formatDate } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useRouter } from "next/navigation";
+import { useDraft } from "@/hooks/apis/useDraft";
+import { toast } from "sonner";
 
 export default function DraftItemCard({ draft }: { draft: Draft }) {
   const router = useRouter();
-
+  const { mutateAsync: deleteDraft } = useDraft().useDeleteDraftById();
+  const handleDeleteDraft = async (id: string) => {
+    await deleteDraft(id);
+    toast.success("Draft deleted successfully");
+  };
   return (
     <Card>
       <CardHeader className="p-4">
@@ -35,7 +41,7 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
           {firstSentenceJson(draft.content)}
         </p>
       </CardContent>
-      <div className="flex items-center justify-between border-t p-4">
+      <div className="flex items-center justify-end border-t p-4">
         <div className="flex space-x-2">
           <Button
             variant="outline"
@@ -50,6 +56,13 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
             onClick={() => router.replace(`/publish/${draft.id}`)}
           >
             Publish
+          </Button>
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleDeleteDraft(draft.id)}
+          >
+            Delete
           </Button>
         </div>
       </div>

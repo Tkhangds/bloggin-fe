@@ -12,7 +12,7 @@ export default function Page({ params }: { params: { id: string } }) {
           <FullPageLoading text="We are preparing everything for you." />
         }
       >
-        <BlockEditor id={params.id} mode="draft" />
+        <BlockEditor id={params.id} mode="post" />
       </Suspense>
     </>
   );

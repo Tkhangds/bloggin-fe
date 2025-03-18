@@ -17,11 +17,17 @@ const draftAction = {
     );
     return res.data.data;
   },
-  async getAllDraftByUserId(authorId: string) {
-    const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Draft[]>>(
-      `/draft/author/${authorId}`,
+  async getAllDraftByUserId(page?: number, limit?: number) {
+    const res = await bloggingApi.get<PaginationResponseWrapper<Draft[]>>(
+      `/draft/author`,
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
     );
-    return res.data.data ?? [];
+    return res.data.data;
   },
   async createDraft(data: CreateDraftDto) {
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Draft>>(

@@ -1,15 +1,20 @@
 import { bloggingApi } from "@/lib/HttpClient/index";
 import { CreatePostDto } from "@/types/dtos/create-post.dto";
+import { UpdatePostDto } from "@/types/dtos/update-post.dto";
 import { Post } from "@/types/post";
 
 const postAction = {
-  // async getAllPost(page?: number, limit?: number) {
-  async getAllPost() {
-    const res =
-      await bloggingApi.get<BloggingSuccessResponseWrapper<Post[]>>(
-        "/post/all",
-      );
-    return res.data.data ?? [];
+  async getAllPost(page?: number, limit?: number) {
+    const res = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
+      "/post/all",
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
+    );
+    return res.data;
   },
   async getPostById(id: string) {
     const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Post>>(
@@ -19,9 +24,7 @@ const postAction = {
   },
   async getPostByAuthor() {
     const res =
-      await bloggingApi.get<BloggingSuccessResponseWrapper<Post[]>>(
-        `/post/author`,
-      );
+      await bloggingApi.get<PaginationResponseWrapper<Post[]>>(`/post/author`);
     return res.data.data;
   },
   async createPost(data: CreatePostDto) {
@@ -32,7 +35,7 @@ const postAction = {
 
     return res.data.data;
   },
-  async updatePostById(id: string, data: Post) {
+  async updatePostById(id: string, data: UpdatePostDto) {
     const res = await bloggingApi.put<BloggingSuccessResponseWrapper<Post>>(
       `/post/${id}`,
       data,
@@ -40,10 +43,10 @@ const postAction = {
     return res;
   },
   async deletePostById(id: string) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper<Post>>(
+    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
       `/post/${id}`,
     );
-    return res;
+    return res.data.message;
   },
 };
 

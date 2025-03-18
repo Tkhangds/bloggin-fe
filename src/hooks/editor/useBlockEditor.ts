@@ -8,6 +8,7 @@ import { initialContent } from "@/lib/editor/data/initialContent";
 import { useEffect, useState } from "react";
 import debounce from "lodash/debounce";
 import { useDraft } from "../apis/useDraft";
+import { usePost } from "../apis/usePost";
 
 declare global {
   interface Window {
@@ -17,11 +18,19 @@ declare global {
 
 export const useBlockEditor = ({
   id,
+  mode,
   ...editorOptions
-}: { id: string | undefined } & Partial<Omit<EditorOptions, "extensions">>) => {
+}: { id: string | undefined; mode: string } & Partial<
+  Omit<EditorOptions, "extensions">
+>) => {
   const { useGetDraftById, useUpdateDraftById } = useDraft();
+  const { useGetPostById, useUpdatePostById } = usePost();
 
-  const { data: draft } = useGetDraftById(id || "");
+  const getData = mode === "draft" ? useGetDraftById : useGetPostById;
+  const updateData = mode === "draft" ? useUpdateDraftById : useUpdatePostById;
+
+  const { data: contentData } = getData(id || "");
+  const { mutate: updateContent } = updateData();
 
   const saveContent = debounce((editor: Editor) => {
     const jsonContent = editor.getJSON();
@@ -29,12 +38,10 @@ export const useBlockEditor = ({
     if (!id) {
       return;
     }
-    updateDraft({ id, data: { content: json } });
+    updateContent({ id, data: { content: json } });
 
     setIsSaving(false);
   }, 3000);
-
-  const { mutate: updateDraft } = useUpdateDraftById();
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -44,7 +51,7 @@ export const useBlockEditor = ({
       immediatelyRender: false,
       shouldRerenderOnTransaction: false,
       autofocus: true,
-      content: draft ? JSON.parse(draft.content) : initialContent,
+      content: contentData ? JSON.parse(contentData.content) : initialContent,
       onUpdate: ({ editor }) => {
         setIsSaving(true);
         saveContent(editor);
@@ -65,14 +72,14 @@ export const useBlockEditor = ({
   );
 
   useEffect(() => {
-    if (editor && draft && draft.content) {
-      const parsedContent = JSON.parse(draft.content);
+    if (editor && contentData && contentData.content) {
+      const parsedContent = JSON.parse(contentData.content);
 
       if (editor.getJSON() !== parsedContent) {
         editor.commands.setContent(parsedContent);
       }
     }
-  }, [editor, draft]);
+  }, [editor, contentData]);
 
   if (typeof window !== "undefined") {
     window.editor = editor;

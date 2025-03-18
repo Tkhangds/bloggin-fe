@@ -13,18 +13,19 @@ import {
 import { useAuthProvider } from "@/context/AuthContext";
 import { usePost } from "@/hooks/apis/usePost";
 import PostItemCard from "@/components/setting/post-item-card";
+import FullPageLoading from "@/components/loading/loading";
 
 export default function PostsPage() {
   const { user, loading } = useAuthProvider();
 
   const { data, isLoading, error } = usePost().useGetPostByAuthor();
 
-  if (loading) return <p>Loading...</p>;
   if (!user) {
     return <p>Please log in to view your drafts.</p>;
   }
-  if (isLoading) return <p>Loading your drafts...</p>;
   if (error) return <p>Error loading drafts: {error.message}</p>;
+  if (loading || isLoading)
+    return <FullPageLoading text="We are preparing everything for you." />;
 
   return (
     <Card>
