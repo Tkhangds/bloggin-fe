@@ -117,7 +117,7 @@ function BackgroundPaths({ title = "Welcome To Bloggin" }: { title?: string }) {
             <div className="group relative inline-block w-full max-w-[280px] overflow-hidden rounded-2xl bg-gradient-to-b from-white/5 to-white/10 p-px shadow-lg backdrop-blur-lg transition-shadow duration-300 hover:shadow-xl sm:w-auto">
               <Button
                 onClick={() => {
-                  router.push("/test");
+                  router.push("/draft");
                 }}
                 variant="ghost"
                 className="w-full rounded-[1.15rem] border border-white/10 bg-black px-6 py-5 text-base font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-black hover:text-white hover:shadow-lg group-hover:-translate-y-0.5 sm:px-8 sm:py-6 sm:text-lg"

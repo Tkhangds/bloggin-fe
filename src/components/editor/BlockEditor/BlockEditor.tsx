@@ -1,3 +1,5 @@
+"use client";
+
 import { EditorContent } from "@tiptap/react";
 import React, { useRef, useState } from "react";
 
@@ -15,25 +17,27 @@ import { EditorHeader } from "./components/EditorHeader";
 import { TextMenu } from "../menus/TextMenu";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { useSidebar } from "@/hooks/editor/useSidebar";
-import { TiptapCollabProvider } from "@hocuspocus/provider";
 
 export const BlockEditor = ({
-  provider,
+  id,
+  mode,
 }: {
-  provider?: TiptapCollabProvider | null | undefined;
+  id: string | undefined;
+  mode: string;
 }) => {
   const [isEditable, setIsEditable] = useState(true);
   const menuContainerRef = useRef(null);
 
-  const leftSidebar = useSidebar();
-  const { editor, users, collabState } = useBlockEditor({
-    provider,
+  const rightSidebar = useSidebar();
+  const { editor, isSaving } = useBlockEditor({
+    id,
+    mode: mode,
     onTransaction({ editor: currentEditor }) {
       setIsEditable(currentEditor.isEditable);
     },
   });
 
-  if (!editor || !users) {
+  if (!editor) {
     return null;
   }
 
@@ -41,13 +45,16 @@ export const BlockEditor = ({
     <div className="flex h-full" ref={menuContainerRef}>
       <div className="relative flex h-full flex-1 flex-col overflow-hidden">
         <EditorHeader
+          mode={mode}
+          isSaving={isSaving}
           editor={editor}
-          collabState={collabState}
-          users={users}
-          isSidebarOpen={leftSidebar.isOpen}
-          toggleSidebar={leftSidebar.toggle}
+          isSidebarOpen={rightSidebar.isOpen}
+          toggleSidebar={rightSidebar.toggle}
         />
-        <EditorContent editor={editor} className="flex-1 overflow-y-auto" />
+        <EditorContent
+          editor={editor}
+          className="mt-4 flex-1 overflow-y-auto"
+        />
         <ContentItemMenu editor={editor} isEditable={isEditable} />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />
         <TextMenu editor={editor} />
@@ -57,8 +64,8 @@ export const BlockEditor = ({
         <ImageBlockMenu editor={editor} appendTo={menuContainerRef} />
       </div>
       <Sidebar
-        isOpen={leftSidebar.isOpen}
-        onClose={leftSidebar.close}
+        isOpen={rightSidebar.isOpen}
+        onClose={rightSidebar.close}
         editor={editor}
       />
     </div>

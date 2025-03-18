@@ -3,11 +3,11 @@ import "dotenv/config";
 
 const createEnv = () => {
   const EnvSchema = z.object({
-    API_BASE_URL: z.string(),
+    NEXT_PUBLIC_API_BASE_URL: z.string(),
   });
 
   const envVars = {
-    API_BASE_URL: process.env.API_BASE_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   };
 
   const parsedEnv = EnvSchema.safeParse(envVars);

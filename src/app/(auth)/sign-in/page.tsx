@@ -6,8 +6,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import SplitText from "@/components/ui/split-text";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginDto, LoginSchema } from "@/types/dtos/login.dto";
+import { useAuth } from "@/hooks/apis/useAuth";
 
 export default function LoginPage(): JSX.Element {
   return (
@@ -24,10 +28,21 @@ interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const form = useForm({
+    mode: "onSubmit",
+    resolver: zodResolver(LoginSchema),
+  });
+
+  const {
+    control,
+    handleSubmit,
+    formState: {},
+  } = form;
+
+  const { mutateAsync: login } = useAuth().useLogin();
+
+  const [loading] = useState<boolean>(false);
+  const [error] = useState<string>("");
   const router = useRouter();
 
   // Check if user is already logged in
@@ -38,41 +53,15 @@ function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
     }
   }, [router]);
 
-  const handleLogin = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-
-    // Simple validation
-    if (!email || !password) {
-      setError("Please enter both email and password");
-      setLoading(false);
-      return;
-    }
-
-    // Simulate API call delay
-    setTimeout(() => {
-      // For prototype, just check if email contains @ and password length
-      if (email.includes("@") && password.length >= 6) {
-        // Store user info in localStorage
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("userEmail", email);
-        localStorage.setItem("loginTime", new Date().toISOString());
-
-        // Redirect or show success
-        router.push("/");
-      } else {
-        setError("Invalid email or password (prototype validation)");
-      }
-      setLoading(false);
-    }, 1500);
+  const onSubmitHandle = async (data: LoginDto) => {
+    await login({ data });
   };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleLogin}>
+          <form className="p-6 md:p-8" onSubmit={handleSubmit(onSubmitHandle)}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -86,14 +75,19 @@ function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
                 </div>
               )}
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                <Label htmlFor="email">Email/Username</Label>
+                <Controller
+                  name="identifier"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="email or username"
+                      placeholder="m@example.com"
+                      required
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
               </div>
               <div className="grid gap-2">
@@ -106,12 +100,18 @@ function LoginForm({ className, ...props }: LoginFormProps): JSX.Element {
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="password"
+                      type="password"
+                      required
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  )}
                 />
               </div>
               <Button type="submit" disabled={loading} className="w-full">

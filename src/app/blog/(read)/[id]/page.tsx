@@ -1,10 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import {
   Heart,
   MessageCircle,
-  Bookmark,
   Play,
   Share2,
   ThumbsUp,
@@ -14,8 +12,16 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Textarea } from "@/components/editor/ui/Textarea";
+import { usePost } from "@/hooks/apis/usePost";
+import { useParams } from "next/navigation";
+import { formatDate } from "@/utils/date-convert";
+import { generateHTML } from "@tiptap/html";
+import ExtensionKit from "@/extensions/extension-kit";
+import { AnyExtension } from "@tiptap/react";
+import { initialContent } from "@/lib/editor/data/initialContent";
+import FullPageLoading from "@/components/loading/loading";
 
 interface CommentType {
   id: number;
@@ -31,13 +37,45 @@ interface CommentProps {
 }
 
 export default function BlogReadingPage() {
+  const { useGetPostById } = usePost();
+  const params = useParams<{ id: string }>();
+
+  const { data, isPending } = useGetPostById(params.id);
+
+  const html = generateHTML(
+    initialContent,
+    [...ExtensionKit({})].filter((e): e is AnyExtension => e !== undefined),
+  );
+
+  const [content, setContent] = useState<string>(html);
+
+  useEffect(() => {
+    if (data) {
+      setContent(
+        generateHTML(
+          JSON.parse(data.content),
+          [...ExtensionKit({})].filter(
+            (e): e is AnyExtension => e !== undefined,
+          ),
+        ),
+      );
+    }
+  }, [data]);
+
+  if (isPending) {
+    return <FullPageLoading text="We are preparing everything for you." />;
+  }
+
+  if (!data || isPending) {
+    return <FullPageLoading text="We are preparing everything for you." />;
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
       {/* Article Title */}
       <h1 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
-        Things only senior React engineers know
+        {data?.title || "Article Title"}
       </h1>
-
       {/* Author Info */}
       <div className="mb-8 flex items-center gap-3">
         <Avatar className="h-10 w-10">
@@ -46,7 +84,7 @@ export default function BlogReadingPage() {
         </Avatar>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
           <div className="flex items-center gap-1">
-            <span className="font-medium">John Doe</span>
+            <span className="font-medium">{data.author.displayName}</span>
             <Button
               variant="ghost"
               size="sm"
@@ -58,11 +96,12 @@ export default function BlogReadingPage() {
           <div className="flex items-center text-sm text-gray-500">
             <span>3 min read</span>
             <span className="mx-1">·</span>
-            <span>Nov 15, 2024</span>
+            <span>
+              {data?.createdAt ? formatDate(data.createdAt) : "Nov 15, 2024"}
+            </span>
           </div>
         </div>
       </div>
-
       {/* Engagement Metrics */}
       <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-6">
         <div className="flex items-center gap-4">
@@ -81,9 +120,6 @@ export default function BlogReadingPage() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Bookmark className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
             <Play className="h-5 w-5" />
           </Button>
           <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -91,9 +127,12 @@ export default function BlogReadingPage() {
           </Button>
         </div>
       </div>
-
-      {/* Featured Image */}
-      <div className="mb-8">
+      <div
+        className="prose prose-lg max-w-none"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+      {/*Featured Image*/}
+      {/* <div className="mb-8">
         <Image
           src="https://placehold.co/800x450/png"
           alt="Code snippet showing React code"
@@ -101,10 +140,9 @@ export default function BlogReadingPage() {
           height={450}
           className="w-full rounded-lg object-cover"
         />
-      </div>
-
+      </div> */}
       {/* Article Content */}
-      <div className="prose prose-lg max-w-none">
+      {/* <div className="prose prose-lg max-w-none">
         <p className="mb-8 text-xl leading-relaxed">
           React can be tricky for beginners. However, understanding a few
           underlying principles or tricks can make becoming a senior React
@@ -165,8 +203,7 @@ export default function BlogReadingPage() {
           the ability to batch updates. The virtual DOM is just an
           implementation detail.
         </p>
-      </div>
-
+      </div> */}
       {/* Comment Section */}
       <div className="mt-12">
         <Separator className="my-8" />

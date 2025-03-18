@@ -48,7 +48,6 @@ import {
   TaskList,
   UniqueID,
 } from ".";
-
 import { ImageUpload } from "./ImageUpload";
 import { TableOfContentsNode } from "./TableOfContentsNode";
 import { isChangeOrigin } from "@tiptap/extension-collaboration";

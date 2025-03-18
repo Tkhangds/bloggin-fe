@@ -5,6 +5,7 @@ import "../styles/globals.css";
 
 import TanStackProvider from "@/lib/TanStack/provider";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/context/AuthContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
-        <TanStackProvider>{children}</TanStackProvider>
+        <TanStackProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TanStackProvider>
         <Toaster />
       </body>
     </html>
