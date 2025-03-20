@@ -1,9 +1,10 @@
+import cloudinaryAction from "@/apis/cloudinary.action";
+
 export class API {
   public static uploadImage = async (_file: File) => {
-    console.log('Image upload is disabled in the demo... Please implement the API.uploadImage method in your project.')
-    await new Promise(r => setTimeout(r, 500))
-    return '/placeholder-image.jpg'
-  }
+    const res = await cloudinaryAction.uploadImage(_file);
+    return res.secure_url;
+  };
 }
 
-export default API
+export default API;

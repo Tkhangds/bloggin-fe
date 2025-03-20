@@ -81,7 +81,7 @@ export async function middleware(request: NextRequest) {
       const postId = postIdMatch ? postIdMatch[1] : null;
 
       const postResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/${postId}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname.startsWith("/draft") ? "draft" : "post"}/${postId}`,
         {
           headers: {
             Cookie: `bloggin-session=${sessionCookie!.value}`,

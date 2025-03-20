@@ -36,7 +36,7 @@ const postAction = {
     return res.data.data;
   },
   async updatePostById(id: string, data: UpdatePostDto) {
-    const res = await bloggingApi.put<BloggingSuccessResponseWrapper<Post>>(
+    const res = await bloggingApi.patch<BloggingSuccessResponseWrapper<Post>>(
       `/post/${id}`,
       data,
     );
