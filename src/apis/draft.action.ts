@@ -4,13 +4,6 @@ import { CreateDraftDto } from "@/types/dtos/create-draft.dto";
 import { UpdateDraftDto } from "@/types/dtos/update-draft.dto";
 
 const draftAction = {
-  // async getAllDraftByUserId(authorId: string, page?: number, limit?: number) {
-  //   const res =
-  //     await bloggingApi.get<BloggingSuccessResponseWrapper<Draft[]>>(
-  //       "/draft/all",
-  //     );
-  //   return res.data.data ?? [];
-  // },
   async getDraftById(id: string) {
     const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Draft>>(
       `/draft/${id}`,
@@ -34,7 +27,6 @@ const draftAction = {
       "/draft",
       data,
     );
-    console.log(res.data);
     return res.data;
   },
   async updateDraftById(id: string, data: UpdateDraftDto) {

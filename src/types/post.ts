@@ -7,6 +7,7 @@ export const postSchema = z.object({
   content: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  commentCount: z.number(),
   tags: z.array(
     z.object({
       id: z.string(),

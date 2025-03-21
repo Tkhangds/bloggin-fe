@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { Post } from "@/types/post";
 import { formatDate } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
+import { useEffect } from "react";
 
 export default function BlogCard({
   index,
@@ -17,6 +18,10 @@ export default function BlogCard({
   post: Post;
 }) {
   const router = useRouter();
+
+  useEffect(() => {
+    console.log("BlogCard rendered", post);
+  }, []);
 
   return (
     <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
@@ -64,7 +69,7 @@ export default function BlogCard({
                 </div>
                 <div className="flex items-center gap-1 text-gray-500">
                   <MessageCircle className="h-4 w-4" />
-                  <span className="text-xs">{"2"}</span>
+                  <span className="text-xs">{post.commentCount ?? "2"}</span>
                 </div>
                 {/* <span className="text-xs text-gray-500">
                   {post.readTime} min read
