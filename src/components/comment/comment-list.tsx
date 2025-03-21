@@ -2,14 +2,12 @@
 
 import { useComment } from "@/hooks/apis/useComment";
 import CommentItem from "./comment-item";
-import { Comment } from "@/types/comment";
 export default function CommentsList({
   postId,
 }: {
   postId: string;
 }): JSX.Element {
-  const { data: comments, isPending } =
-    useComment(postId).useGetAllCommentsByPostId();
+  const { data: comments } = useComment(postId).useGetAllCommentsByPostId();
 
   // // Sample comments data
   // const comments: Comment[] = [

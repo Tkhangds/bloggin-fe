@@ -16,7 +16,7 @@ export function timeAgo(isoDate: string) {
     second: 1,
   };
 
-  for (let unit in intervals) {
+  for (const unit in intervals) {
     const count = Math.floor(
       seconds / intervals[unit as keyof typeof intervals],
     );

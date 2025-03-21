@@ -1,16 +1,15 @@
 "use client";
 
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import { useState } from "react";
-import { Textarea } from "../editor/ui/Textarea";
-import { Button } from "../ui/button";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useComment } from "@/hooks/apis/useComment";
 import {
   CreateCommentDto,
   CreateCommentSchema,
 } from "@/types/dtos/create-comment.dto";
-import { useComment } from "@/hooks/apis/useComment";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Controller, useForm } from "react-hook-form";
+import { Textarea } from "../editor/ui/Textarea";
+import { Button } from "../ui/button";
 
 export default function CommentForm({
   postId,
