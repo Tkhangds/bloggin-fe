@@ -57,8 +57,11 @@ export default function BlogReadingPage() {
       {/* Author Info */}
       <div className="mb-8 flex items-center gap-3">
         <Avatar className="h-10 w-10">
-          <AvatarImage src="/placeholder.svg?height=40&width=40" alt="Author" />
-          <AvatarFallback>JD</AvatarFallback>
+          <AvatarImage
+            src={`https://api.dicebear.com/9.x/initials/svg?seed=${data.author.displayName}`}
+            alt="Author"
+          />
+          <AvatarFallback>N/A</AvatarFallback>
         </Avatar>
         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
           <div className="flex items-center gap-1">

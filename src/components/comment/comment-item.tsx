@@ -8,7 +8,7 @@ interface CommentProps {
 
 export default function CommentItem({ comment }: CommentProps): JSX.Element {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-b-[1px] border-neutral-500/10">
       <div className="space-y-3">
         {/* Comment Header */}
         <div className="flex items-center gap-3">
@@ -34,7 +34,7 @@ export default function CommentItem({ comment }: CommentProps): JSX.Element {
         <p className="pl-13 text-gray-800">{comment.content}</p>
 
         {/* Comment Actions */}
-        <div className="pl-13 flex items-center gap-4"></div>
+        <div className="pl-13 flex h-3 items-center"></div>
       </div>
     </div>
   );

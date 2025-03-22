@@ -5,6 +5,7 @@ import {
   useMutation,
   useQueryClient,
   keepPreviousData,
+  useInfiniteQuery,
 } from "@tanstack/react-query";
 import postAction from "@/apis/post.action";
 import { CreatePostDto } from "@/types/dtos/create-post.dto";
@@ -13,13 +14,14 @@ import { UpdatePostDto } from "@/types/dtos/update-post.dto";
 export const usePost = () => {
   const queryClient = useQueryClient();
 
-  const useGetAllPosts = (page?: number, limit?: number) => {
-    return useQuery({
-      queryKey: ["post", "all", page, limit],
-      queryFn: () => {
-        return postAction.getAllPost(page, limit);
+  const useGetAllPosts = (limit?: number) => {
+    return useInfiniteQuery({
+      queryKey: ["posts"],
+      queryFn: ({ pageParam = 1 }) => postAction.getAllPost(pageParam, limit),
+      initialPageParam: 1, // Specify the initial page parameter
+      getNextPageParam: (lastPage, allPages) => {
+        return lastPage.meta.nextPage ?? undefined; // Determine the next page
       },
-      placeholderData: keepPreviousData,
     });
   };
 

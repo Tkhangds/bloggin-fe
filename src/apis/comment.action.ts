@@ -14,10 +14,8 @@ const commentAction = {
         },
       },
     );
-
-    console.log(res.data.data);
-
-    return res.data.data;
+    console.log(res.data);
+    return res.data;
   },
   async createComment(data: CreateCommentDto) {
     const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Comment>>(

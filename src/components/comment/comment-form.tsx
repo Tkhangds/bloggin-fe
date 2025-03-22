@@ -6,7 +6,6 @@ import {
   CreateCommentSchema,
 } from "@/types/dtos/create-comment.dto";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Controller, useForm } from "react-hook-form";
 import { Textarea } from "../editor/ui/Textarea";
 import { Button } from "../ui/button";
@@ -41,17 +40,6 @@ export default function CommentForm({
 
   return (
     <div className="mb-8">
-      <div className="mb-4 flex items-center gap-3">
-        <Avatar className="h-10 w-10 rounded-full">
-          <AvatarImage
-            className="rounded-full"
-            src={`https://api.dicebear.com/9.x/initials/svg?seed=LaKhangDo`}
-            alt="Your avatar"
-          />
-          <AvatarFallback>YA</AvatarFallback>
-        </Avatar>
-        <span className="font-medium">Add a comment</span>
-      </div>
       <form onSubmit={handleSubmit(onSubmitHandle)}>
         <Controller
           name="content"

@@ -1,6 +1,11 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import commentAction from "@/apis/comment.action";
 import { UpdateCommentDto } from "@/types/dtos/update-comment.dto";
 import { CreateCommentDto } from "@/types/dtos/create-comment.dto";
@@ -8,12 +13,13 @@ import { CreateCommentDto } from "@/types/dtos/create-comment.dto";
 export const useComment = (postId: string) => {
   const queryClient = useQueryClient();
 
-  const useGetAllCommentsByPostId = () => {
+  const useGetAllCommentsByPostId = (page?: number, limit?: number) => {
     return useQuery({
-      queryKey: ["comment", postId],
+      queryKey: ["comment", postId, page, limit],
       queryFn: () => {
-        return commentAction.getAllCommentByPostId(postId);
+        return commentAction.getAllCommentByPostId(postId, page, limit);
       },
+      placeholderData: keepPreviousData,
     });
   };
 

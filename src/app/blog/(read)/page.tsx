@@ -10,11 +10,17 @@ import { Badge } from "@/components/ui/badge";
 import BlogCard from "@/components/blog/blog-card";
 import { usePost } from "@/hooks/apis/usePost";
 import FullPageLoading from "@/components/loading/loading";
+import BlogEndNotification from "@/components/blog/blog-end-notification";
 
 export default function BlogBrowsing() {
-  const { data: posts, isLoading } = usePost().useGetAllPosts();
+  const {
+    data: posts,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+    status,
+  } = usePost().useGetAllPosts();
 
-  const [loading, setLoading] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
   //Infinite scroll implementation
@@ -22,8 +28,8 @@ export default function BlogBrowsing() {
     const observer = new IntersectionObserver(
       (entries) => {
         const first = entries[0];
-        if (first.isIntersecting && !loading) {
-          loadMorePosts();
+        if (first.isIntersecting && hasNextPage) {
+          fetchNextPage();
         }
       },
       { threshold: 1.0 },
@@ -38,18 +44,11 @@ export default function BlogBrowsing() {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [loading]);
+  }, [fetchNextPage, hasNextPage]);
 
-  const loadMorePosts = () => {
-    setLoading(true);
-    // // Simulate loading more posts
-    setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-  };
-
-  if (isLoading)
+  if (!posts) {
     return <FullPageLoading text="We are preparing everything for you." />;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-white px-4 text-gray-900 sm:px-6 lg:px-20">
@@ -58,16 +57,17 @@ export default function BlogBrowsing() {
         {/* Blog Posts */}
         <div className="flex-1">
           <h1 className="mb-6 text-2xl font-bold">For You</h1>
-
           <div className="grid grid-cols-1 gap-8">
             {posts &&
-              posts.data.map((post, index) => (
-                <BlogCard key={post.id} post={post} index={index}></BlogCard>
-              ))}
+              posts.pages.map((page, index) =>
+                page.data.map((post, index) => (
+                  <BlogCard key={post.id} post={post} index={index}></BlogCard>
+                )),
+              )}
 
             {/* Loader for infinite scroll */}
-            <div ref={loaderRef} className="flex justify-center py-4">
-              {loading && (
+            <div ref={loaderRef} className="flex justify-center">
+              {isFetchingNextPage && (
                 <div className="flex items-center justify-center space-x-2">
                   <div
                     className="h-2 w-2 animate-bounce rounded-full bg-gray-400"
@@ -85,6 +85,7 @@ export default function BlogBrowsing() {
               )}
             </div>
           </div>
+          {!hasNextPage && <BlogEndNotification></BlogEndNotification>}
         </div>
 
         {/* Sidebar */}
