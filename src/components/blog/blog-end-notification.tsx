@@ -1,4 +1,3 @@
-import { Heart } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 
 export default function BlogEndNotification(): JSX.Element {

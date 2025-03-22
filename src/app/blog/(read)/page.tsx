@@ -1,16 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { useEffect, useRef } from "react";
 
-import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import BlogCard from "@/components/blog/blog-card";
-import { usePost } from "@/hooks/apis/usePost";
-import FullPageLoading from "@/components/loading/loading";
 import BlogEndNotification from "@/components/blog/blog-end-notification";
+import FullPageLoading from "@/components/loading/loading";
+import { usePost } from "@/hooks/apis/usePost";
 
 export default function BlogBrowsing() {
   const {
@@ -18,7 +18,6 @@ export default function BlogBrowsing() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-    status,
   } = usePost().useGetAllPosts();
 
   const loaderRef = useRef<HTMLDivElement>(null);
@@ -59,7 +58,7 @@ export default function BlogBrowsing() {
           <h1 className="mb-6 text-2xl font-bold">For You</h1>
           <div className="grid grid-cols-1 gap-8">
             {posts &&
-              posts.pages.map((page, index) =>
+              posts.pages.map((page) =>
                 page.data.map((post, index) => (
                   <BlogCard key={post.id} post={post} index={index}></BlogCard>
                 )),

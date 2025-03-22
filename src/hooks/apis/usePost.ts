@@ -4,7 +4,6 @@ import {
   useQuery,
   useMutation,
   useQueryClient,
-  keepPreviousData,
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import postAction from "@/apis/post.action";
@@ -18,9 +17,9 @@ export const usePost = () => {
     return useInfiniteQuery({
       queryKey: ["posts"],
       queryFn: ({ pageParam = 1 }) => postAction.getAllPost(pageParam, limit),
-      initialPageParam: 1, // Specify the initial page parameter
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage.meta.nextPage ?? undefined; // Determine the next page
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) => {
+        return lastPage.meta.nextPage ?? undefined;
       },
     });
   };
