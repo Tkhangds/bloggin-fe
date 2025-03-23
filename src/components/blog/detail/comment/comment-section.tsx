@@ -13,11 +13,7 @@ export default function CommentSection({
     <div className="mt-12">
       <Separator className="my-8" />
       <h3 className="mb-6 text-2xl font-bold">Comments ({commentCount})</h3>
-
-      {/* Comment Form */}
       <CommentForm postId={postId} />
-
-      {/* Comments List */}
       <CommentsList postId={postId} />
     </div>
   );

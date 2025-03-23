@@ -56,7 +56,7 @@ export const useAuth = () => {
   const useGetMe = () => {
     return useMutation({
       mutationFn: async () => {
-        return await authAction.me();
+        return await authAction.getMe();
       },
     });
   };

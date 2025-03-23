@@ -7,7 +7,7 @@ import { RemoveFavoriteDto } from "@/types/dtos/remove-favorite.dto";
 
 const favoriteAction = {
   async getFavorite(page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Favorite[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Favorite[]>>(
       `/favorite`,
       {
         params: {
@@ -16,22 +16,23 @@ const favoriteAction = {
         },
       },
     );
-    return res.data.data;
+    return result.data.data;
   },
   async createFavorite(data: CreateFavoriteDto) {
-    const res = await bloggingApi.post<
-      BloggingSuccessResponseWrapper<Favorite>
-    >("/favorite", data);
-    return res.data;
+    const result = await bloggingApi.post<SuccessResponseWrapper<Favorite>>(
+      "/favorite",
+      data,
+    );
+    return result.data;
   },
   async deleteFavorite(data: RemoveFavoriteDto) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
+    const result = await bloggingApi.delete<SuccessResponseWrapper>(
       `/favorite`,
       {
         data,
       },
     );
-    return res.data.message;
+    return result.data.message;
   },
 };
 

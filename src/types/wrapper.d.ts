@@ -1,9 +1,9 @@
-type BloggingSuccessResponseWrapper<T = null> = {
+type SuccessResponseWrapper<T = null> = {
   message: string;
   data: T;
 };
 
-type PaginationResponseWrapper<T = null> = BloggingSuccessResponseWrapper<T> & {
+type PaginationResponseWrapper<T = null> = SuccessResponseWrapper<T> & {
   meta: {
     total: number;
     page: number;
@@ -14,7 +14,7 @@ type PaginationResponseWrapper<T = null> = BloggingSuccessResponseWrapper<T> & {
   };
 };
 
-type BloggingErrorResponseWrapper = {
+type ErrorResponseWrapper = {
   message: string;
   statusCode: string;
   errors: string;

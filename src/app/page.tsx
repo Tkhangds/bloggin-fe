@@ -141,7 +141,7 @@ export default function Page() {
   return (
     <LandingLayout>
       <BackgroundPaths></BackgroundPaths>
-      <div className="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-center gap-24 px-4 py-6 sm:px-6 md:px-8">
+      <div className="mx-auto mt-10 flex max-w-7xl flex-col items-center justify-center gap-24 px-4 py-6 dark:bg-neutral-950 sm:px-6 md:px-8">
         <ImageGallery></ImageGallery>
         <TemplateGallery></TemplateGallery>
         <div>More content incoming</div>

@@ -100,7 +100,7 @@ export default function TemplateGallery() {
                   <Image
                     src={template.image || "/placeholder.svg"}
                     alt={`${template.title} template preview`}
-                    layout="fill"
+                    fill
                     className="object-scale-down"
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />

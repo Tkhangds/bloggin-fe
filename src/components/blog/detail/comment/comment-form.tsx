@@ -7,8 +7,8 @@ import {
 } from "@/types/dtos/create-comment.dto";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { Textarea } from "../editor/ui/Textarea";
-import { Button } from "../ui/button";
+import { Textarea } from "../../../editor/ui/Textarea";
+import { Button } from "../../../ui/button";
 
 export default function CommentForm({
   postId,

@@ -5,7 +5,7 @@ import { UpdateCommentDto } from "@/types/dtos/update-comment.dto";
 
 const commentAction = {
   async getAllCommentByPostId(postId: string, page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Comment[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Comment[]>>(
       `/comment/post/${postId}`,
       {
         params: {
@@ -14,27 +14,27 @@ const commentAction = {
         },
       },
     );
-    console.log(res.data);
-    return res.data;
+    return result.data;
   },
   async createComment(data: CreateCommentDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Comment>>(
+    const result = await bloggingApi.post<SuccessResponseWrapper<Comment>>(
       "/comment",
       data,
     );
-    return res.data;
+    return result.data;
   },
   async updateCommentById(id: string, data: UpdateCommentDto) {
-    const res = await bloggingApi.patch<
-      BloggingSuccessResponseWrapper<Comment>
-    >(`/comment/${id}`, data);
-    return res.data.data;
+    const result = await bloggingApi.patch<SuccessResponseWrapper<Comment>>(
+      `/comment/${id}`,
+      data,
+    );
+    return result.data.data;
   },
   async deleteCommentById(id: string) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
+    const result = await bloggingApi.delete<SuccessResponseWrapper>(
       `/comment/${id}`,
     );
-    return res.data.message;
+    return result.data.message;
   },
 };
 

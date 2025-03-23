@@ -7,7 +7,7 @@
 
 @layer base {
   body {
-    @apply bg-white text-neutral-900 dark:bg-black dark:text-white;
+    @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-white;
     @apply antialiased;
 
     font-size: 16px;
@@ -116,7 +116,7 @@
 
 html,
 body {
-  @apply bg-white text-neutral-900 dark:bg-black dark:text-white;
+  @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-white;
 }
 
 input::placeholder,

@@ -7,7 +7,7 @@ import { RemoveFollowDto } from "@/types/dtos/remove-follow.dto";
 
 const followAction = {
   async getFollower(page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
       `/follow/follower`,
       {
         params: {
@@ -16,10 +16,10 @@ const followAction = {
         },
       },
     );
-    return res.data.data;
+    return result.data.data;
   },
   async getFollowing(page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
       `/follow/following`,
       {
         params: {
@@ -28,23 +28,20 @@ const followAction = {
         },
       },
     );
-    return res.data.data;
+    return result.data.data;
   },
   async createFollow(data: CreateFollowDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Follow>>(
+    const result = await bloggingApi.post<SuccessResponseWrapper<Follow>>(
       "/follow",
       data,
     );
-    return res.data;
+    return result.data;
   },
   async deleteFollow(data: RemoveFollowDto) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
-      `/follow`,
-      {
-        data,
-      },
-    );
-    return res.data.message;
+    const result = await bloggingApi.delete<SuccessResponseWrapper>(`/follow`, {
+      data,
+    });
+    return result.data.message;
   },
 };
 

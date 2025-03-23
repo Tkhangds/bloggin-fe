@@ -5,28 +5,28 @@ import { User } from "@/types/user";
 
 const authAction = {
   async login(data: LoginDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper>(
+    const result = await bloggingApi.post<SuccessResponseWrapper>(
       "/auth/login",
       data,
     );
-    return res.data;
+    return result.data;
   },
   async register(data: RegisterDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper>(
+    const result = await bloggingApi.post<SuccessResponseWrapper>(
       "/auth/register",
       data,
     );
-    return res.data;
+    return result.data;
   },
   async logout() {
-    const res =
-      await bloggingApi.delete<BloggingSuccessResponseWrapper>("/auth/logout");
-    return res.data;
+    const result =
+      await bloggingApi.delete<SuccessResponseWrapper>("/auth/logout");
+    return result.data;
   },
-  async me() {
-    const res =
-      await bloggingApi.get<BloggingSuccessResponseWrapper<User>>("/auth/me");
-    return res.data.data;
+  async getMe() {
+    const result =
+      await bloggingApi.get<SuccessResponseWrapper<User>>("/auth/me");
+    return result.data.data;
   },
 };
 

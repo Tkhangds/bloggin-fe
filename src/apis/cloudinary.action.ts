@@ -5,8 +5,7 @@ const cloudinaryAction = {
   async uploadImage(file: File) {
     const formData = new FormData();
     formData.append("file", file);
-
-    const res = await bloggingApi.post<UploadResponse>(
+    const result = await bloggingApi.post<UploadResponse>(
       "/cloudinary/upload",
       formData,
       {
@@ -15,12 +14,10 @@ const cloudinaryAction = {
         },
       },
     );
-
-    return res.data;
+    return result.data;
   },
   async deleteImage(publicId?: string) {
     if (!publicId) return;
-
     return "Deleted";
   },
 };

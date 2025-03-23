@@ -6,9 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { Post } from "@/types/post";
-import { formatDate } from "@/utils/date-convert";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { useEffect } from "react";
 
 export default function BlogCard({
   index,
@@ -18,11 +17,6 @@ export default function BlogCard({
   post: Post;
 }) {
   const router = useRouter();
-
-  useEffect(() => {
-    console.log("BlogCard rendered", post);
-  }, []);
-
   return (
     <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
       <div onClick={() => router.push("/blog/" + post.id)}>
@@ -34,7 +28,7 @@ export default function BlogCard({
           <span className="text-sm font-medium">{post.author.displayName}</span>
           <span className="text-sm text-gray-500">·</span>
           <span className="text-sm text-gray-500">
-            {formatDate(post.createdAt)}
+            {formatDateFromISOString(post.createdAt)}
           </span>
         </div>
 
