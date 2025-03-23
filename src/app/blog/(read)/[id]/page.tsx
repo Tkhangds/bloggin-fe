@@ -40,10 +40,6 @@ export default function BlogReadingPage() {
     }
   }, [data]);
 
-  if (isPending) {
-    return <FullPageLoading text="We are preparing everything for you." />;
-  }
-
   if (!data || isPending) {
     return <FullPageLoading text="We are preparing everything for you." />;
   }
@@ -108,6 +104,7 @@ export default function BlogReadingPage() {
           </Button>
         </div>
       </div>
+
       <div
         className="prose prose-lg max-w-none"
         dangerouslySetInnerHTML={{ __html: content }}

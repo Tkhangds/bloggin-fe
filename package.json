@@ -74,6 +74,7 @@
     "cmdk": "^1.0.4",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.4.7",
+    "gsap": "^3.12.7",
     "i": "^0.3.7",
     "iframe-resizer": "^5.3.3",
     "lodash": "^4.17.21",

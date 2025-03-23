@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import debounce from "lodash/debounce";
 import { useDraft } from "../apis/useDraft";
 import { usePost } from "../apis/usePost";
+import { useAuthProvider } from "@/context/AuthContext";
 
 declare global {
   interface Window {
@@ -23,6 +24,8 @@ export const useBlockEditor = ({
 }: { id: string | undefined; mode: string } & Partial<
   Omit<EditorOptions, "extensions">
 >) => {
+  const { user } = useAuthProvider();
+
   const { useGetDraftById, useUpdateDraftById } = useDraft();
   const { useGetPostById, useUpdatePostById } = usePost();
 
@@ -31,17 +34,6 @@ export const useBlockEditor = ({
 
   const { data: contentData } = getData(id || "");
   const { mutate: updateContent } = updateData();
-
-  const saveContent = debounce((editor: Editor) => {
-    const jsonContent = editor.getJSON();
-    const json = JSON.stringify(jsonContent);
-    if (!id) {
-      return;
-    }
-    updateContent({ id, data: { content: json } });
-
-    setIsSaving(false);
-  }, 3000);
 
   const [isSaving, setIsSaving] = useState(false);
 
@@ -84,6 +76,17 @@ export const useBlockEditor = ({
   if (typeof window !== "undefined") {
     window.editor = editor;
   }
+
+  const saveContent = debounce((editor: Editor) => {
+    const jsonContent = editor.getJSON();
+    const json = JSON.stringify(jsonContent);
+    if (!id) {
+      return;
+    }
+    updateContent({ id, data: { content: json, authorId: user?.id } });
+
+    setIsSaving(false);
+  }, 3000);
 
   return { editor, isSaving };
 };
