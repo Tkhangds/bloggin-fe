@@ -10,7 +10,7 @@ import {
   CardContent,
 } from "../ui/card";
 import { Draft } from "@/types/draft";
-import { formatDate } from "@/utils/date-convert";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useRouter } from "next/navigation";
 import { useDraft } from "@/hooks/apis/useDraft";
@@ -33,7 +33,7 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
           </Button>
         </div>
         <CardDescription>
-          Last edited on {formatDate(draft.updatedAt)}
+          Last edited on {formatDateFromISOString(draft.updatedAt)}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0">

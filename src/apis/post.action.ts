@@ -5,7 +5,7 @@ import { Post } from "@/types/post";
 
 const postAction = {
   async getAllPost(page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
       "/post/all",
       {
         params: {
@@ -14,39 +14,39 @@ const postAction = {
         },
       },
     );
-    return res.data;
+    return result.data;
   },
-  async getPostById(id: string) {
-    const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Post>>(
-      `/post/${id}`,
+  async getPostById(postId: string) {
+    const result = await bloggingApi.get<SuccessResponseWrapper<Post>>(
+      `/post/${postId}`,
     );
-    return res.data.data;
+    return result.data.data;
   },
   async getPostByAuthor() {
-    const res =
+    const result =
       await bloggingApi.get<PaginationResponseWrapper<Post[]>>(`/post/author`);
-    return res.data.data;
+    return result.data.data;
   },
   async createPost(data: CreatePostDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Post>>(
+    const result = await bloggingApi.post<SuccessResponseWrapper<Post>>(
       "/post",
       data,
     );
 
-    return res.data.data;
+    return result.data.data;
   },
-  async updatePostById(id: string, data: UpdatePostDto) {
-    const res = await bloggingApi.put<BloggingSuccessResponseWrapper<Post>>(
-      `/post/${id}`,
+  async updatePostById(postId: string, data: UpdatePostDto) {
+    const result = await bloggingApi.patch<SuccessResponseWrapper<Post>>(
+      `/post/${postId}`,
       data,
     );
-    return res;
+    return result;
   },
-  async deletePostById(id: string) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
-      `/post/${id}`,
+  async deletePostById(postId: string) {
+    const result = await bloggingApi.delete<SuccessResponseWrapper>(
+      `/post/${postId}`,
     );
-    return res.data.message;
+    return result.data.message;
   },
 };
 

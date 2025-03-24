@@ -5,19 +5,26 @@ import { MoveRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <div className="flex flex-col border-t-[1px] border-black/20">
+    <div className="flex flex-col border-t-[1px] border-black/20 dark:border-neutral-700/20">
       <div className="flex flex-col px-4 py-6 lg:flex-row lg:items-start lg:gap-10 lg:px-20 lg:py-10 xl:px-48">
         <Image
           width={100}
           height={150}
           src={`/image/Blogging.svg`}
           alt="logo"
-          className="mx-auto mb-6 scale-[3] lg:mx-0 lg:mb-0"
+          className="mx-auto mb-6 scale-[3] dark:hidden lg:mx-0 lg:mb-0"
+        />
+        <Image
+          width={100}
+          height={150}
+          src={`/image/Blogging-white.svg`}
+          alt="logo"
+          className="mx-auto mb-6 hidden scale-[3] dark:flex lg:mx-0 lg:mb-0"
         />
 
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
           <div className="flex flex-1 flex-col">
-            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2">
+            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
               About Blogging
             </span>
             <div className="py-3">
@@ -33,7 +40,7 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-1 flex-col">
-            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2">
+            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
               Contact Us
             </span>
             <div className="flex flex-1 flex-col items-start justify-start gap-3 py-3">
@@ -51,7 +58,7 @@ export default function Footer() {
           </div>
 
           <div className="flex flex-1 flex-col">
-            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2">
+            <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
               Blogging Story
             </span>
             <div className="flex flex-1 flex-col items-start justify-start gap-3 py-3">

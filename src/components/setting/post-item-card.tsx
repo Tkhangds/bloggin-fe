@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Post } from "@/types/post";
-import { formatDate } from "@/utils/date-convert";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useRouter } from "next/navigation";
 import { usePost } from "@/hooks/apis/usePost";
@@ -40,7 +40,7 @@ export default function PostItemCard({ post }: { post: Post }) {
           </Button>
         </div>
         <CardDescription>
-          Published on {formatDate(post.createdAt)}
+          Published on {formatDateFromISOString(post.createdAt)}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-4 pt-0">

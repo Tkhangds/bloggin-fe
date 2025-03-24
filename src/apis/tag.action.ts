@@ -3,11 +3,11 @@ import { Tag } from "@/types/tag";
 
 const tagAction = {
   async getAllTags(name?: string, page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Tag[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Tag[]>>(
       "/tag",
       { params: { name, page, limit } },
     );
-    return res.data.data;
+    return result.data.data;
   },
 };
 

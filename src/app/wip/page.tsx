@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Construction } from "lucide-react";
 import Link from "next/link";
 
-export default function WIPLanding() {
+export default function WIPPage() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header className="flex h-14 items-center px-4 lg:px-6">

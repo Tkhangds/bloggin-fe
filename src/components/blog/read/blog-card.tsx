@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { Post } from "@/types/post";
-import { formatDate } from "@/utils/date-convert";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 
 export default function BlogCard({
@@ -17,7 +17,6 @@ export default function BlogCard({
   post: Post;
 }) {
   const router = useRouter();
-
   return (
     <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
       <div onClick={() => router.push("/blog/" + post.id)}>
@@ -29,7 +28,7 @@ export default function BlogCard({
           <span className="text-sm font-medium">{post.author.displayName}</span>
           <span className="text-sm text-gray-500">·</span>
           <span className="text-sm text-gray-500">
-            {formatDate(post.createdAt)}
+            {formatDateFromISOString(post.createdAt)}
           </span>
         </div>
 
@@ -64,7 +63,7 @@ export default function BlogCard({
                 </div>
                 <div className="flex items-center gap-1 text-gray-500">
                   <MessageCircle className="h-4 w-4" />
-                  <span className="text-xs">{"2"}</span>
+                  <span className="text-xs">{post.commentCount ?? "2"}</span>
                 </div>
                 {/* <span className="text-xs text-gray-500">
                   {post.readTime} min read

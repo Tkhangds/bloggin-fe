@@ -23,13 +23,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 
 export function AvatarMenu({}) {
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  const { user, logout } = useAuthProvider();
+  const { user, logout } = useAuthContext();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -40,16 +40,6 @@ export function AvatarMenu({}) {
   const handleSignOut = async () => {
     await logout();
   };
-
-  // Get initials from name
-  function initials(str: string): string {
-    return str
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .substring(0, 2);
-  }
 
   if (!user) {
     return null;
@@ -63,9 +53,12 @@ export function AvatarMenu({}) {
           className="relative hidden h-10 w-10 rounded-full lg:flex"
         >
           <Avatar className="h-10 w-10 border border-border">
-            <AvatarImage src={"/typescript.svg"} alt={user.username} />
+            <AvatarImage
+              src={`https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`}
+              alt={user.username}
+            />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {initials(user.username)}
+              {`https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`}
             </AvatarFallback>
           </Avatar>
         </Button>

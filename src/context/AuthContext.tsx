@@ -85,4 +85,4 @@ export function AuthProvider({
   );
 }
 
-export const useAuthProvider = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);

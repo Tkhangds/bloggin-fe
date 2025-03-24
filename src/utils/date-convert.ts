@@ -1,4 +1,4 @@
-export function formatDate(isoString: string): string {
+export function formatDateFromISOString(isoString: string): string {
   if (!isoString) return "";
 
   const date = new Date(isoString);

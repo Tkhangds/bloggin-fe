@@ -1,7 +1,6 @@
-"uie client";
+"use client";
 
 import { Heart } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,10 +23,7 @@ export default function FavoritesPage() {
             <h3 className="text-lg font-medium">Your Favorite Content</h3>
             <Button size="sm">Browse Content</Button>
           </div>
-
-          {/* Favorites Cards */}
           <div className="grid gap-4 md:grid-cols-2">
-            {/* Favorite 1 */}
             <Card>
               <CardHeader className="p-4">
                 <div className="flex items-center justify-between">
@@ -65,8 +61,6 @@ export default function FavoritesPage() {
                 </div>
               </div>
             </Card>
-
-            {/* Favorite 2 */}
             <Card>
               <CardHeader className="p-4">
                 <div className="flex items-center justify-between">

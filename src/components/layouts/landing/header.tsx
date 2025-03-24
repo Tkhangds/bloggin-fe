@@ -5,20 +5,20 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/editor/ui/Icon";
 
 export const Header = () => {
   const router = useRouter();
-  const { user, loading } = useAuthProvider();
+  const { user, loading } = useAuthContext();
 
   if (loading) {
     return <div>loading...</div>;
   }
 
   return (
-    <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-black/20 bg-white px-4 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
+    <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-black/20 bg-white px-4 py-1 dark:bg-neutral-950 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/blog">
@@ -26,9 +26,16 @@ export const Header = () => {
               <Image
                 width={120}
                 height={240}
-                src={`/image/Blogging-ngang.svg`}
+                src="/image/Blogging-ngang.svg"
                 alt="logo"
-                className="h-full w-full scale-150 object-cover transition-transform duration-300"
+                className="h-full w-full scale-150 object-cover transition-transform duration-300 dark:hidden"
+              />
+              <Image
+                width={120}
+                height={240}
+                src="/image/Blogging-ngang-white.svg"
+                alt="logo"
+                className="hidden h-full w-full scale-150 object-cover transition-transform duration-300 dark:flex"
               />
             </div>
           </Link>

@@ -4,21 +4,14 @@ import { CreateDraftDto } from "@/types/dtos/create-draft.dto";
 import { UpdateDraftDto } from "@/types/dtos/update-draft.dto";
 
 const draftAction = {
-  // async getAllDraftByUserId(authorId: string, page?: number, limit?: number) {
-  //   const res =
-  //     await bloggingApi.get<BloggingSuccessResponseWrapper<Draft[]>>(
-  //       "/draft/all",
-  //     );
-  //   return res.data.data ?? [];
-  // },
-  async getDraftById(id: string) {
-    const res = await bloggingApi.get<BloggingSuccessResponseWrapper<Draft>>(
-      `/draft/${id}`,
+  async getDraftById(draftId: string) {
+    const result = await bloggingApi.get<SuccessResponseWrapper<Draft>>(
+      `/draft/${draftId}`,
     );
-    return res.data.data;
+    return result.data.data;
   },
   async getAllDraftByUserId(page?: number, limit?: number) {
-    const res = await bloggingApi.get<PaginationResponseWrapper<Draft[]>>(
+    const result = await bloggingApi.get<PaginationResponseWrapper<Draft[]>>(
       `/draft/author`,
       {
         params: {
@@ -27,28 +20,27 @@ const draftAction = {
         },
       },
     );
-    return res.data.data;
+    return result.data.data;
   },
   async createDraft(data: CreateDraftDto) {
-    const res = await bloggingApi.post<BloggingSuccessResponseWrapper<Draft>>(
+    const result = await bloggingApi.post<SuccessResponseWrapper<Draft>>(
       "/draft",
       data,
     );
-    console.log(res.data);
-    return res.data;
+    return result.data;
   },
-  async updateDraftById(id: string, data: UpdateDraftDto) {
-    const res = await bloggingApi.put<BloggingSuccessResponseWrapper<Draft>>(
-      `/draft/${id}`,
+  async updateDraftById(draftId: string, data: UpdateDraftDto) {
+    const result = await bloggingApi.put<SuccessResponseWrapper<Draft>>(
+      `/draft/${draftId}`,
       data,
     );
-    return res;
+    return result;
   },
-  async deleteDraftById(id: string) {
-    const res = await bloggingApi.delete<BloggingSuccessResponseWrapper>(
-      `/draft/${id}`,
+  async deleteDraftById(draftId: string) {
+    const result = await bloggingApi.delete<SuccessResponseWrapper>(
+      `/draft/${draftId}`,
     );
-    return res.data.message;
+    return result.data.message;
   },
 };
 

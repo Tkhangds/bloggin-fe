@@ -10,12 +10,12 @@ import {
 } from "@/components/ui/card";
 import DraftItemCard from "@/components/setting/draft-item-card";
 import { useDraft } from "@/hooks/apis/useDraft";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { NotepadTextDashed } from "lucide-react";
 import FullPageLoading from "@/components/loading/loading";
 
 export default function DraftsPage() {
-  const { user, loading } = useAuthProvider();
+  const { user, loading } = useAuthContext();
 
   const { data, isLoading, error } = useDraft().useGetAllDraftsByAuthorId();
 
