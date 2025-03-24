@@ -80,12 +80,12 @@ export default function TemplateGallery() {
             distance={150}
             direction="vertical"
             reverse={false}
-            config={{ tension: 100, friction: 20 }}
+            config={{ tension: 100, friction: 15 }}
             initialOpacity={0.2}
             animateOpacity
             scale={0.9}
             threshold={0.2}
-            delay={200}
+            delay={100}
             key={template.id}
           >
             <Card

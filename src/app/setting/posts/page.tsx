@@ -10,13 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { usePost } from "@/hooks/apis/usePost";
 import PostItemCard from "@/components/setting/post-item-card";
 import FullPageLoading from "@/components/loading/loading";
 
 export default function PostsPage() {
-  const { user, loading } = useAuthProvider();
+  const { user, loading } = useAuthContext();
 
   const { data, isLoading, error } = usePost().useGetPostByAuthor();
 
@@ -40,7 +40,6 @@ export default function PostsPage() {
             <Button size="sm">Create Post</Button>
           </div>
 
-          {/* Blog Post Cards */}
           <div className="grid gap-4 md:grid-cols-2">
             {data &&
               data.map((item) => (
@@ -49,15 +48,12 @@ export default function PostsPage() {
           </div>
           {data && data.length === 0 && (
             <div className="py-12 text-center">
-              {" "}
-              <FileText className="mx-auto h-12 w-12 text-muted-foreground" />{" "}
-              <h3 className="mt-4 text-lg font-medium"> No posts yet </h3>{" "}
+              <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium"> No posts yet </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                {" "}
-                You haven't created any posts yet. Start sharing your
-                content!{" "}
-              </p>{" "}
-              <Button className="mt-4"> Create Post </Button>{" "}
+                You haven't created any posts yet. Start sharing your content!
+              </p>
+              <Button className="mt-4"> Create Post </Button>
             </div>
           )}
         </div>

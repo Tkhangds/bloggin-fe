@@ -25,4 +25,6 @@ const LoadBlogIndicator = forwardRef<HTMLDivElement, { isLoading: boolean }>(
   },
 );
 
+LoadBlogIndicator.displayName = "LoadBlogIndicator";
+
 export default LoadBlogIndicator;

@@ -5,13 +5,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { Icon } from "@/components/editor/ui/Icon";
 
 export const Header = () => {
   const router = useRouter();
-  const { user, loading } = useAuthProvider();
+  const { user, loading } = useAuthContext();
 
   if (loading) {
     return <div>loading...</div>;

@@ -23,13 +23,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 
 export function AvatarMenu({}) {
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
-  const { user, logout } = useAuthProvider();
+  const { user, logout } = useAuthContext();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";

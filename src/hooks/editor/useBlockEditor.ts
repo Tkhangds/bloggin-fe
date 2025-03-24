@@ -5,11 +5,12 @@ import type { AnyExtension, Editor, EditorOptions } from "@tiptap/core";
 
 import { ExtensionKit } from "@/extensions/extension-kit";
 import { initialContent } from "@/lib/editor/data/initialContent";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import debounce from "lodash/debounce";
 import { useDraft } from "../apis/useDraft";
 import { usePost } from "../apis/usePost";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
+import { useDebounce } from "use-debounce";
 
 declare global {
   interface Window {
@@ -24,7 +25,7 @@ export const useBlockEditor = ({
 }: { id: string | undefined; mode: string } & Partial<
   Omit<EditorOptions, "extensions">
 >) => {
-  const { user } = useAuthProvider();
+  const { user } = useAuthContext();
 
   const { useGetDraftById, useUpdateDraftById } = useDraft();
   const { useGetPostById, useUpdatePostById } = usePost();
@@ -45,7 +46,6 @@ export const useBlockEditor = ({
       autofocus: true,
       content: contentData ? JSON.parse(contentData.content) : initialContent,
       onUpdate: ({ editor }) => {
-        setIsSaving(true);
         saveContent(editor);
       },
       extensions: [...ExtensionKit({})].filter(
@@ -57,6 +57,13 @@ export const useBlockEditor = ({
           autocorrect: "off",
           autocapitalize: "off",
           class: "min-h-full",
+        },
+        handleDOMEvents: {
+          blur: () => {
+            if (editor) {
+              saveContent(editor);
+            }
+          },
         },
       },
     },
@@ -77,16 +84,38 @@ export const useBlockEditor = ({
     window.editor = editor;
   }
 
-  const saveContent = debounce((editor: Editor) => {
-    const jsonContent = editor.getJSON();
-    const json = JSON.stringify(jsonContent);
-    if (!id) {
-      return;
+  useEffect(() => {
+    if (editor?.isEmpty && contentData?.content) {
+      const parsedContent = JSON.parse(contentData.content);
+      editor.commands.setContent(parsedContent);
     }
-    updateContent({ id, data: { content: json, authorId: user?.id } });
+  }, [contentData, editor]);
 
-    setIsSaving(false);
-  }, 3000);
+  const saveContent = useCallback(
+    debounce(async (editor: Editor) => {
+      if (!id) return;
+      const { from, to } = editor.state.selection;
+
+      setIsSaving(true);
+
+      const jsonContent = editor.getJSON();
+      const json = JSON.stringify(jsonContent);
+
+      try {
+        updateContent({ id, data: { content: json, authorId: user?.id } });
+
+        const newFrom = Math.min(from, editor.state.doc.content.size);
+        const newTo = Math.min(to, editor.state.doc.content.size);
+
+        editor.commands.setTextSelection({ from: newFrom, to: newTo });
+      } catch (error) {
+        console.error("Failed to save content:", error);
+      } finally {
+        setIsSaving(false);
+      }
+    }, 3000),
+    [id, updateContent, user, setIsSaving],
+  );
 
   return { editor, isSaving };
 };

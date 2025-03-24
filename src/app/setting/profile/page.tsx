@@ -24,7 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/loading";
 
 export default function ProfilePage() {
@@ -33,7 +33,7 @@ export default function ProfilePage() {
   const [location, setLocation] = useState<string>("New York, USA");
   const [phone, setPhone] = useState<string>("+1 (555) 123-4567");
 
-  const { user, loading } = useAuthProvider();
+  const { user, loading } = useAuthContext();
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

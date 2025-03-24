@@ -79,7 +79,10 @@ export const ExtensionKit = ({ provider }: ExtensionKitProps) => [
     heading: false,
     horizontalRule: false,
     blockquote: false,
-    history: false,
+    history: {
+      depth: 100,
+      newGroupDelay: 500,
+    },
     codeBlock: false,
   }),
   Details.configure({

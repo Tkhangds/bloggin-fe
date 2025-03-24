@@ -93,7 +93,6 @@ export default function SettingsLayout({
             </Card>
           </div>
 
-          {/* Right Column - Content */}
           <div className="md:col-span-3">{children}</div>
         </div>
       </div>

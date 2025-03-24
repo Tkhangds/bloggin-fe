@@ -8,13 +8,13 @@ import { useDraft } from "@/hooks/apis/useDraft";
 import { useRouter } from "next/navigation";
 import { initialContent } from "@/lib/editor/data/initialContent";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { useAuthProvider } from "@/context/AuthContext";
+import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/loading";
 
 export default function Page() {
   const router = useRouter();
   const { useCreateDraft } = useDraft();
-  const { user } = useAuthProvider();
+  const { user } = useAuthContext();
 
   const { mutateAsync: createDraft } = useCreateDraft();
 

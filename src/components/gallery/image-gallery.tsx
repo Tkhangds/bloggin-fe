@@ -50,7 +50,6 @@ export default function ImageGallery(): JSX.Element {
     },
   ];
 
-  // Auto-rotate images every 5 seconds
   useEffect(() => {
     let intervalId: NodeJS.Timeout | undefined;
 
@@ -60,7 +59,6 @@ export default function ImageGallery(): JSX.Element {
       }, 3500);
     }
 
-    // Clean up interval on component unmount or when auto-rotation is turned off
     return () => {
       if (intervalId) {
         clearInterval(intervalId);
@@ -68,14 +66,11 @@ export default function ImageGallery(): JSX.Element {
     };
   }, [isAutoRotating, images.length]);
 
-  // Handle image selection
   const handleImageSelect = (id: number): void => {
     setSelectedImage(id);
-    // Optionally uncomment the line below if you want manual selection to pause auto-rotation
-    // setIsAutoRotating(false);
+    setIsAutoRotating(false);
   };
 
-  // Toggle auto-rotation
   const toggleAutoRotation = (): void => {
     setIsAutoRotating((prev) => !prev);
   };
