@@ -1,16 +1,15 @@
 "use client";
 
-import { useEditor } from "@tiptap/react";
 import type { AnyExtension, Editor, EditorOptions } from "@tiptap/core";
+import { useEditor } from "@tiptap/react";
 
+import { useAuthContext } from "@/context/AuthContext";
 import { ExtensionKit } from "@/extensions/extension-kit";
 import { initialContent } from "@/lib/editor/data/initialContent";
-import { useCallback, useEffect, useRef, useState } from "react";
 import debounce from "lodash/debounce";
+import { useCallback, useEffect, useState } from "react";
 import { useDraft } from "../apis/useDraft";
 import { usePost } from "../apis/usePost";
-import { useAuthContext } from "@/context/AuthContext";
-import { useDebounce } from "use-debounce";
 
 declare global {
   interface Window {
@@ -29,7 +28,6 @@ export const useBlockEditor = ({
 
   const { useGetDraftById, useUpdateDraftById } = useDraft();
   const { useGetPostById, useUpdatePostById } = usePost();
-
   const getData = mode === "draft" ? useGetDraftById : useGetPostById;
   const updateData = mode === "draft" ? useUpdateDraftById : useUpdatePostById;
 
@@ -91,31 +89,43 @@ export const useBlockEditor = ({
     }
   }, [contentData, editor]);
 
+  const debouncedSave = useCallback(
+    debounce(
+      async (editor: Editor, contentId: string, userId: string | undefined) => {
+        const jsonContent = editor.getJSON();
+        const json = JSON.stringify(jsonContent);
+
+        try {
+          updateContent({
+            id: contentId,
+            data: { content: json, authorId: userId },
+          });
+        } catch (error) {
+          console.error("Failed to save content:", error);
+        } finally {
+          setIsSaving(false);
+        }
+      },
+      3000,
+    ),
+    [updateContent],
+  );
+
   const saveContent = useCallback(
-    debounce(async (editor: Editor) => {
+    (editor: Editor) => {
       if (!id) return;
-      const { from, to } = editor.state.selection;
 
       setIsSaving(true);
-
-      const jsonContent = editor.getJSON();
-      const json = JSON.stringify(jsonContent);
-
-      try {
-        updateContent({ id, data: { content: json, authorId: user?.id } });
-
-        const newFrom = Math.min(from, editor.state.doc.content.size);
-        const newTo = Math.min(to, editor.state.doc.content.size);
-
-        editor.commands.setTextSelection({ from: newFrom, to: newTo });
-      } catch (error) {
-        console.error("Failed to save content:", error);
-      } finally {
-        setIsSaving(false);
-      }
-    }, 3000),
-    [id, updateContent, user, setIsSaving],
+      debouncedSave(editor, id, user?.id);
+    },
+    [id, user?.id, debouncedSave],
   );
+
+  useEffect(() => {
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [debouncedSave]);
 
   return { editor, isSaving };
 };
