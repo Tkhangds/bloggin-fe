@@ -103,7 +103,15 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
               <TagsSection tagsManager={tagsManager} />
 
-              <div className="pt-2">
+              <div className="flex items-center justify-end space-x-4 pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full px-8 md:w-auto"
+                  size="lg"
+                  onClick={() => router.back()}
+                >
+                  Cancel
+                </Button>
                 <Button
                   type="submit"
                   className="w-full px-8 md:w-auto"

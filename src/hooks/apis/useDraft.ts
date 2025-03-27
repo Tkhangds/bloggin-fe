@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import draftAction from "@/apis/draft.action";
 import { UpdateDraftDto } from "@/types/dtos/update-draft.dto";
 import { CreateDraftDto } from "@/types/dtos/create-draft.dto";
+import { toast } from "sonner";
 
 export const useDraft = () => {
   const queryClient = useQueryClient();
@@ -52,6 +53,7 @@ export const useDraft = () => {
         queryClient.invalidateQueries({
           queryKey: ["draft", "author"],
         });
+        toast.success("Draft deleted successfully");
       },
     });
   };

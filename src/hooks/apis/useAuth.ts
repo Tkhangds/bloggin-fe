@@ -6,6 +6,7 @@ import { LoginDto } from "@/types/dtos/login.dto";
 import { useRouter } from "next/navigation";
 import { RegisterDto } from "@/types/dtos/register.dto";
 import { useAuthContext } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export const useAuth = () => {
   const queryClient = useQueryClient();
@@ -23,6 +24,7 @@ export const useAuth = () => {
         // Fix this later
         queryClient.invalidateQueries({ queryKey: ["login"] });
         await refetchUser();
+        toast.success("Login successfully");
         router.replace("/");
       },
     });
@@ -36,7 +38,8 @@ export const useAuth = () => {
       onSuccess: () => {
         // Fix this later
         queryClient.invalidateQueries({ queryKey: ["register"] });
-        router.push("/");
+        toast.success("Register successfully");
+        router.push("/sign-in");
       },
     });
   };
@@ -48,6 +51,7 @@ export const useAuth = () => {
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["logout"] });
+        toast.success("Logout successfully");
         router.push("/");
       },
     });

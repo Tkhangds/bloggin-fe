@@ -1,6 +1,11 @@
 "use client";
 
+import { usePost } from "@/hooks/apis/usePost";
+import { Post } from "@/types/post";
+import { formatDateFromISOString } from "@/utils/date-convert";
+import firstSentenceJson from "@/utils/first-sentence-json";
 import { FileText } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import {
   Card,
@@ -9,12 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
-import { Post } from "@/types/post";
-import { formatDateFromISOString } from "@/utils/date-convert";
-import firstSentenceJson from "@/utils/first-sentence-json";
-import { useRouter } from "next/navigation";
-import { usePost } from "@/hooks/apis/usePost";
-import { toast } from "sonner";
 
 export default function PostItemCard({ post }: { post: Post }) {
   const router = useRouter();
@@ -22,7 +21,6 @@ export default function PostItemCard({ post }: { post: Post }) {
 
   const handleDeletePost = async (id: string) => {
     await deletePost(id);
-    toast.success("Post deleted successfully");
   };
 
   return (

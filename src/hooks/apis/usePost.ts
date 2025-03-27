@@ -9,6 +9,7 @@ import {
 import postAction from "@/apis/post.action";
 import { CreatePostDto } from "@/types/dtos/create-post.dto";
 import { UpdatePostDto } from "@/types/dtos/update-post.dto";
+import { toast } from "sonner";
 
 export const usePost = () => {
   const queryClient = useQueryClient();
@@ -55,6 +56,7 @@ export const usePost = () => {
         queryClient.invalidateQueries({
           queryKey: ["post", "all"],
         });
+        toast.success("Post created successfully");
       },
     });
   };
@@ -65,6 +67,7 @@ export const usePost = () => {
         return await postAction.deletePostById(id);
       },
       onSuccess: (_, id) => {
+        toast.success("Post deleted successfully");
         queryClient.invalidateQueries({ queryKey: ["post", id] });
         queryClient.invalidateQueries({
           queryKey: ["post", "author"],

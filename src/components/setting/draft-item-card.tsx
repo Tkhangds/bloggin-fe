@@ -1,27 +1,25 @@
 "use client";
 
-import { NotepadTextDashed } from "lucide-react";
-import { Button } from "../ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "../ui/card";
+import { useDraft } from "@/hooks/apis/useDraft";
 import { Draft } from "@/types/draft";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
+import { NotepadTextDashed } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useDraft } from "@/hooks/apis/useDraft";
-import { toast } from "sonner";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 export default function DraftItemCard({ draft }: { draft: Draft }) {
   const router = useRouter();
   const { mutateAsync: deleteDraft } = useDraft().useDeleteDraftById();
   const handleDeleteDraft = async (id: string) => {
     await deleteDraft(id);
-    toast.success("Draft deleted successfully");
   };
   return (
     <Card>

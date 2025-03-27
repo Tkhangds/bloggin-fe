@@ -109,6 +109,7 @@ export default function ProfilePage() {
                   placeholder="Username"
                   className="pl-9"
                   value={user?.displayName}
+                  readOnly
                 />
               </div>
             </div>
@@ -154,6 +155,7 @@ export default function ProfilePage() {
                   placeholder="Email address"
                   className="pl-9"
                   value={user?.email}
+                  readOnly
                 />
               </div>
             </div>

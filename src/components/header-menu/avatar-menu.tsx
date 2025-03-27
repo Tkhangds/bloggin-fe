@@ -1,18 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
+  BadgeHelp,
+  FileText,
   LogOut,
   Moon,
+  NotepadTextDashed,
   Sun,
   User,
-  FileText,
-  Heart,
-  BadgeHelp,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,7 +23,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 
 export function AvatarMenu({}) {
@@ -82,9 +82,9 @@ export function AvatarMenu({}) {
             <FileText className="mr-2 h-4 w-4" />
             <span>Your Blog</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/setting/favorites")}>
-            <Heart className="mr-2 h-4 w-4" />
-            <span>Favorite</span>
+          <DropdownMenuItem onClick={() => router.push("/setting/drafts")}>
+            <NotepadTextDashed className="mr-2 h-4 w-4" />
+            <span>Your Draft</span>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={toggleTheme}>
             {theme === "light" ? (

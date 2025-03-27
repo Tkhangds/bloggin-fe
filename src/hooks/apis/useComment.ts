@@ -9,6 +9,7 @@ import {
 import commentAction from "@/apis/comment.action";
 import { UpdateCommentDto } from "@/types/dtos/update-comment.dto";
 import { CreateCommentDto } from "@/types/dtos/create-comment.dto";
+import { toast } from "sonner";
 
 export const useComment = (postId: string) => {
   const queryClient = useQueryClient();
@@ -49,6 +50,7 @@ export const useComment = (postId: string) => {
         queryClient.invalidateQueries({
           queryKey: ["post", "all"],
         });
+        toast.success("Comment created successfully");
       },
     });
   };
