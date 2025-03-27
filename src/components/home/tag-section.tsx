@@ -22,7 +22,7 @@ export default function TagSection() {
   ];
 
   return (
-    <section className="relative mx-auto flex w-full items-center justify-center bg-neutral-100 px-[-1rem] py-12 dark:bg-black md:py-24 lg:py-28">
+    <section className="relative mx-auto flex w-full items-center justify-center bg-neutral-100 py-12 dark:bg-black md:py-24 lg:py-28">
       <div className="absolute left-0 right-0 top-0 h-10 bg-gradient-to-b from-white to-neutral-100 dark:from-neutral-950 dark:to-black"></div>
       <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-neutral-100 to-white dark:from-black dark:to-neutral-950"></div>
       <div className="container flex w-full max-w-5xl flex-col justify-center px-4 md:px-6">
