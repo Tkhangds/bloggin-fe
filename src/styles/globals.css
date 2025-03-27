@@ -4,6 +4,7 @@
 
 @import "./editor.css";
 @import "./background/magicpattern.css";
+@import "./background/heropattern.css";
 
 @layer base {
   body {

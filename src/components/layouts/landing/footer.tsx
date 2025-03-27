@@ -5,8 +5,8 @@ import { MoveRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <div className="flex flex-col border-t-[1px] border-black/20 dark:border-neutral-700/20">
-      <div className="flex flex-col px-4 py-6 lg:flex-row lg:items-start lg:gap-10 lg:px-20 lg:py-10 xl:px-48">
+    <div className="relative flex flex-col border-t-[1px] border-black/5 dark:border-neutral-700/20">
+      <div className="z-10 flex flex-col px-4 py-6 lg:flex-row lg:items-start lg:gap-10 lg:px-20 lg:py-10 xl:px-48">
         <Image
           width={100}
           height={150}
@@ -89,6 +89,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <div className="hero-pattern absolute bottom-0 z-0 hidden h-60 w-full lg:block"></div>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import ImageGallery from "@/components/home/gallery/image-gallery";
 import TemplateGallery from "@/components/home/gallery/template-gallery";
 import BackgroundPaths from "@/components/home/background-path";
 import TagSection from "@/components/home/tag-section";
+import CTASection from "@/components/home/cta-section";
 
 export default function HomePage() {
   return (
@@ -15,7 +16,7 @@ export default function HomePage() {
 
         <TagSection></TagSection>
         <TemplateGallery></TemplateGallery>
-        <div>More content incoming</div>
+        <CTASection></CTASection>
       </div>
     </LandingLayout>
   );

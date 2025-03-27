@@ -64,7 +64,7 @@ export default function TemplateGallery() {
           threshold={0.2}
           delay={100}
         >
-          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight text-[#171717] md:text-5xl">
+          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight text-[#171717] dark:text-white md:text-5xl">
             Need a template?
           </h1>
           <h3 className="text-1xl mb-4 w-full text-left tracking-tight text-muted-foreground md:text-2xl">
