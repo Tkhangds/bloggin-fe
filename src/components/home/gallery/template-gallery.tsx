@@ -12,7 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import AnimatedContent from "../ui/animated-content";
+import AnimatedContent from "../../ui/animated-content";
 
 export default function TemplateGallery() {
   const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
@@ -55,20 +55,19 @@ export default function TemplateGallery() {
     <div className="mx-auto flex max-w-5xl flex-col items-center space-y-6 bg-transparent p-4">
       <div className="w-full text-left">
         <AnimatedContent
-          distance={150}
+          distance={100}
           direction="horizontal"
           reverse={true}
           config={{ tension: 100, friction: 20 }}
-          initialOpacity={0.2}
           animateOpacity
           scale={0.8}
           threshold={0.2}
           delay={100}
         >
-          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight md:text-5xl">
+          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight text-[#171717] dark:text-white md:text-5xl">
             Need a template?
           </h1>
-          <h3 className="text-1xl font-thin- mb-4 w-full text-left tracking-tight md:text-2xl">
+          <h3 className="mb-4 w-full text-left text-xl tracking-tight text-muted-foreground md:text-2xl">
             Big ideas, no clue where to start? No worries – Bloggin’s gotchu!
           </h3>
         </AnimatedContent>
@@ -77,11 +76,10 @@ export default function TemplateGallery() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2">
         {templates.map((template) => (
           <AnimatedContent
-            distance={150}
+            distance={100}
             direction="vertical"
             reverse={false}
             config={{ tension: 100, friction: 15 }}
-            initialOpacity={0.2}
             animateOpacity
             scale={0.9}
             threshold={0.2}
@@ -106,7 +104,7 @@ export default function TemplateGallery() {
                   />
                 </div>
               </CardHeader>
-              <CardContent className="flex-grow p-4">
+              <CardContent className="flex-grow p-4 pb-0">
                 <CardTitle className="mb-2 flex items-center justify-between">
                   {template.title}
                   {selectedTemplate === template.id && (

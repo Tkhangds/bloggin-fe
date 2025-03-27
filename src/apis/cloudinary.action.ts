@@ -1,5 +1,5 @@
 import { bloggingApi } from "@/lib/HttpClient";
-import { UploadResponse } from "@/types/upload-response";
+import { UploadResponse } from "@/types/image-response";
 
 const cloudinaryAction = {
   async uploadImage(file: File) {

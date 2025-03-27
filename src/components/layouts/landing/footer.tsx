@@ -5,8 +5,8 @@ import { MoveRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <div className="flex flex-col border-t-[1px] border-black/20 dark:border-neutral-700/20">
-      <div className="flex flex-col px-4 py-6 lg:flex-row lg:items-start lg:gap-10 lg:px-20 lg:py-10 xl:px-48">
+    <div className="relative flex flex-col border-t-[1px] border-black/5 dark:border-neutral-700/20">
+      <div className="z-10 flex flex-col px-4 py-6 lg:flex-row lg:items-start lg:gap-10 lg:px-20 lg:py-10 xl:px-48">
         <Image
           width={100}
           height={150}
@@ -25,16 +25,16 @@ export default function Footer() {
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
           <div className="flex flex-1 flex-col">
             <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
-              About Blogging
+              About Bloggin
             </span>
             <div className="py-3">
-              Blogging is more than just a platform—it&apos;s a thriving hub for
+              Bloggin is more than just a platform—it&apos;s a thriving hub for
               sharing ideas, sparking conversations, and expanding knowledge.
-              Designed with a clean, user-friendly interface, Blogging makes it
+              Designed with a clean, user-friendly interface, Bloggin makes it
               effortless for writers to craft compelling stories and for readers
               to discover insightful content across diverse topics. Whether
               you&apos;re a seasoned blogger, an industry expert, or a curious
-              reader, Blogging connects you with a global community passionate
+              reader, Bloggin connects you with a global community passionate
               about learning and storytelling.
             </div>
           </div>
@@ -59,7 +59,7 @@ export default function Footer() {
 
           <div className="flex flex-1 flex-col">
             <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
-              Blogging Story
+              Bloggin Story
             </span>
             <div className="flex flex-1 flex-col items-start justify-start gap-3 py-3">
               <BlogCard
@@ -89,6 +89,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <div className="hero-pattern absolute bottom-0 z-0 hidden h-60 w-full lg:block"></div>
     </div>
   );
 }
