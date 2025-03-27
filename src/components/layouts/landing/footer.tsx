@@ -141,7 +141,7 @@ function BlogCard({
         width={120}
         height={50}
         alt="author-logo"
-        className="rounded-md"
+        className="rounded-md bg-white"
         src={src || "/placeholder.svg"}
       />
       <div className="flex flex-col">
