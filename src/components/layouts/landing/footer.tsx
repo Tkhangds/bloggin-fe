@@ -25,16 +25,16 @@ export default function Footer() {
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
           <div className="flex flex-1 flex-col">
             <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
-              About Blogging
+              About Bloggin
             </span>
             <div className="py-3">
-              Blogging is more than just a platform—it&apos;s a thriving hub for
+              Bloggin is more than just a platform—it&apos;s a thriving hub for
               sharing ideas, sparking conversations, and expanding knowledge.
-              Designed with a clean, user-friendly interface, Blogging makes it
+              Designed with a clean, user-friendly interface, Bloggin makes it
               effortless for writers to craft compelling stories and for readers
               to discover insightful content across diverse topics. Whether
               you&apos;re a seasoned blogger, an industry expert, or a curious
-              reader, Blogging connects you with a global community passionate
+              reader, Bloggin connects you with a global community passionate
               about learning and storytelling.
             </div>
           </div>
@@ -59,7 +59,7 @@ export default function Footer() {
 
           <div className="flex flex-1 flex-col">
             <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
-              Blogging Story
+              Bloggin Story
             </span>
             <div className="flex flex-1 flex-col items-start justify-start gap-3 py-3">
               <BlogCard

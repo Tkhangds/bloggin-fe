@@ -79,21 +79,19 @@ export default function ImageGallery(): JSX.Element {
     <div className="mx-auto flex max-w-5xl flex-col items-center space-y-6 bg-transparent p-4">
       <div className="w-full text-left">
         <AnimatedContent
-          distance={150}
+          distance={100}
           direction="horizontal"
           reverse={true}
           config={{ tension: 100, friction: 20 }}
-          initialOpacity={0.2}
           animateOpacity
           scale={0.8}
           threshold={0.2}
           delay={100}
         >
-          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight md:text-5xl">
+          <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight text-[#171717] md:text-5xl">
             Explore our feature.
           </h1>
-
-          <h3 className="text-1xl font-thin- mb-4 w-full text-left tracking-tight md:text-2xl">
+          <h3 className="text-1xl mb-4 w-full text-left tracking-tight text-muted-foreground md:text-2xl">
             Write, edit, publish, and connect—all in one place.
           </h3>
         </AnimatedContent>
@@ -101,17 +99,16 @@ export default function ImageGallery(): JSX.Element {
 
       {/* Image */}
       <AnimatedContent
-        distance={150}
+        distance={100}
         direction="vertical"
         reverse={false}
         config={{ tension: 100, friction: 20 }}
-        initialOpacity={0.2}
         animateOpacity
         scale={0.9}
         threshold={0.2}
         delay={200}
       >
-        <div className="relative mb-8 h-fit w-full overflow-hidden rounded-lg bg-muted shadow-xl">
+        <div className="relative mb-6 h-fit w-full overflow-hidden rounded-lg bg-muted shadow-xl">
           <Image
             src={images[selectedImage].src}
             alt={images[selectedImage].alt}
@@ -124,13 +121,13 @@ export default function ImageGallery(): JSX.Element {
         </div>
 
         {/* Buttons */}
-        <div className="flex w-full flex-wrap justify-center gap-2">
+        <div className="flex w-full flex-wrap justify-center gap-3">
           {images.map((image) => (
             <Button
               key={image.id}
               variant={selectedImage === image.id ? "default" : "outline"}
               className={cn(
-                "h-auto py-2",
+                "h-auto py-2 shadow-sm",
                 selectedImage === image.id && "ring-2 ring-primary",
               )}
               onClick={() => handleImageSelect(image.id)}

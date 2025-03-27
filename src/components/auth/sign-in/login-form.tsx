@@ -28,7 +28,7 @@ export default function LoginForm({
   const {
     control,
     handleSubmit,
-    formState: {},
+    formState: { errors },
   } = form;
 
   const { mutateAsync: login } = useAuth().useLogin();
@@ -37,7 +37,11 @@ export default function LoginForm({
   const [error] = useState<string>("");
 
   const onSubmitHandle = async (data: LoginDto) => {
-    await login({ data });
+    try {
+      await login({ data });
+    } catch (e: unknown) {
+      console.error(e);
+    }
   };
 
   return (
@@ -66,9 +70,9 @@ export default function LoginForm({
                     <Input
                       id="email or username"
                       placeholder="m@example.com"
-                      required
                       value={field.value}
                       onChange={field.onChange}
+                      error={errors.identifier?.message}
                     />
                   )}
                 />
@@ -90,9 +94,9 @@ export default function LoginForm({
                     <Input
                       id="password"
                       type="password"
-                      required
                       value={field.value}
                       onChange={field.onChange}
+                      error={errors.password?.message}
                     />
                   )}
                 />
