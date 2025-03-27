@@ -91,7 +91,7 @@ export default function ImageGallery(): JSX.Element {
           <h1 className="mb-2 w-full text-left text-3xl font-bold tracking-tight text-[#171717] dark:text-white md:text-5xl">
             Explore our feature.
           </h1>
-          <h3 className="text-1xl mb-4 w-full text-left tracking-tight text-muted-foreground md:text-2xl">
+          <h3 className="mb-4 w-full text-left text-xl tracking-tight text-muted-foreground md:text-2xl">
             Write, edit, publish, and connect—all in one place.
           </h3>
         </AnimatedContent>
