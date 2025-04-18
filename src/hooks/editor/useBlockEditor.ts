@@ -69,6 +69,8 @@ export const useBlockEditor = ({
   );
 
   useEffect(() => {
+    console.log("Editor initialized:", contentData);
+
     if (editor && contentData && contentData.content) {
       const parsedContent = JSON.parse(contentData.content);
 

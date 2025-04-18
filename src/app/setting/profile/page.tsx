@@ -25,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function ProfilePage() {
   const [avatar, setAvatar] = useState<string>("/typescript.svg");

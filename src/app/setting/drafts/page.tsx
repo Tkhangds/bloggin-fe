@@ -12,7 +12,7 @@ import DraftItemCard from "@/components/setting/draft-item-card";
 import { useDraft } from "@/hooks/apis/useDraft";
 import { useAuthContext } from "@/context/AuthContext";
 import { NotepadTextDashed } from "lucide-react";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function DraftsPage() {
   const { user, loading } = useAuthContext();

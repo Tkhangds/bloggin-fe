@@ -6,6 +6,7 @@ import { useEditor } from "@tiptap/react";
 import { ExtensionKit } from "@/extensions/extension-kit";
 import { initialContent } from "@/lib/editor/data/initialContent";
 import { useEffect } from "react";
+import { usePost } from "../apis/usePost";
 
 declare global {
   interface Window {
@@ -14,16 +15,18 @@ declare global {
 }
 
 export const useReadEditor = ({
-  content,
+  id,
   ...editorOptions
-}: { content: string } & Partial<Omit<EditorOptions, "extensions">>) => {
+}: { id: string } & Partial<Omit<EditorOptions, "extensions">>) => {
+  const { data, isPending } = usePost().useGetPostById(id);
+
   const editor = useEditor(
     {
       ...editorOptions,
       immediatelyRender: false,
       shouldRerenderOnTransaction: false,
       autofocus: true,
-      content: content ? JSON.parse(content) : initialContent,
+      content: data?.content ? JSON.parse(data.content) : initialContent,
       extensions: [...ExtensionKit({})].filter(
         (e): e is AnyExtension => e !== undefined,
       ),
@@ -37,22 +40,19 @@ export const useReadEditor = ({
         editable: () => false,
       },
     },
-    [],
+    [data],
   );
 
   useEffect(() => {
-    if (editor && content && content) {
-      const parsedContent = JSON.parse(content);
-
-      if (editor.getJSON() !== parsedContent) {
-        editor.commands.setContent(parsedContent);
-      }
+    if (editor && data?.content) {
+      const parsedContent = JSON.parse(data.content);
+      editor.commands.setContent(parsedContent, false);
     }
-  }, [editor, content]);
+  }, [editor, data?.content]);
 
   if (typeof window !== "undefined") {
     window.editor = editor;
   }
 
-  return { editor };
+  return { editor, isLoading: isPending, post: data };
 };

@@ -18,6 +18,7 @@ import {
 export default function DraftItemCard({ draft }: { draft: Draft }) {
   const router = useRouter();
   const { mutateAsync: deleteDraft } = useDraft().useDeleteDraftById();
+  const queryClient = useDraft().queryClient;
   const handleDeleteDraft = async (id: string) => {
     await deleteDraft(id);
   };
@@ -44,7 +45,10 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => router.replace(`/draft/${draft.id}`)}
+            onClick={() => {
+              queryClient.invalidateQueries({ queryKey: ["draft", draft.id] });
+              router.replace(`/draft/${draft.id}`);
+            }}
           >
             Continue
           </Button>

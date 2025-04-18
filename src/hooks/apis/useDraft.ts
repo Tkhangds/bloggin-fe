@@ -23,7 +23,6 @@ export const useDraft = () => {
       mutationFn: ({ id, data }: { id: string; data: UpdateDraftDto }) => {
         return draftAction.updateDraftById(id, data);
       },
-      onSuccess: (_) => {},
     });
   };
 

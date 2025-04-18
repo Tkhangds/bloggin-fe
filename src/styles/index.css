@@ -1,3 +1,7 @@
+.modal-open {
+  overflow: inherit;
+}
+
 .ProseMirror {
   @apply z-0 mx-auto max-w-xl text-wrap caret-black outline-0 dark:caret-white lg:min-w-[30rem] lg:max-w-2xl lg:py-4 lg:pl-0;
 

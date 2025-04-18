@@ -13,7 +13,7 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 import { usePost } from "@/hooks/apis/usePost";
 import PostItemCard from "@/components/setting/post-item-card";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function PostsPage() {
   const { user, loading } = useAuthContext();
