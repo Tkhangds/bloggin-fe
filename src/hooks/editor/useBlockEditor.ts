@@ -108,7 +108,7 @@ export const useBlockEditor = ({
           setIsSaving(false);
         }
       },
-      3000,
+      2000,
     ),
     [updateContent],
   );

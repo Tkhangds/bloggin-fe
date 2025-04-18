@@ -74,7 +74,7 @@ export default function SettingsLayout({
                       Draft
                     </Link>
                   </Button>
-                  <Button
+                  {/* <Button
                     variant={
                       pathname === "/setting/favorites" ? "default" : "ghost"
                     }
@@ -85,7 +85,7 @@ export default function SettingsLayout({
                       <Heart className="mr-2 h-4 w-4" />
                       Favorites
                     </Link>
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>

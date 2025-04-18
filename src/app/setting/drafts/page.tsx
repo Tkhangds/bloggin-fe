@@ -36,7 +36,6 @@ export default function DraftsPage() {
         <div className="space-y-4">
           <div className="flex justify-between">
             <h3 className="text-lg font-medium">Your Draft Posts</h3>
-            <Button size="sm">Create Draft</Button>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {data &&

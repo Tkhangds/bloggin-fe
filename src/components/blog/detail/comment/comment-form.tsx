@@ -31,10 +31,13 @@ export default function CommentForm({
     formState: {},
   } = form;
 
+  const queryClient = useComment(postId).queryClient;
+
   const { mutateAsync: createComment } = useComment(postId).useCreateComment();
 
   const onSubmitHandle = async (data: CreateCommentDto) => {
     await createComment({ data });
+    queryClient.invalidateQueries({ queryKey: ["posts"] });
     setValue("content", "");
   };
 

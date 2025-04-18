@@ -39,7 +39,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
     formState: { errors },
   } = form;
 
-  const { useGetDraftById } = useDraft();
+  const { queryClient, useGetDraftById } = useDraft();
 
   const { data: draft } = useGetDraftById(params.id);
 
@@ -59,6 +59,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
   const onSubmitHandle = async (data: CreatePostDto) => {
     const blog = await createPost({ data });
     await deleteDraft(params.id);
+    await queryClient.invalidateQueries({ queryKey: ["posts"] });
     router.push("/blog/" + blog.id);
   };
 

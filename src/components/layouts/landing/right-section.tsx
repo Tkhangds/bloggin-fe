@@ -22,11 +22,12 @@ export default function RightSection() {
         <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
           <div className="lg:pt-2">
             <Button
+              variant="ghost"
               onClick={() => {
                 router.push("/draft");
               }}
               size={"sm"}
-              className="mr-2 hidden lg:flex"
+              className="mr-2 hidden text-black lg:flex"
             >
               Write
               <Icon name="Pen" />
@@ -56,7 +57,7 @@ export default function RightSection() {
       )}
 
       {/* Mobile Menu */}
-      <MobileMenu user={{ name: "khang", email: "gunnyvippro111@gmail.com" }} />
+      <MobileMenu />
     </>
   );
 }

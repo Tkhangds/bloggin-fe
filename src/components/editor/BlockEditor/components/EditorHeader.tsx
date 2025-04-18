@@ -10,6 +10,7 @@ import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useRouter, usePathname } from "next/navigation";
+import { MobileMenu } from "@/components/header-menu/mobile-menu";
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean;
@@ -78,6 +79,7 @@ export const EditorHeader = ({
           <Toolbar.Button
             tooltip={editor.isEditable ? "Disable editing" : "Enable editing"}
             onClick={toggleEditable}
+            className="hidden lg:flex"
           >
             <Icon name={editor.isEditable ? "PenOff" : "Pen"} />
           </Toolbar.Button>
@@ -85,19 +87,23 @@ export const EditorHeader = ({
             tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
             onClick={toggleSidebar}
             active={isSidebarOpen}
-            className={isSidebarOpen ? "bg-transparent" : ""}
+            className={clsx(
+              isSidebarOpen ? "bg-transparent" : "",
+              "hidden lg:flex",
+            )}
           >
             <Icon name={isSidebarOpen ? "PanelRightClose" : "PanelRight"} />
           </Toolbar.Button>
-          <FloatingScrollIndicator />
+          <FloatingUpdateIndicator />
           <AvatarMenu></AvatarMenu>
+          <MobileMenu></MobileMenu>
         </div>
       </div>
     </div>
   );
 };
 
-const FloatingScrollIndicator = () => {
+const FloatingUpdateIndicator = () => {
   return (
     <button
       className={clsx(

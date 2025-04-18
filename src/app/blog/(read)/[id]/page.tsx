@@ -22,9 +22,9 @@ export default function BlogReadingPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-12 lg:px-28">
-      <h1 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
+      <p className="mb-6 text-wrap text-3xl font-bold tracking-tight text-gray-900 md:text-4xl lg:text-5xl">
         {post?.title || "Article Title"}
-      </h1>
+      </p>
       <AuthorInfo data={post} />
       <Metric data={post} />
 
