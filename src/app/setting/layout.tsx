@@ -2,10 +2,11 @@
 
 import type React from "react";
 
+import { FileText, NotepadTextDashed, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, FileText, Heart, NotepadTextDashed } from "lucide-react";
 
+import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 
 export default function SettingsLayout({
   children,

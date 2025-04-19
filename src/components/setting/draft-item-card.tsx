@@ -4,7 +4,6 @@ import { useDraft } from "@/hooks/apis/useDraft";
 import { Draft } from "@/types/draft";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { NotepadTextDashed } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import {

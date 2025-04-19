@@ -4,7 +4,6 @@ import { usePost } from "@/hooks/apis/usePost";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import {

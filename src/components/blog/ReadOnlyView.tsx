@@ -1,11 +1,7 @@
-import React, { forwardRef, HTMLProps } from "react";
-import { Editor } from "@tiptap/core";
+import { forwardRef } from "react";
 
-export interface EditorContentProps extends HTMLProps<HTMLDivElement> {
-  editor: Editor | null;
-}
-
-export const ViewOnlyContent = forwardRef<HTMLDivElement, EditorContentProps>(
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const ViewOnlyContent = forwardRef<HTMLDivElement, any>(
   ({ editor, ...props }, ref) => {
     if (!editor) return null;
 

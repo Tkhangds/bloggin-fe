@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   Bell,
   BookOpen,
@@ -15,9 +12,13 @@ import {
   TrendingUpIcon as Trending,
   User,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -25,19 +26,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "@/context/AuthContext";
 
-interface MobileMenuProps {
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
-
 export function MobileMenu() {
-  const { user, logout } = useAuthContext();
+  const { user } = useAuthContext();
 
   const [loggedIn, setLoggedIn] = useState("false");
 
