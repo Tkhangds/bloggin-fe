@@ -8,6 +8,8 @@ import { useRouter } from "next/navigation";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
+import { twMerge } from "tailwind-merge";
+import { useFavorite } from "@/hooks/apis/useFavorite";
 
 export default function BlogCard({
   index,
@@ -17,6 +19,7 @@ export default function BlogCard({
   post: Post;
 }) {
   const router = useRouter();
+  const { data, isLoading } = useFavorite().useGetFavoriteCount(post.id);
   return (
     <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
       <div onClick={() => router.push("/blog/" + post.id)}>
@@ -57,9 +60,18 @@ export default function BlogCard({
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 text-gray-500">
+                <div
+                  className={twMerge(
+                    "flex items-center gap-1",
+                    !isLoading && data.data.isFavorite
+                      ? "font-semibold text-red-500"
+                      : "text-gray-500",
+                  )}
+                >
                   <Heart className="h-4 w-4" />
-                  <span className="text-xs">{"1"}</span>
+                  {!isLoading && (
+                    <span className="text-xs">{data.data.count}</span>
+                  )}
                 </div>
                 <div className="flex items-center gap-1 text-gray-500">
                   <MessageCircle className="h-4 w-4" />

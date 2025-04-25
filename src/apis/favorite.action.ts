@@ -16,7 +16,11 @@ const favoriteAction = {
         },
       },
     );
-    return result.data.data;
+    return result.data;
+  },
+  async getFavoriteCount(postId: string) {
+    const res = await bloggingApi.get(`favorite/${postId}/count`);
+    return res.data;
   },
   async createFavorite(data: CreateFavoriteDto) {
     const result = await bloggingApi.post<SuccessResponseWrapper<Favorite>>(
