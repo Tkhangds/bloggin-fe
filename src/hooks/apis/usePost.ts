@@ -32,7 +32,7 @@ export const usePost = () => {
       },
       onSuccess: (_, variable) => {
         queryClient.invalidateQueries({ queryKey: ["post", variable.id] });
-        queryClient.invalidateQueries({ queryKey: ["post", "all"] });
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
         queryClient.invalidateQueries({ queryKey: ["post", "author"] });
       },
     });
@@ -45,16 +45,13 @@ export const usePost = () => {
       },
       onSuccess: (result, variable) => {
         queryClient.invalidateQueries({
-          queryKey: ["post", result.id],
-        });
-        queryClient.invalidateQueries({
           queryKey: ["draft", variable.data.authorId],
         });
         queryClient.invalidateQueries({
           queryKey: ["post", "author"],
         });
         queryClient.invalidateQueries({
-          queryKey: ["post", "all"],
+          queryKey: ["posts"],
         });
         toast.success("Post created successfully");
       },
@@ -67,7 +64,6 @@ export const usePost = () => {
         return await postAction.deletePostById(id);
       },
       onSuccess: (_, id) => {
-        toast.success("Post deleted successfully");
         queryClient.invalidateQueries({ queryKey: ["post", id] });
         queryClient.invalidateQueries({
           queryKey: ["post", "author"],
@@ -75,6 +71,7 @@ export const usePost = () => {
         queryClient.invalidateQueries({
           queryKey: ["post", "all"],
         });
+        toast.success("Post deleted successfully");
       },
     });
   };

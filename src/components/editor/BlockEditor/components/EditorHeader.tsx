@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useRouter, usePathname } from "next/navigation";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean;
@@ -27,6 +28,8 @@ export const EditorHeader = ({
   isSaving,
   mode,
 }: EditorHeaderProps) => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const pathname = usePathname();
   const { characters, words } = useEditorState({
@@ -42,7 +45,6 @@ export const EditorHeader = ({
 
   const toggleEditable = useCallback(() => {
     editor.setOptions({ editable: !editor.isEditable });
-    // force update the editor
     editor.view.dispatch(editor.view.state.tr);
   }, [editor]);
 
@@ -55,6 +57,9 @@ export const EditorHeader = ({
           {mode === "draft" ? (
             <Button
               onClick={() => {
+                queryClient.invalidateQueries({
+                  queryKey: ["draft", pathname.split("/").pop()],
+                });
                 router.push("/publish/" + pathname.split("/").pop());
               }}
               size={"sm"}
