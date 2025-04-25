@@ -62,7 +62,9 @@ export const useFavorite = () => {
         queryClient.invalidateQueries({
           queryKey: ["favCount", variable.data.postId],
         });
-
+        queryClient.invalidateQueries({
+          queryKey: ["favorite"],
+        });
         toast.success("Unfavored blog");
       },
       onError: (error) => {

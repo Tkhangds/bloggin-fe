@@ -21,7 +21,7 @@ export default function BlogCard({
   const router = useRouter();
   const { data, isLoading } = useFavorite().useGetFavoriteCount(post.id);
   return (
-    <article key={index} className="cursor-pointer border-b pb-8 last:border-0">
+    <article key={index} className="cursor-pointer border-b pb-8">
       <div onClick={() => router.push("/blog/" + post.id)}>
         <div className="mb-3 flex items-center gap-2">
           <Avatar className="h-6 w-6">
@@ -63,14 +63,14 @@ export default function BlogCard({
                 <div
                   className={twMerge(
                     "flex items-center gap-1",
-                    !isLoading && data.data.isFavorite
+                    !isLoading && data?.data.isFavorite
                       ? "font-semibold text-red-500"
                       : "text-gray-500",
                   )}
                 >
                   <Heart className="h-4 w-4" />
                   {!isLoading && (
-                    <span className="text-xs">{data.data.count}</span>
+                    <span className="text-xs">{data?.data.count}</span>
                   )}
                 </div>
                 <div className="flex items-center gap-1 text-gray-500">

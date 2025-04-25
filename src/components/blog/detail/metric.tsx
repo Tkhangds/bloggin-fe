@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 import { useFavorite } from "@/hooks/apis/useFavorite";
+import { FavoriteCountResponseDto } from "@/types/dtos/favorite-count-response.dto";
+import { Favorite } from "@/types/favorite";
 import { Post } from "@/types/post";
 import { to } from "@react-spring/web";
 import { Heart, Loader2, MessageCircle, Play, Share2 } from "lucide-react";
@@ -17,13 +19,13 @@ export default function Metric({ data }: { data: Post }): JSX.Element {
   const router = useRouter();
 
   const handleFavClicked = async () => {
-    if (favCount.data.isFavorite === null) {
+    if (favCount?.data.isFavorite === null) {
       toast.error("Login to favorite");
       router.push("/sign-in");
       return;
     }
     try {
-      if (!favCount.data.isFavorite) {
+      if (!favCount?.data.isFavorite) {
         const res = await favAction.mutateAsync({ data: { postId: data.id } });
       } else {
         const res = await unFavAction.mutateAsync({
@@ -40,7 +42,7 @@ export default function Metric({ data }: { data: Post }): JSX.Element {
         <div
           className={twMerge(
             "flex items-center gap-1",
-            !isLoading && favCount.data.isFavorite
+            !isLoading && favCount?.data.isFavorite
               ? "font-bold text-red-500"
               : "",
           )}
@@ -54,7 +56,7 @@ export default function Metric({ data }: { data: Post }): JSX.Element {
           >
             <Heart className="mr-1 h-5 w-5" />
             {!isLoading ? (
-              <span>{favCount.data.count}</span>
+              <span>{favCount?.data.count}</span>
             ) : (
               <Loader2 className="animate-spin" />
             )}
