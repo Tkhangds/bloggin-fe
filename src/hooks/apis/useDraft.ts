@@ -31,10 +31,7 @@ export const useDraft = () => {
       mutationFn: async ({ data }: { data: CreateDraftDto }) => {
         return await draftAction.createDraft(data);
       },
-      onSuccess: (result) => {
-        queryClient.invalidateQueries({
-          queryKey: ["draft", result.data.authorId],
-        });
+      onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["draft", "author"],
         });

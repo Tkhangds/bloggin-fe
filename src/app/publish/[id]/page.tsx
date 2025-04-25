@@ -47,6 +47,8 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (draft) {
+      console.log("Draft:", draft);
+
       setValue("content", draft.content);
       setValue("authorId", draft.authorId);
     }
@@ -60,6 +62,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
     const blog = await createPost({ data });
     await deleteDraft(params.id);
     await queryClient.invalidateQueries({ queryKey: ["posts"] });
+    await queryClient.invalidateQueries({ queryKey: ["post", blog.id] });
     router.push("/blog/" + blog.id);
   };
 
