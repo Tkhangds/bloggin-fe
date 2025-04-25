@@ -10,6 +10,8 @@ import { AvatarMenu } from "@/components/header-menu/avatar-menu";
 import { Button } from "@/components/ui/button";
 import clsx from "clsx";
 import { useRouter, usePathname } from "next/navigation";
+import { MobileMenu } from "@/components/header-menu/mobile-menu";
+import { useQueryClient } from "@tanstack/react-query";
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean;
@@ -26,6 +28,8 @@ export const EditorHeader = ({
   isSaving,
   mode,
 }: EditorHeaderProps) => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const pathname = usePathname();
   const { characters, words } = useEditorState({
@@ -41,7 +45,6 @@ export const EditorHeader = ({
 
   const toggleEditable = useCallback(() => {
     editor.setOptions({ editable: !editor.isEditable });
-    // force update the editor
     editor.view.dispatch(editor.view.state.tr);
   }, [editor]);
 
@@ -54,6 +57,9 @@ export const EditorHeader = ({
           {mode === "draft" ? (
             <Button
               onClick={() => {
+                queryClient.invalidateQueries({
+                  queryKey: ["draft", pathname.split("/").pop()],
+                });
                 router.push("/publish/" + pathname.split("/").pop());
               }}
               size={"sm"}
@@ -78,6 +84,7 @@ export const EditorHeader = ({
           <Toolbar.Button
             tooltip={editor.isEditable ? "Disable editing" : "Enable editing"}
             onClick={toggleEditable}
+            className="hidden lg:flex"
           >
             <Icon name={editor.isEditable ? "PenOff" : "Pen"} />
           </Toolbar.Button>
@@ -85,19 +92,23 @@ export const EditorHeader = ({
             tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
             onClick={toggleSidebar}
             active={isSidebarOpen}
-            className={isSidebarOpen ? "bg-transparent" : ""}
+            className={clsx(
+              isSidebarOpen ? "bg-transparent" : "",
+              "hidden lg:flex",
+            )}
           >
             <Icon name={isSidebarOpen ? "PanelRightClose" : "PanelRight"} />
           </Toolbar.Button>
-          <FloatingScrollIndicator />
+          <FloatingUpdateIndicator />
           <AvatarMenu></AvatarMenu>
+          <MobileMenu></MobileMenu>
         </div>
       </div>
     </div>
   );
 };
 
-const FloatingScrollIndicator = () => {
+const FloatingUpdateIndicator = () => {
   return (
     <button
       className={clsx(

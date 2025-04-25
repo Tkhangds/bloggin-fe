@@ -21,7 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body
+        className={`${inter.className} scrollbar-gutter-stable overflow-y-scroll antialiased`}
+      >
         <TanStackProvider>
           <AuthProvider>{children}</AuthProvider>
         </TanStackProvider>

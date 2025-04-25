@@ -1,42 +1,42 @@
 "use client";
 
-import { NotepadTextDashed } from "lucide-react";
-import { Button } from "../ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "../ui/card";
+import { useDraft } from "@/hooks/apis/useDraft";
 import { Draft } from "@/types/draft";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useRouter } from "next/navigation";
-import { useDraft } from "@/hooks/apis/useDraft";
-import { toast } from "sonner";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 export default function DraftItemCard({ draft }: { draft: Draft }) {
   const router = useRouter();
   const { mutateAsync: deleteDraft } = useDraft().useDeleteDraftById();
+  const queryClient = useDraft().queryClient;
   const handleDeleteDraft = async (id: string) => {
     await deleteDraft(id);
-    toast.success("Draft deleted successfully");
   };
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader className="p-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{draft.title}</CardTitle>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <NotepadTextDashed className="h-4 w-4" />
-          </Button>
+          <CardTitle
+            onClick={() => router.push(`/draft/${draft.id}`)}
+            className="cursor-pointer text-base"
+          >
+            {draft.title}
+          </CardTitle>
         </div>
         <CardDescription>
           Last edited on {formatDateFromISOString(draft.updatedAt)}
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-4 pt-0">
+      <CardContent className="flex-1 p-4 pt-0">
         <p className="line-clamp-2 text-sm text-muted-foreground">
           {firstSentenceJson(draft.content)}
         </p>
@@ -44,12 +44,13 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
       <div className="flex items-center justify-end border-t p-4">
         <div className="flex space-x-2">
           <Button
-            variant="outline"
+            variant="destructive_outline"
             size="sm"
-            onClick={() => router.replace(`/draft/${draft.id}`)}
+            onClick={() => handleDeleteDraft(draft.id)}
           >
-            Continue
+            Delete
           </Button>
+
           <Button
             variant="outline"
             size="sm"
@@ -58,11 +59,13 @@ export default function DraftItemCard({ draft }: { draft: Draft }) {
             Publish
           </Button>
           <Button
-            variant="destructive"
             size="sm"
-            onClick={() => handleDeleteDraft(draft.id)}
+            onClick={() => {
+              queryClient.invalidateQueries({ queryKey: ["draft", draft.id] });
+              router.replace(`/draft/${draft.id}`);
+            }}
           >
-            Delete
+            Continue
           </Button>
         </div>
       </div>

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { initialContent } from "@/lib/editor/data/initialContent";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useAuthContext } from "@/context/AuthContext";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function Page() {
   const router = useRouter();

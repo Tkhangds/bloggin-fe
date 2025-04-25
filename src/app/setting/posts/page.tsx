@@ -13,7 +13,7 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 import { usePost } from "@/hooks/apis/usePost";
 import PostItemCard from "@/components/setting/post-item-card";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function PostsPage() {
   const { user, loading } = useAuthContext();
@@ -37,7 +37,6 @@ export default function PostsPage() {
         <div className="space-y-4">
           <div className="flex justify-between">
             <h3 className="text-lg font-medium">Your Blog Posts</h3>
-            <Button size="sm">Create Post</Button>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">

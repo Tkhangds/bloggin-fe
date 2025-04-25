@@ -1,8 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   Bell,
   BookOpen,
@@ -15,9 +12,13 @@ import {
   TrendingUpIcon as Trending,
   User,
 } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -25,17 +26,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import { useAuthContext } from "@/context/AuthContext";
 
-interface MobileMenuProps {
-  user: {
-    name: string;
-    email: string;
-    image?: string;
-  };
-}
+export function MobileMenu() {
+  const { user } = useAuthContext();
 
-export function MobileMenu({ user }: MobileMenuProps) {
   const [loggedIn, setLoggedIn] = useState("false");
 
   const router = useRouter();
@@ -64,12 +59,14 @@ export function MobileMenu({ user }: MobileMenuProps) {
   };
 
   // Get initials from name
-  const initials = user.name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase()
-    .substring(0, 2);
+  const initials = user?.username
+    ? user.username
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .substring(0, 2)
+    : "N/A";
 
   return (
     <Sheet>
@@ -89,13 +86,13 @@ export function MobileMenu({ user }: MobileMenuProps) {
           <>
             <div className="flex items-center gap-4 py-6">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={user.image} alt={user.name} />
+                <AvatarImage src={user?.avatarUrl} alt={user?.displayName} />
                 <AvatarFallback>{initials}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="text-sm font-medium">{user.name}</span>
+                <span className="text-sm font-medium">{user?.displayName}</span>
                 <span className="text-xs text-muted-foreground">
-                  {user.email}
+                  {user?.email}
                 </span>
               </div>
             </div>

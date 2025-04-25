@@ -12,22 +12,24 @@ export default function Footer() {
           height={150}
           src={`/image/Blogging.svg`}
           alt="logo"
-          className="mx-auto mb-6 scale-[3] dark:hidden lg:mx-0 lg:mb-0"
+          className="z-0 mx-auto mb-6 scale-[3] dark:hidden lg:mx-0 lg:mb-0"
+          draggable={false}
         />
         <Image
           width={100}
           height={150}
           src={`/image/Blogging-white.svg`}
           alt="logo"
-          className="mx-auto mb-6 hidden scale-[3] dark:flex lg:mx-0 lg:mb-0"
+          className="z-0 mx-auto mb-6 hidden scale-[3] dark:flex lg:mx-0 lg:mb-0"
+          draggable={false}
         />
 
-        <div className="flex flex-col gap-8 lg:flex-row lg:gap-4">
+        <div className="z-10 flex flex-col gap-8 lg:flex-row lg:gap-4">
           <div className="flex flex-1 flex-col">
             <span className="text-[20px] font-[600] text-neutral-800 underline underline-offset-2 dark:text-neutral-300">
               About Bloggin
             </span>
-            <div className="py-3">
+            <div className="py-3 text-[#171717] dark:text-[#f9f9f9]">
               Bloggin is more than just a platform—it&apos;s a thriving hub for
               sharing ideas, sparking conversations, and expanding knowledge.
               Designed with a clean, user-friendly interface, Bloggin makes it

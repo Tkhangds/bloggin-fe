@@ -1,18 +1,33 @@
 import { motion } from "framer-motion";
 
 export default function FloatingPaths({ position }: { position: number }) {
-  const paths = Array.from({ length: 36 }, (_, i) => ({
-    id: i,
-    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${
-      380 - i * 5 * position
-    } -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${
-      152 - i * 5 * position
-    } ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${
-      684 - i * 5 * position
-    } ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
-    color: `rgba(15,23,42,${0.1 + i * 0.03})`,
-    width: 0.5 + i * 0.03,
-  }));
+  const numPaths = 36;
+  const baseX = 380;
+  const baseY = 189;
+
+  const paths = Array.from({ length: numPaths }, (_, i) => {
+    const offset = i * 5 * position;
+    const yOffset = i * 6;
+
+    return {
+      id: i,
+      d: `M-${baseX - offset} -${baseY + yOffset}C-${baseX - offset} -${
+        baseY + yOffset
+      } -${312 - offset} ${216 - yOffset} ${152 - offset} ${
+        343 - yOffset
+      }C${616 - offset} ${470 - yOffset} ${684 - offset} ${
+        875 - yOffset
+      } ${684 - offset} ${875 - yOffset}`,
+      strokeOpacity: 0.1 + i * 0.03,
+      strokeWidth: 0.5 + i * 0.03,
+    };
+  });
+
+  const pathAnimation = {
+    pathLength: 1,
+    opacity: [0.3, 0.6, 0.3],
+    pathOffset: [0, 1, 0],
+  };
 
   return (
     <div className="pointer-events-none absolute inset-0">
@@ -22,19 +37,15 @@ export default function FloatingPaths({ position }: { position: number }) {
         fill="none"
       >
         <title>Welcome To Blogging</title>
-        {paths.map((path) => (
+        {paths.map(({ id, d, strokeOpacity, strokeWidth }) => (
           <motion.path
-            key={path.id}
-            d={path.d}
+            key={id}
+            d={d}
             stroke="currentColor"
-            strokeWidth={path.width}
-            strokeOpacity={0.1 + path.id * 0.03}
+            strokeWidth={strokeWidth}
+            strokeOpacity={strokeOpacity}
             initial={{ pathLength: 0.3, opacity: 0.6 }}
-            animate={{
-              pathLength: 1,
-              opacity: [0.3, 0.6, 0.3],
-              pathOffset: [0, 1, 0],
-            }}
+            animate={pathAnimation}
             transition={{
               duration: 20 + Math.random() * 10,
               repeat: Number.POSITIVE_INFINITY,

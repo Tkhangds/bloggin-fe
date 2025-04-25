@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import draftAction from "@/apis/draft.action";
 import { UpdateDraftDto } from "@/types/dtos/update-draft.dto";
 import { CreateDraftDto } from "@/types/dtos/create-draft.dto";
+import { toast } from "sonner";
 
 export const useDraft = () => {
   const queryClient = useQueryClient();
@@ -22,7 +23,6 @@ export const useDraft = () => {
       mutationFn: ({ id, data }: { id: string; data: UpdateDraftDto }) => {
         return draftAction.updateDraftById(id, data);
       },
-      onSuccess: (_) => {},
     });
   };
 
@@ -31,10 +31,7 @@ export const useDraft = () => {
       mutationFn: async ({ data }: { data: CreateDraftDto }) => {
         return await draftAction.createDraft(data);
       },
-      onSuccess: (result) => {
-        queryClient.invalidateQueries({
-          queryKey: ["draft", result.data.authorId],
-        });
+      onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: ["draft", "author"],
         });
@@ -52,6 +49,7 @@ export const useDraft = () => {
         queryClient.invalidateQueries({
           queryKey: ["draft", "author"],
         });
+        toast.success("Draft deleted successfully");
       },
     });
   };

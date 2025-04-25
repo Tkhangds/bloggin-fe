@@ -25,7 +25,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function ProfilePage() {
   const [avatar, setAvatar] = useState<string>("/typescript.svg");
@@ -109,6 +109,7 @@ export default function ProfilePage() {
                   placeholder="Username"
                   className="pl-9"
                   value={user?.displayName}
+                  readOnly
                 />
               </div>
             </div>
@@ -154,6 +155,7 @@ export default function ProfilePage() {
                   placeholder="Email address"
                   className="pl-9"
                   value={user?.email}
+                  readOnly
                 />
               </div>
             </div>

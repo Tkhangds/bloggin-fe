@@ -1,5 +1,9 @@
+.modal-open {
+  overflow: inherit;
+}
+
 .ProseMirror {
-  @apply z-0 mx-auto max-w-2xl py-16 pl-4 pr-4 caret-black outline-0 dark:caret-white lg:min-w-[45rem] lg:pl-8 lg:pr-8 xl:pl-16 xl:pr-8;
+  @apply z-0 mx-auto max-w-xl text-wrap caret-black outline-0 dark:caret-white lg:min-w-[30rem] lg:max-w-2xl lg:py-4 lg:pl-0;
 
   .selection {
     @apply inline;
@@ -39,3 +43,5 @@
 @import "./partials/placeholder.css";
 @import "./partials/table.css";
 @import "./partials/typography.css";
+@import "./globals.css";
+@import "./editor.css";

@@ -53,7 +53,7 @@ export const BlockEditor = ({
         />
         <EditorContent
           editor={editor}
-          className="mt-4 flex-1 overflow-y-auto"
+          className="mt-16 flex-1 overflow-y-auto px-4 py-8 lg:px-0 lg:py-0"
         />
         <ContentItemMenu editor={editor} isEditable={isEditable} />
         <LinkMenu editor={editor} appendTo={menuContainerRef} />

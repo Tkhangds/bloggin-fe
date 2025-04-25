@@ -2,10 +2,11 @@
 
 import type React from "react";
 
+import { FileText, NotepadTextDashed, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, FileText, Heart, NotepadTextDashed } from "lucide-react";
 
+import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -14,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 
 export default function SettingsLayout({
   children,
@@ -26,8 +26,6 @@ export default function SettingsLayout({
   return (
     <LandingHeaderLayout>
       <div className="container mx-auto px-4 py-8 xl:px-48">
-        <h1 className="mb-8 text-3xl font-bold">Profile Settings</h1>
-
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Left Column - Navigation */}
           <div className="md:col-span-1">
@@ -76,7 +74,7 @@ export default function SettingsLayout({
                       Draft
                     </Link>
                   </Button>
-                  <Button
+                  {/* <Button
                     variant={
                       pathname === "/setting/favorites" ? "default" : "ghost"
                     }
@@ -87,7 +85,7 @@ export default function SettingsLayout({
                       <Heart className="mr-2 h-4 w-4" />
                       Favorites
                     </Link>
-                  </Button>
+                  </Button> */}
                 </div>
               </CardContent>
             </Card>

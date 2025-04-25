@@ -9,6 +9,7 @@ import {
 import postAction from "@/apis/post.action";
 import { CreatePostDto } from "@/types/dtos/create-post.dto";
 import { UpdatePostDto } from "@/types/dtos/update-post.dto";
+import { toast } from "sonner";
 
 export const usePost = () => {
   const queryClient = useQueryClient();
@@ -31,7 +32,7 @@ export const usePost = () => {
       },
       onSuccess: (_, variable) => {
         queryClient.invalidateQueries({ queryKey: ["post", variable.id] });
-        queryClient.invalidateQueries({ queryKey: ["post", "all"] });
+        queryClient.invalidateQueries({ queryKey: ["posts"] });
         queryClient.invalidateQueries({ queryKey: ["post", "author"] });
       },
     });
@@ -44,17 +45,15 @@ export const usePost = () => {
       },
       onSuccess: (result, variable) => {
         queryClient.invalidateQueries({
-          queryKey: ["post", result.id],
-        });
-        queryClient.invalidateQueries({
           queryKey: ["draft", variable.data.authorId],
         });
         queryClient.invalidateQueries({
           queryKey: ["post", "author"],
         });
         queryClient.invalidateQueries({
-          queryKey: ["post", "all"],
+          queryKey: ["posts"],
         });
+        toast.success("Post created successfully");
       },
     });
   };
@@ -72,6 +71,7 @@ export const usePost = () => {
         queryClient.invalidateQueries({
           queryKey: ["post", "all"],
         });
+        toast.success("Post deleted successfully");
       },
     });
   };

@@ -5,7 +5,7 @@ import { usePost } from "@/hooks/apis/usePost";
 
 import BlogCard from "@/components/blog/read/blog-card";
 import BlogEndNotification from "@/components/blog/read/blog-end-notification";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 import TagRecommend from "@/components/blog/read/tag-recommend";
 import WriterRecommend from "@/components/blog/read/writer-recommend";
 import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";

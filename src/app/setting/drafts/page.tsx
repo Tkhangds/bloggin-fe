@@ -12,7 +12,7 @@ import DraftItemCard from "@/components/setting/draft-item-card";
 import { useDraft } from "@/hooks/apis/useDraft";
 import { useAuthContext } from "@/context/AuthContext";
 import { NotepadTextDashed } from "lucide-react";
-import FullPageLoading from "@/components/loading/loading";
+import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function DraftsPage() {
   const { user, loading } = useAuthContext();
@@ -36,7 +36,6 @@ export default function DraftsPage() {
         <div className="space-y-4">
           <div className="flex justify-between">
             <h3 className="text-lg font-medium">Your Draft Posts</h3>
-            <Button size="sm">Create Draft</Button>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             {data &&

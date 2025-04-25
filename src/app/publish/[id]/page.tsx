@@ -39,7 +39,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
     formState: { errors },
   } = form;
 
-  const { useGetDraftById } = useDraft();
+  const { queryClient, useGetDraftById } = useDraft();
 
   const { data: draft } = useGetDraftById(params.id);
 
@@ -47,6 +47,8 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (draft) {
+      console.log("Draft:", draft);
+
       setValue("content", draft.content);
       setValue("authorId", draft.authorId);
     }
@@ -59,6 +61,8 @@ export default function PublishPage({ params }: { params: { id: string } }) {
   const onSubmitHandle = async (data: CreatePostDto) => {
     const blog = await createPost({ data });
     await deleteDraft(params.id);
+    await queryClient.invalidateQueries({ queryKey: ["posts"] });
+    await queryClient.invalidateQueries({ queryKey: ["post", blog.id] });
     router.push("/blog/" + blog.id);
   };
 
@@ -103,7 +107,15 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
               <TagsSection tagsManager={tagsManager} />
 
-              <div className="pt-2">
+              <div className="flex items-center justify-end space-x-4 pt-2">
+                <Button
+                  variant="outline"
+                  className="w-full px-8 md:w-auto"
+                  size="lg"
+                  onClick={() => router.back()}
+                >
+                  Cancel
+                </Button>
                 <Button
                   type="submit"
                   className="w-full px-8 md:w-auto"

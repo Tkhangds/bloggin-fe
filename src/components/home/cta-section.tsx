@@ -19,7 +19,7 @@ export default function CTASection() {
           threshold={0.2}
           delay={100}
         >
-          <h1 className="mb-2 w-full text-center text-2xl font-bold tracking-tight text-[#171717] dark:text-white md:text-3xl">
+          <h1 className="mb-4 w-full text-center text-2xl font-bold tracking-tight text-[#171717] dark:text-white md:text-3xl">
             Sign up now and start your journey with us!
           </h1>
         </AnimatedContent>
@@ -36,7 +36,7 @@ export default function CTASection() {
           <Button
             variant={"default"}
             size={"lg"}
-            className="flex items-center justify-center"
+            className="flex items-center justify-center px-8 py-6"
           >
             <h1 className="flex w-full items-center justify-center text-center text-base font-bold tracking-tight text-white dark:text-[#171717] md:text-xl">
               Start Writing!
