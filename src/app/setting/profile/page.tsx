@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Camera, User, MapPin, Mail, Phone } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -28,12 +28,23 @@ import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function ProfilePage() {
-  const [avatar, setAvatar] = useState<string>("/typescript.svg");
+  const { user, loading } = useAuthContext();
+
+  const [avatar, setAvatar] = useState<string>(
+    `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName ?? "N/A"}`,
+  );
   const [gender, setGender] = useState<string>("male");
   const [location, setLocation] = useState<string>("New York, USA");
   const [phone, setPhone] = useState<string>("+1 (555) 123-4567");
 
-  const { user, loading } = useAuthContext();
+  useEffect(() => {
+    if (user) {
+      setAvatar(
+        user.avatarUrl ||
+          `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`,
+      );
+    }
+  }, [user]);
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
