@@ -66,7 +66,7 @@ export default function CommentItem({
             <div>
               <div className="font-medium">{comment.author.displayName}</div>
               <div className="text-sm text-gray-500">
-                {timeAgo(comment.createdAt)}
+                {timeAgo(comment.updatedAt)}
               </div>
             </div>
           </div>
