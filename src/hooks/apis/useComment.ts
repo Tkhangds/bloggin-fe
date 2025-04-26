@@ -64,6 +64,7 @@ export const useComment = (postId: string) => {
         queryClient.invalidateQueries({
           queryKey: ["comment", postId],
         });
+        toast.success("Comment deleted successfully");
       },
     });
   };
