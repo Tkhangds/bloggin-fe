@@ -12,7 +12,7 @@ import { useComment } from "@/hooks/apis/useComment";
 import { Comment } from "@/types/comment";
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 
-interface CommentProps {
+interface CommentActionProps {
   comment: Comment;
   onEditStart: () => void;
 }
@@ -20,7 +20,7 @@ interface CommentProps {
 export default function CommentAction({
   comment,
   onEditStart,
-}: CommentProps): JSX.Element {
+}: CommentActionProps): JSX.Element {
   const { mutateAsync: deleteComment } = useComment(
     comment.postId,
   ).useDeleteCommentById();

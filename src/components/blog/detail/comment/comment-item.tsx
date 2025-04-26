@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useComment } from "@/hooks/apis/useComment";
 import { Button } from "@/components/ui/button";
 
-interface CommentProps {
+interface CommentItemProps {
   comment: Comment;
   isAuthor?: boolean;
 }
@@ -16,7 +16,7 @@ interface CommentProps {
 export default function CommentItem({
   comment,
   isAuthor,
-}: CommentProps): JSX.Element {
+}: CommentItemProps): JSX.Element {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
 
