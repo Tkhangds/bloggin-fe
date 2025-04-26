@@ -14,13 +14,11 @@ import { Ellipsis, Pencil, Trash2 } from "lucide-react";
 
 interface CommentProps {
   comment: Comment;
-  isAuthor?: boolean;
   onEditStart: () => void;
 }
 
 export default function CommentAction({
   comment,
-  isAuthor,
   onEditStart,
 }: CommentProps): JSX.Element {
   const { mutateAsync: deleteComment } = useComment(

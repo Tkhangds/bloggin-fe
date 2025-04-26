@@ -74,7 +74,6 @@ export default function CommentItem({
           {isAuthor && (
             <CommentAction
               comment={comment}
-              isAuthor={isAuthor}
               onEditStart={handleEditStart}
             ></CommentAction>
           )}
