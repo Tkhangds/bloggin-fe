@@ -26,16 +26,25 @@ import {
 } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/full-page-loading";
+import { set, update } from "lodash";
+import { useUser } from "@/hooks/apis/useUser";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const { user, loading } = useAuthContext();
+  const { mutateAsync: updateUser, isPending: isUpdatingUser } =
+    useUser().useUpdateUser();
+  const { mutateAsync: updateAvatar, isPending: isUpdatingAvatar } =
+    useUser().useUpdateAvatar();
 
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatar, setAvatar] = useState<string>(
     `https://api.dicebear.com/9.x/initials/svg?seed=${user?.displayName ?? "N/A"}`,
   );
-  const [gender, setGender] = useState<string>("male");
-  const [location, setLocation] = useState<string>("New York, USA");
-  const [phone, setPhone] = useState<string>("+1 (555) 123-4567");
+
+  const [displayName, setDisplayName] = useState<string>(
+    user?.displayName ?? "",
+  );
 
   useEffect(() => {
     if (user) {
@@ -43,27 +52,38 @@ export default function ProfilePage() {
         user.avatarUrl ||
           `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`,
       );
+      setDisplayName(user.displayName);
     }
   }, [user]);
-
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        if (e.target?.result) {
-          setAvatar(e.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   if (loading) {
     return (
       <FullPageLoading text="We are preparing everything for you!"></FullPageLoading>
     );
   }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted");
+
+    if (avatarFile) {
+      try {
+        await updateAvatar({ data: avatarFile });
+      } catch (error) {
+        console.error("Error updating avatar:", error);
+        toast.error("Failed to update avatar");
+      }
+    }
+
+    if (displayName !== user?.displayName) {
+      try {
+        await updateUser({ data: { displayName } });
+      } catch (error) {
+        console.error("Error updating user:", error);
+        toast.error("Failed to update user");
+      }
+    }
+  };
 
   return (
     <Card>
@@ -72,7 +92,7 @@ export default function ProfilePage() {
         <CardDescription>Update your profile information</CardDescription>
       </CardHeader>
       <CardContent>
-        <form className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Avatar Upload */}
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start">
             <div className="relative">
@@ -95,7 +115,14 @@ export default function ProfilePage() {
                   type="file"
                   accept="image/*"
                   className="hidden"
-                  onChange={handleAvatarChange}
+                  onChange={(e) => {
+                    const file = e.target.files?.[0] || null;
+                    setAvatarFile(file);
+                    if (file) {
+                      const fileUrl = URL.createObjectURL(file);
+                      setAvatar(fileUrl);
+                    }
+                  }}
                 />
               </div>
             </div>
@@ -112,20 +139,20 @@ export default function ProfilePage() {
           {/* User Information Form */}
           <div className="grid gap-6 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">Display Name</Label>
               <div className="relative">
                 <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="username"
                   placeholder="Username"
                   className="pl-9"
-                  value={user?.displayName}
-                  readOnly
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
               <Select value={gender} onValueChange={setGender}>
                 <SelectTrigger>
@@ -154,7 +181,7 @@ export default function ProfilePage() {
                   onChange={(e) => setLocation(e.target.value)}
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -167,11 +194,12 @@ export default function ProfilePage() {
                   className="pl-9"
                   value={user?.email}
                   readOnly
+                  disabled
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
               <div className="relative">
                 <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -184,14 +212,15 @@ export default function ProfilePage() {
                   onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex justify-end">
-            <Button type="button" variant="outline" className="mr-2">
-              Cancel
+            <Button disabled={isUpdatingUser || isUpdatingAvatar} type="submit">
+              {isUpdatingUser || isUpdatingAvatar
+                ? "Saving..."
+                : "Save Changes"}
             </Button>
-            <Button type="submit">Save Changes</Button>
           </div>
         </form>
       </CardContent>

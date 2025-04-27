@@ -54,7 +54,10 @@ export function AvatarMenu({}) {
         >
           <Avatar className="h-10 w-10 border border-border">
             <AvatarImage
-              src={`https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`}
+              src={
+                user.avatarUrl ??
+                `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`
+              }
               alt={user.username}
             />
             <AvatarFallback className="bg-primary/10 text-primary">
@@ -66,7 +69,9 @@ export function AvatarMenu({}) {
       <DropdownMenuContent className="modal-open w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.username}</p>
+            <p className="text-sm font-medium leading-none">
+              {user.displayName}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -74,19 +79,28 @@ export function AvatarMenu({}) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => router.push("/setting/profile")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/setting/profile")}
+          >
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/setting/posts")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/setting/posts")}
+          >
             <FileText className="mr-2 h-4 w-4" />
             <span>Your Blog</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/setting/drafts")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/setting/drafts")}
+          >
             <NotepadTextDashed className="mr-2 h-4 w-4" />
             <span>Your Draft</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={toggleTheme}>
+          <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
             {theme === "light" ? (
               <Moon className="mr-2 h-4 w-4" />
             ) : (
@@ -96,13 +110,16 @@ export function AvatarMenu({}) {
               {theme === "light" ? "Dark Mode (wip)" : "Light Mode (wip)"}
             </span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => router.push("/")}>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/")}
+          >
             <BadgeHelp className="mr-2 h-4 w-4" />
             <span>About Us</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
+        <DropdownMenuItem className="cursor-pointer" onClick={handleSignOut}>
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>
