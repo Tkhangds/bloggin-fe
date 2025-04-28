@@ -2,21 +2,12 @@
 
 import type React from "react";
 
+import { Camera, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Camera, User, MapPin, Mail, Phone } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+import FullPageLoading from "@/components/loading/full-page-loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -24,9 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "@/context/AuthContext";
-import FullPageLoading from "@/components/loading/full-page-loading";
-import { set, update } from "lodash";
 import { useUser } from "@/hooks/apis/useUser";
 import { toast } from "sonner";
 
