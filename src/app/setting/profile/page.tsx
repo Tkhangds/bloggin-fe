@@ -61,6 +61,7 @@ export default function ProfilePage() {
     if (avatarFile) {
       try {
         await updateAvatar({ data: avatarFile });
+        URL.revokeObjectURL(avatar);
       } catch (error) {
         console.error("Error updating avatar:", error);
         toast.error("Failed to update avatar");
