@@ -11,7 +11,7 @@ import getTemplate from "@/utils/getTemplate";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function Page() {
+function PageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateName = searchParams.get("templateName");
@@ -41,23 +41,23 @@ export default function Page() {
     }
 
     fetchDraft();
-  }, []);
+  }, [user, templateName, createDraft, router]);
 
   useEffect(() => {
     if (id) {
       router.replace(`/draft/${id}?templateName=${templateName}`);
     }
-  }, [id]);
+  }, [id, templateName, router]);
 
+  return <FullPageLoading text="We are preparing everything for you." />;
+}
+
+export default function Page() {
   return (
-    <>
-      <Suspense
-        fallback={
-          <FullPageLoading text="We are preparing everything for you." />
-        }
-      >
-        <FullPageLoading text="We are preparing everything for you." />
-      </Suspense>
-    </>
+    <Suspense
+      fallback={<FullPageLoading text="We are preparing everything for you." />}
+    >
+      <PageContent />
+    </Suspense>
   );
 }
