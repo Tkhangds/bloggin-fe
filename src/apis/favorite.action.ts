@@ -2,6 +2,8 @@ import { bloggingApi } from "@/lib/HttpClient/index";
 import { Favorite } from "@/types/favorite";
 import { CreateFavoriteDto } from "@/types/dtos/create-favorite.dto";
 import { RemoveFavoriteDto } from "@/types/dtos/remove-favorite.dto";
+import { FavoriteCountResponseDto } from "@/types/dtos/favorite-count-response.dto";
+import { CreateFavoriteResponseDto } from "@/types/dtos/create-favorite-response.dto";
 
 // WIP
 
@@ -16,13 +18,18 @@ const favoriteAction = {
         },
       },
     );
-    return result.data.data;
+    return result.data;
+  },
+  async getFavoriteCount(postId: string) {
+    const res = await bloggingApi.get<
+      SuccessResponseWrapper<FavoriteCountResponseDto>
+    >(`favorite/${postId}/count`);
+    return res.data;
   },
   async createFavorite(data: CreateFavoriteDto) {
-    const result = await bloggingApi.post<SuccessResponseWrapper<Favorite>>(
-      "/favorite",
-      data,
-    );
+    const result = await bloggingApi.post<
+      SuccessResponseWrapper<CreateFavoriteResponseDto>
+    >("/favorite", data);
     return result.data;
   },
   async deleteFavorite(data: RemoveFavoriteDto) {

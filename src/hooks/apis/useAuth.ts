@@ -23,6 +23,8 @@ export const useAuth = () => {
       onSuccess: async () => {
         // Fix this later
         queryClient.invalidateQueries({ queryKey: ["login"] });
+        queryClient.invalidateQueries({ queryKey: ["favCount"] });
+        queryClient.invalidateQueries({ queryKey: ["favorite"] });
         await refetchUser();
         toast.success("Login successfully");
         router.replace("/");
@@ -50,6 +52,8 @@ export const useAuth = () => {
         return await authAction.logout();
       },
       onSuccess: () => {
+        queryClient.removeQueries({ queryKey: ["favCount"] });
+        queryClient.removeQueries({ queryKey: ["favorite"] });
         queryClient.invalidateQueries({ queryKey: ["logout"] });
         toast.success("Logout successfully");
         router.push("/");
