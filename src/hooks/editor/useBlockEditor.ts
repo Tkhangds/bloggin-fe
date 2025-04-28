@@ -5,7 +5,7 @@ import { useEditor } from "@tiptap/react";
 
 import { useAuthContext } from "@/context/AuthContext";
 import { ExtensionKit } from "@/extensions/extension-kit";
-import { initialContent } from "@/lib/editor/data/initialContent";
+import getTemplate from "@/utils/getTemplate";
 import debounce from "lodash/debounce";
 import { useCallback, useEffect, useState } from "react";
 import { useDraft } from "../apis/useDraft";
@@ -20,8 +20,9 @@ declare global {
 export const useBlockEditor = ({
   id,
   mode,
+  templateName,
   ...editorOptions
-}: { id: string | undefined; mode: string } & Partial<
+}: { id: string | undefined; mode: string; templateName?: string } & Partial<
   Omit<EditorOptions, "extensions">
 >) => {
   const { user } = useAuthContext();
@@ -42,7 +43,9 @@ export const useBlockEditor = ({
       immediatelyRender: false,
       shouldRerenderOnTransaction: false,
       autofocus: true,
-      content: contentData ? JSON.parse(contentData.content) : initialContent,
+      content: contentData
+        ? JSON.parse(contentData.content)
+        : getTemplate(templateName || ""),
       onUpdate: ({ editor }) => {
         saveContent(editor);
       },
@@ -70,7 +73,7 @@ export const useBlockEditor = ({
 
   useEffect(() => {
     console.log("Editor initialized:", contentData);
-
+    console.log("template name", templateName);
     if (editor && contentData && contentData.content) {
       const parsedContent = JSON.parse(contentData.content);
 

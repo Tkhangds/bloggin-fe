@@ -5,14 +5,17 @@ import "iframe-resizer/js/iframeResizer.contentWindow";
 
 import { useState, useEffect } from "react";
 import { useDraft } from "@/hooks/apis/useDraft";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { initialContent } from "@/lib/editor/data/initialContent";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/full-page-loading";
+import getTemplate from "@/utils/getTemplate";
 
 export default function Page() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateName = searchParams.get("templateName");
   const { useCreateDraft } = useDraft();
   const { user } = useAuthContext();
 
@@ -26,7 +29,7 @@ export default function Page() {
         router.replace("/login");
         return;
       }
-      const content = JSON.stringify(initialContent);
+      const content = JSON.stringify(getTemplate(templateName || ""));
       const draft = await createDraft({
         data: {
           content: content,
@@ -43,7 +46,7 @@ export default function Page() {
 
   useEffect(() => {
     if (id) {
-      router.replace(`/draft/${id}`);
+      router.replace(`/draft/${id}?templateName=${templateName}`);
     }
   }, [id]);
 
