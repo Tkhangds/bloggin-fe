@@ -1,16 +1,15 @@
 "use client";
 
-import { Suspense } from "react";
 import "iframe-resizer/js/iframeResizer.contentWindow";
+import { Suspense } from "react";
 
-import { useState, useEffect } from "react";
-import { useDraft } from "@/hooks/apis/useDraft";
-import { useRouter, useSearchParams } from "next/navigation";
-import { initialContent } from "@/lib/editor/data/initialContent";
-import firstSentenceJson from "@/utils/first-sentence-json";
-import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/full-page-loading";
+import { useAuthContext } from "@/context/AuthContext";
+import { useDraft } from "@/hooks/apis/useDraft";
+import firstSentenceJson from "@/utils/first-sentence-json";
 import getTemplate from "@/utils/getTemplate";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const router = useRouter();
