@@ -11,6 +11,7 @@ import {
 import { useComment } from "@/hooks/apis/useComment";
 import { Comment } from "@/types/comment";
 import { Ellipsis, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CommentActionProps {
   comment: Comment;
@@ -29,8 +30,13 @@ export default function CommentAction({
     onEditStart();
   };
 
-  const handleDelete = () => {
-    deleteComment(comment.id);
+  const handleDelete = async () => {
+    try {
+      await deleteComment(comment.id);
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      toast.error("Failed to delete comment");
+    }
   };
 
   return (
