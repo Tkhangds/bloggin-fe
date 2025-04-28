@@ -1,9 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,11 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import AnimatedContent from "../../ui/animated-content";
 
 export default function TemplateGallery() {
-  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
-
+  const router = useRouter();
   const templates = [
     {
       id: 0,
@@ -24,6 +22,7 @@ export default function TemplateGallery() {
       description:
         "Perfect for consistent daily updates and personal journaling",
       image: "/image/template/daily.png",
+      name: "daily",
     },
     {
       id: 1,
@@ -31,6 +30,7 @@ export default function TemplateGallery() {
       description:
         "Ideal for sharing wisdom, tips, and guidance with your audience",
       image: "/image/template/advice.png",
+      name: "advice",
     },
     {
       id: 2,
@@ -38,17 +38,20 @@ export default function TemplateGallery() {
       description:
         "Structured format for tutorials, code snippets, and technical explanations",
       image: "/image/template/technical.png",
+      name: "technical",
     },
     {
       id: 3,
       title: "Tip Blog",
       description: "Quick, actionable tips and tricks in a concise format",
       image: "/image/template/tip.png",
+      name: "tip",
     },
   ];
 
   const handleTemplateSelect = (id: number) => {
-    setSelectedTemplate(id);
+    //handle template selection logic here
+    router.push("/draft" + `?templateName=${templates[id].name}`);
   };
 
   return (
@@ -88,10 +91,8 @@ export default function TemplateGallery() {
           >
             <Card
               className={cn(
-                "flex h-full min-h-[400px] cursor-pointer flex-col transition-all hover:shadow-md",
-                selectedTemplate === template.id && "ring-2 ring-primary",
+                "flex h-full min-h-[400px] flex-col transition-all hover:shadow-md",
               )}
-              onClick={() => handleTemplateSelect(template.id)}
             >
               <CardHeader className="p-0">
                 <div className="relative aspect-[3/2] w-full overflow-hidden rounded-t-lg">
@@ -107,9 +108,9 @@ export default function TemplateGallery() {
               <CardContent className="flex-grow p-4 pb-0">
                 <CardTitle className="mb-2 flex items-center justify-between">
                   {template.title}
-                  {selectedTemplate === template.id && (
+                  {/* {selectedTemplate === template.id && (
                     <Check className="h-5 w-5 text-primary" />
-                  )}
+                  )} */}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
                   {template.description}
@@ -117,18 +118,14 @@ export default function TemplateGallery() {
               </CardContent>
               <CardFooter className="mt-auto p-4">
                 <Button
-                  variant={
-                    selectedTemplate === template.id ? "default" : "outline"
-                  }
+                  variant={"outline"}
                   className="w-full"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleTemplateSelect(template.id);
                   }}
                 >
-                  {selectedTemplate === template.id
-                    ? "Selected"
-                    : "Select Template"}
+                  Select Template
                 </Button>
               </CardFooter>
             </Card>

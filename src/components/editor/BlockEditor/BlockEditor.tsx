@@ -21,9 +21,11 @@ import { useSidebar } from "@/hooks/editor/useSidebar";
 export const BlockEditor = ({
   id,
   mode,
+  templateName,
 }: {
   id: string | undefined;
   mode: string;
+  templateName?: string;
 }) => {
   const [isEditable, setIsEditable] = useState(true);
   const menuContainerRef = useRef(null);
@@ -32,6 +34,7 @@ export const BlockEditor = ({
   const { editor, isSaving } = useBlockEditor({
     id,
     mode: mode,
+    templateName,
     onTransaction({ editor: currentEditor }) {
       setIsEditable(currentEditor.isEditable);
     },

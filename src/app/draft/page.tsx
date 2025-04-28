@@ -1,18 +1,20 @@
 "use client";
 
-import { Suspense } from "react";
 import "iframe-resizer/js/iframeResizer.contentWindow";
+import { Suspense } from "react";
 
-import { useState, useEffect } from "react";
-import { useDraft } from "@/hooks/apis/useDraft";
-import { useRouter } from "next/navigation";
-import { initialContent } from "@/lib/editor/data/initialContent";
-import firstSentenceJson from "@/utils/first-sentence-json";
-import { useAuthContext } from "@/context/AuthContext";
 import FullPageLoading from "@/components/loading/full-page-loading";
+import { useAuthContext } from "@/context/AuthContext";
+import { useDraft } from "@/hooks/apis/useDraft";
+import firstSentenceJson from "@/utils/first-sentence-json";
+import getTemplate from "@/utils/getTemplate";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
-export default function Page() {
+function PageContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateName = searchParams.get("templateName");
   const { useCreateDraft } = useDraft();
   const { user } = useAuthContext();
 
@@ -26,7 +28,7 @@ export default function Page() {
         router.replace("/login");
         return;
       }
-      const content = JSON.stringify(initialContent);
+      const content = JSON.stringify(getTemplate(templateName || ""));
       const draft = await createDraft({
         data: {
           content: content,
@@ -39,23 +41,23 @@ export default function Page() {
     }
 
     fetchDraft();
-  }, []);
+  }, [user, templateName, createDraft, router]);
 
   useEffect(() => {
     if (id) {
-      router.replace(`/draft/${id}`);
+      router.replace(`/draft/${id}?templateName=${templateName}`);
     }
-  }, [id]);
+  }, [id, templateName, router]);
 
+  return <FullPageLoading text="We are preparing everything for you." />;
+}
+
+export default function Page() {
   return (
-    <>
-      <Suspense
-        fallback={
-          <FullPageLoading text="We are preparing everything for you." />
-        }
-      >
-        <FullPageLoading text="We are preparing everything for you." />
-      </Suspense>
-    </>
+    <Suspense
+      fallback={<FullPageLoading text="We are preparing everything for you." />}
+    >
+      <PageContent />
+    </Suspense>
   );
 }
