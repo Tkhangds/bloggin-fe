@@ -1,6 +1,5 @@
 "use client";
 
-import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,11 +10,19 @@ import {
 } from "@/components/ui/card";
 import { useFavorite } from "@/hooks/apis/useFavorite";
 import BlogCard from "@/components/blog/read/blog-card";
+import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
 
 export default function FavoritesPage() {
   const { data, isLoading } = useFavorite().useGetFavoriteers();
   const favs = data?.pages[0].data;
   console.log("my favs: ", favs);
+  if (isLoading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <LoadBlogIndicator isLoading={isLoading} />
+      </div>
+    );
+  }
   return (
     <Card>
       <CardHeader>

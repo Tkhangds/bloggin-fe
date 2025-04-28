@@ -5,7 +5,6 @@ import CommentSection from "@/components/blog/detail/comment/comment-section";
 import Metric from "@/components/blog/detail/metric";
 import { ViewOnlyContent } from "@/components/blog/ReadOnlyView";
 import FullPageLoading from "@/components/loading/full-page-loading";
-import { useFavorite } from "@/hooks/apis/useFavorite";
 import { useReadEditor } from "@/hooks/editor/useReadEditor";
 import "@/styles/index.css";
 import { useParams } from "next/navigation";

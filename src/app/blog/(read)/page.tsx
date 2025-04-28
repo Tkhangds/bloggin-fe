@@ -9,7 +9,6 @@ import FullPageLoading from "@/components/loading/full-page-loading";
 import TagRecommend from "@/components/blog/read/tag-recommend";
 import WriterRecommend from "@/components/blog/read/writer-recommend";
 import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
-import { useFavorite } from "@/hooks/apis/useFavorite";
 
 export default function BlogBrowsing() {
   const {

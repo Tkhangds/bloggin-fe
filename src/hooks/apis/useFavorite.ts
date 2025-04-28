@@ -1,5 +1,4 @@
 import favoriteAction from "@/apis/favorite.action";
-import postAction from "@/apis/post.action";
 import { CreateFavoriteDto } from "@/types/dtos/create-favorite.dto";
 import { RemoveFavoriteDto } from "@/types/dtos/remove-favorite.dto";
 import {
@@ -39,7 +38,7 @@ export const useFavorite = () => {
       mutationFn: async ({ data }: { data: CreateFavoriteDto }) => {
         return await favoriteAction.createFavorite(data);
       },
-      onSuccess: (result, variable) => {
+      onSuccess: (result) => {
         queryClient.invalidateQueries({
           queryKey: ["favCount", result.data.postId],
         });
@@ -48,7 +47,7 @@ export const useFavorite = () => {
         });
         toast.success("Favored blog");
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Failed to favorite blog");
       },
     });
@@ -58,7 +57,7 @@ export const useFavorite = () => {
       mutationFn: async ({ data }: { data: RemoveFavoriteDto }) => {
         return await favoriteAction.deleteFavorite(data);
       },
-      onSuccess: (result, variable) => {
+      onSuccess: (_, variable) => {
         queryClient.invalidateQueries({
           queryKey: ["favCount", variable.data.postId],
         });
@@ -67,7 +66,7 @@ export const useFavorite = () => {
         });
         toast.success("Unfavored blog");
       },
-      onError: (error) => {
+      onError: () => {
         toast.error("Failed to favorite blog");
       },
     });

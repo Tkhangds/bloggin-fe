@@ -1,10 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { useAuthContext } from "@/context/AuthContext";
 import { useFavorite } from "@/hooks/apis/useFavorite";
-import { FavoriteCountResponseDto } from "@/types/dtos/favorite-count-response.dto";
-import { Favorite } from "@/types/favorite";
 import { Post } from "@/types/post";
-import { to } from "@react-spring/web";
 import { Heart, Loader2, MessageCircle, Play, Share2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -26,9 +22,9 @@ export default function Metric({ data }: { data: Post }): JSX.Element {
     }
     try {
       if (!favCount?.data.isFavorite) {
-        const res = await favAction.mutateAsync({ data: { postId: data.id } });
+        await favAction.mutateAsync({ data: { postId: data.id } });
       } else {
-        const res = await unFavAction.mutateAsync({
+        await unFavAction.mutateAsync({
           data: { postId: data.id },
         });
       }
