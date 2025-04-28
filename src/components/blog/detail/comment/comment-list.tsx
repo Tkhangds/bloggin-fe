@@ -5,6 +5,7 @@ import CommentItem from "./comment-item";
 import { MessageSquare } from "lucide-react";
 import CommentPagination from "./comment-pagination";
 import { useState } from "react";
+import { useAuthContext } from "@/context/AuthContext";
 export default function CommentsList({
   postId,
 }: {
@@ -21,10 +22,16 @@ export default function CommentsList({
     5,
   );
 
+  const { user } = useAuthContext();
+
   return (
     <div className="space-y-8">
       {comments?.data.map((comment) => (
-        <CommentItem key={comment.id} comment={comment} />
+        <CommentItem
+          key={comment.id}
+          comment={comment}
+          isAuthor={user?.id === comment.authorId}
+        />
       ))}
 
       {comments?.data.length === 0 && (
