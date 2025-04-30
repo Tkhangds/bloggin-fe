@@ -2,33 +2,32 @@ import { bloggingApi } from "@/lib/HttpClient/index";
 import { Follow } from "@/types/follow";
 import { CreateFollowDto } from "@/types/dtos/create-follow.dto";
 import { RemoveFollowDto } from "@/types/dtos/remove-follow.dto";
+import { GetFollowResponse } from "@/types/dtos/get-following-response.dto";
 
 // WIP
 
 const followAction = {
   async getFollower(page?: number, limit?: number) {
-    const result = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
-      `/follow/follower`,
-      {
-        params: {
-          page,
-          limit,
-        },
+    const result = await bloggingApi.get<
+      PaginationResponseWrapper<GetFollowResponse[]>
+    >(`/follow/follower`, {
+      params: {
+        page,
+        limit,
       },
-    );
-    return result.data.data;
+    });
+    return result.data;
   },
   async getFollowing(page?: number, limit?: number) {
-    const result = await bloggingApi.get<PaginationResponseWrapper<Follow[]>>(
-      `/follow/following`,
-      {
-        params: {
-          page,
-          limit,
-        },
+    const result = await bloggingApi.get<
+      PaginationResponseWrapper<GetFollowResponse[]>
+    >(`/follow/following`, {
+      params: {
+        page,
+        limit,
       },
-    );
-    return result.data.data;
+    });
+    return result.data;
   },
   async createFollow(data: CreateFollowDto) {
     const result = await bloggingApi.post<SuccessResponseWrapper<Follow>>(
