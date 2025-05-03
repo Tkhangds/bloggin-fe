@@ -6,6 +6,7 @@ import {
   LogOut,
   Moon,
   NotepadTextDashed,
+  Settings,
   Sun,
   User,
 } from "lucide-react";
@@ -81,10 +82,17 @@ export function AvatarMenu({}) {
         <DropdownMenuGroup>
           <DropdownMenuItem
             className="cursor-pointer"
-            onClick={() => router.push("/setting/profile")}
+            onClick={() => router.push(`/profile/${user.id}`)}
           >
             <User className="mr-2 h-4 w-4" />
             <span>Profile</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push(`/setting/profile`)}
+          >
+            <Settings className="mr-2 h-4 w-4" />
+            <span>Settings</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"

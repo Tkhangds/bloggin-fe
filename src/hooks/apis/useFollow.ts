@@ -47,11 +47,13 @@ export const useFollow = () => {
     });
   };
 
-  const useGetFollower = (limit?: number) => {
+  const useGetFollower = (userId?: string, limit?: number) => {
     return useInfiniteQuery({
-      queryKey: ["follower"],
+      queryKey: ["follower", userId],
       queryFn: ({ pageParam = 1 }) =>
-        followAction.getFollower(pageParam, limit),
+        userId
+          ? followAction.getFollower(userId, pageParam, limit)
+          : followAction.getFollower(undefined, pageParam, limit),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         return lastPage.meta.nextPage ?? undefined;
@@ -59,17 +61,20 @@ export const useFollow = () => {
     });
   };
 
-  const useGetFollowing = (limit?: number) => {
+  const useGetFollowing = (userId?: string, limit?: number) => {
     return useInfiniteQuery({
-      queryKey: ["following"],
+      queryKey: ["following", userId],
       queryFn: ({ pageParam = 1 }) =>
-        followAction.getFollowing(pageParam, limit),
+        userId
+          ? followAction.getFollowing(userId, pageParam, limit)
+          : followAction.getFollowing(undefined, pageParam, limit),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         return lastPage.meta.nextPage ?? undefined;
       },
     });
   };
+
   return {
     useCreateFollow,
     useGetFollower,

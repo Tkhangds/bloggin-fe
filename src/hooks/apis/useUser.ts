@@ -2,7 +2,7 @@
 
 import userAction from "@/apis/user.action";
 import { useAuthContext } from "@/context/AuthContext";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useUser = () => {
@@ -32,8 +32,18 @@ export const useUser = () => {
     });
   };
 
+  const useGetUserById = (userId: string) => {
+    return useQuery({
+      queryKey: ["user", userId],
+      queryFn: () => {
+        return userAction.getUserById(userId);
+      },
+    });
+  };
+
   return {
     useUpdateAvatar,
     useUpdateUser,
+    useGetUserById,
   };
 };

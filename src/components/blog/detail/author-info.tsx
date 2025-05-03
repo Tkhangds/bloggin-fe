@@ -14,7 +14,6 @@ export default function AuthorInfo({ data }: { data: Post }): JSX.Element {
   const isFollowing = following?.pages[0].data.some((following) => {
     return following.author.id === data.authorId;
   });
-  console.log(user);
   const ownPost = user?.id === data.authorId;
 
   const handleFollow = async () => {

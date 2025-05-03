@@ -7,10 +7,11 @@ import { GetFollowResponse } from "@/types/dtos/get-following-response.dto";
 // WIP
 
 const followAction = {
-  async getFollower(page?: number, limit?: number) {
+  async getFollower(userId?: string, page?: number, limit?: number) {
+    const route = userId ? `/follow/${userId}/follower` : `/follow/follower`;
     const result = await bloggingApi.get<
       PaginationResponseWrapper<GetFollowResponse[]>
-    >(`/follow/follower`, {
+    >(route, {
       params: {
         page,
         limit,
@@ -18,10 +19,12 @@ const followAction = {
     });
     return result.data;
   },
-  async getFollowing(page?: number, limit?: number) {
+  async getFollowing(userId?: string, page?: number, limit?: number) {
+    const route = userId ? `/follow/${userId}/following` : `/follow/following`;
+    console.log("route", route);
     const result = await bloggingApi.get<
       PaginationResponseWrapper<GetFollowResponse[]>
-    >(`/follow/following`, {
+    >(route, {
       params: {
         page,
         limit,

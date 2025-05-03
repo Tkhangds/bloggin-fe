@@ -22,11 +22,14 @@ const postAction = {
     );
     return result.data.data;
   },
-  async getPostByAuthor() {
-    const result =
-      await bloggingApi.get<PaginationResponseWrapper<Post[]>>(`/post/author`);
+
+  async getPostByAuthor(authorId: string) {
+    const result = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
+      `/post/author/${authorId}`,
+    );
     return result.data.data;
   },
+
   async createPost(data: CreatePostDto) {
     const result = await bloggingApi.post<SuccessResponseWrapper<Post>>(
       "/post",

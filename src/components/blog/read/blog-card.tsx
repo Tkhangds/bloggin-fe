@@ -21,21 +21,29 @@ export default function BlogCard({
   const router = useRouter();
   const { data, isLoading } = useFavorite().useGetFavoriteCount(post.id);
   return (
-    <article key={index} className="cursor-pointer border-b pb-8">
-      <div onClick={() => router.push("/blog/" + post.id)}>
-        <div className="mb-3 flex items-center gap-2">
+    <article key={index} className="border-b pb-8">
+      <div className="cursor-pointer">
+        <div
+          className="group mb-3 flex items-center gap-2"
+          onClick={() => router.push("/profile/" + post.authorId)}
+        >
           <Avatar className="h-6 w-6">
             <AvatarImage src={post.author.avatarUrl} alt={"Avatar"} />
             <AvatarFallback>{post.author.displayName.charAt(0)}</AvatarFallback>
           </Avatar>
-          <span className="text-sm font-medium">{post.author.displayName}</span>
+          <span className="text-sm font-medium group-hover:underline group-hover:underline-offset-4">
+            {post.author.displayName}
+          </span>
           <span className="text-sm text-gray-500">·</span>
           <span className="text-sm text-gray-500">
             {formatDateFromISOString(post.createdAt)}
           </span>
         </div>
 
-        <div className="flex flex-col gap-4 md:flex-row">
+        <div
+          className="flex flex-col gap-4 md:flex-row"
+          onClick={() => router.push("/blog/" + post.id)}
+        >
           <div className="flex-1">
             <h2 className="mb-2 text-xl font-bold transition-colors hover:text-gray-700">
               {post.title}
