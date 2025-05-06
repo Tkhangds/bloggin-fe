@@ -2,7 +2,7 @@
 
 import userAction from "@/apis/user.action";
 import { useAuthContext } from "@/context/AuthContext";
-import { useMutation, useQueries, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useUser = () => {
@@ -22,7 +22,11 @@ export const useUser = () => {
 
   const useUpdateUser = () => {
     return useMutation({
-      mutationFn: ({ data }: { data: { displayName: string } }) => {
+      mutationFn: ({
+        data,
+      }: {
+        data: { displayName?: string; specialties?: string; about?: string };
+      }) => {
         return userAction.updateUser(data);
       },
       onSuccess: async () => {

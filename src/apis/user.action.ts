@@ -13,7 +13,11 @@ const userAction = {
 
     return result.data;
   },
-  async updateUser(data: { displayName: string }) {
+  async updateUser(data: {
+    displayName?: string;
+    specialties?: string;
+    about?: string;
+  }) {
     const result = await bloggingApi.patch<SuccessResponseWrapper>(
       "/user",
       data,
