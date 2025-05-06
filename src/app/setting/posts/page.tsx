@@ -17,15 +17,15 @@ import FullPageLoading from "@/components/loading/full-page-loading";
 
 export default function PostsPage() {
   const { user, loading } = useAuthContext();
-
-  const { data, isLoading, error } = usePost().useGetPostByAuthor();
-
-  if (!user) {
-    return <p>Please log in to view your drafts.</p>;
-  }
+  const authorId = user?.id ?? "";
+  const { data, isLoading, error } = usePost().useGetPostByAuthor(authorId);
   if (error) return <p>Error loading drafts: {error.message}</p>;
   if (loading || isLoading)
     return <FullPageLoading text="We are preparing everything for you." />;
+
+  if (!user) {
+    return <p>Please log in to view your blogs.</p>;
+  }
 
   return (
     <Card>

@@ -2,9 +2,8 @@
 
 import type React from "react";
 
-import { Camera, Mail, User } from "lucide-react";
+import { Camera, ClipboardList, Mail, Sparkles, User } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import FullPageLoading from "@/components/loading/full-page-loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,7 @@ import { Separator } from "@/components/ui/separator";
 import { useAuthContext } from "@/context/AuthContext";
 import { useUser } from "@/hooks/apis/useUser";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function ProfilePage() {
   const { user, loading } = useAuthContext();
@@ -37,6 +37,15 @@ export default function ProfilePage() {
   const [displayName, setDisplayName] = useState<string>(
     user?.displayName ?? "",
   );
+  const [specialties, setSpecialties] = useState<string | undefined>(
+    user?.specialties,
+  );
+  const [about, setAbout] = useState<string | undefined>(user?.about);
+
+  const hasChanged =
+    user?.about !== about ||
+    user?.specialties !== specialties ||
+    user?.displayName !== displayName;
 
   useEffect(() => {
     if (user) {
@@ -45,6 +54,8 @@ export default function ProfilePage() {
           `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`,
       );
       setDisplayName(user.displayName);
+      if (user?.about) setAbout(user.about);
+      if (user?.specialties) setSpecialties(user.specialties);
     }
   }, [user]);
 
@@ -68,9 +79,15 @@ export default function ProfilePage() {
       }
     }
 
-    if (displayName !== user?.displayName) {
+    if (hasChanged) {
       try {
-        await updateUser({ data: { displayName } });
+        await updateUser({
+          data: {
+            displayName: displayName,
+            specialties: specialties,
+            about: about,
+          },
+        });
       } catch (error) {
         console.error("Error updating user:", error);
         toast.error("Failed to update user");
@@ -130,7 +147,7 @@ export default function ProfilePage() {
           <Separator />
 
           {/* User Information Form */}
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 pb-3 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="username">Display Name</Label>
               <div className="relative">
@@ -192,24 +209,48 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* <div className="space-y-2">
-              <Label htmlFor="phone">Phone</Label>
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="specialties">Specialties</Label>
               <div className="relative">
-                <Phone className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Sparkles className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="Phone number"
+                  id="specialties"
+                  placeholder="What is your specialty?"
                   className="pl-9"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  value={specialties}
+                  onChange={(e) => setSpecialties(e.target.value)}
+                  maxLength={100}
                 />
+                <span className="absolute -bottom-5 right-0 text-xs text-muted-foreground">
+                  {specialties?.length ?? 0}/100
+                </span>
               </div>
-            </div> */}
+            </div>
+
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="about">About</Label>
+              <div className="relative">
+                <ClipboardList className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Textarea
+                  id="about"
+                  placeholder="Let readers know more about you"
+                  className="pl-9"
+                  value={about}
+                  onChange={(e) => setAbout(e.target.value)}
+                  maxLength={300}
+                />
+                <span className="absolute -bottom-5 right-0 text-xs text-muted-foreground">
+                  {about?.length ?? 0}/300
+                </span>
+              </div>
+            </div>
           </div>
 
           <div className="flex justify-end">
-            <Button disabled={isUpdatingUser || isUpdatingAvatar} type="submit">
+            <Button
+              disabled={isUpdatingUser || isUpdatingAvatar || !hasChanged}
+              type="submit"
+            >
               {isUpdatingUser || isUpdatingAvatar
                 ? "Saving..."
                 : "Save Changes"}

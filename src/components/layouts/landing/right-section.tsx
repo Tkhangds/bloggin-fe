@@ -27,7 +27,7 @@ export default function RightSection() {
                 router.push("/draft");
               }}
               size={"sm"}
-              className="mr-2 hidden text-black lg:flex"
+              className="mr-2 hidden text-foreground lg:flex"
             >
               Write
               <Icon name="Pen" />

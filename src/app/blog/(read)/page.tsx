@@ -46,10 +46,9 @@ export default function BlogBrowsing() {
   if (!posts) {
     return <FullPageLoading text="We are preparing everything for you." />;
   }
-  //console.log("favorites", favorites?.pages[0].data[0].postId);
 
   return (
-    <div className="flex min-h-screen flex-col bg-white px-4 pt-5 text-gray-900 sm:px-6 lg:px-20 lg:pt-10 xl:px-64">
+    <div className="flex min-h-screen flex-col bg-white px-4 pt-5 text-gray-900 sm:px-6 lg:px-20 xl:px-64">
       {/* Main Content */}
       <main className="container flex flex-1 flex-col gap-8 py-6 md:flex-row md:py-8">
         {/* Blog Posts */}

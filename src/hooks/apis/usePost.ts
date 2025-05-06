@@ -30,10 +30,12 @@ export const usePost = () => {
       mutationFn: ({ id, data }: { id: string; data: UpdatePostDto }) => {
         return postAction.updatePostById(id, data);
       },
-      onSuccess: (_, variable) => {
+      onSuccess: (result, variable) => {
         queryClient.invalidateQueries({ queryKey: ["post", variable.id] });
         queryClient.invalidateQueries({ queryKey: ["posts"] });
-        queryClient.invalidateQueries({ queryKey: ["post", "author"] });
+        queryClient.invalidateQueries({
+          queryKey: ["post", "author", result.data.data.authorId],
+        });
       },
     });
   };
@@ -85,11 +87,11 @@ export const usePost = () => {
     });
   };
 
-  const useGetPostByAuthor = () => {
+  const useGetPostByAuthor = (authorId: string) => {
     return useQuery({
-      queryKey: ["post", "author"],
+      queryKey: ["post", "author", authorId],
       queryFn: () => {
-        return postAction.getPostByAuthor();
+        return postAction.getPostByAuthor(authorId);
       },
     });
   };

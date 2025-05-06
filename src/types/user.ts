@@ -7,6 +7,8 @@ export const userSchema = z.object({
   displayName: z.string(),
   isAdmin: z.boolean(),
   avatarUrl: z.string().optional(),
+  specialties: z.string().optional(),
+  about: z.string().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;

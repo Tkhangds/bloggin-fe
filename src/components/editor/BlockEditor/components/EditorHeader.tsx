@@ -64,6 +64,7 @@ export const EditorHeader = ({
               }}
               size={"sm"}
               className="mr-2 hidden lg:flex"
+              disabled={isSaving}
             >
               Publish
               <Icon name="CloudUpload" />

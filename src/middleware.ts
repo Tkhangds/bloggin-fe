@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Define which routes should be protected
-const protectedRoutes = ["/draft", "/profile", "/publish", "/setting"];
+const protectedRoutes = ["/draft", "/publish", "/setting/*"];
 const authRoutes = ["/sign-in", "/sign-up"];
 const editRoutes = ["/blog/edit", "/draft"];
 
