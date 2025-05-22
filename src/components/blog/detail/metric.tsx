@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useFavorite } from "@/hooks/apis/useFavorite";
 import { Post } from "@/types/post";
-import { Heart, Loader2, MessageCircle, Play, Share2 } from "lucide-react";
+import { Heart, Loader2, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
@@ -33,44 +33,34 @@ export default function Metric({ data }: { data: Post }): JSX.Element {
     }
   };
   return (
-    <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-6">
-      <div className="flex items-center gap-4">
-        <div
-          className={twMerge(
-            "flex items-center gap-1",
-            !isLoading && favCount?.data.isFavorite
-              ? "font-bold text-red-500"
-              : "",
-          )}
+    <div className="flex items-center gap-4">
+      <div
+        className={twMerge(
+          "flex items-center gap-1",
+          !isLoading && favCount?.data.isFavorite
+            ? "font-bold text-red-500"
+            : "",
+        )}
+      >
+        <Button
+          variant="ghost"
+          size="sm"
+          className="h-8 px-2"
+          onClick={handleFavClicked}
+          disabled={isLoading}
         >
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 px-2"
-            onClick={handleFavClicked}
-            disabled={isLoading}
-          >
-            <Heart className="mr-1 h-5 w-5" />
-            {!isLoading ? (
-              <span>{favCount?.data.count}</span>
-            ) : (
-              <Loader2 className="animate-spin" />
-            )}
-          </Button>
-        </div>
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="sm" className="h-8 px-2">
-            <MessageCircle className="mr-1 h-5 w-5" />
-            <span>{data.commentCount}</span>
-          </Button>
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Play className="h-5 w-5" />
+          <Heart className="mr-1 h-5 w-5" />
+          {!isLoading ? (
+            <span>{favCount?.data.count}</span>
+          ) : (
+            <Loader2 className="animate-spin" />
+          )}
         </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <Share2 className="h-5 w-5" />
+      </div>
+      <div className="flex items-center gap-1">
+        <Button variant="ghost" size="sm" className="h-8 px-2">
+          <MessageCircle className="mr-1 h-5 w-5" />
+          <span>{data.commentCount}</span>
         </Button>
       </div>
     </div>

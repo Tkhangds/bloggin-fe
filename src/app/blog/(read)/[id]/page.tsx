@@ -5,8 +5,10 @@ import CommentSection from "@/components/blog/detail/comment/comment-section";
 import Metric from "@/components/blog/detail/metric";
 import { ViewOnlyContent } from "@/components/blog/ReadOnlyView";
 import FullPageLoading from "@/components/loading/full-page-loading";
+import { Button } from "@/components/ui/button";
 import { useReadEditor } from "@/hooks/editor/useReadEditor";
 import "@/styles/index.css";
+import { Play, Share2 } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export default function BlogReadingPage() {
@@ -26,7 +28,17 @@ export default function BlogReadingPage() {
         {post?.title || "Article Title"}
       </p>
       <AuthorInfo data={post} />
-      <Metric data={post} />
+      <div className="mb-8 flex items-center justify-between border-b border-gray-200 pb-6">
+        <Metric data={post} />
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Play className="h-5 w-5" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <Share2 className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
 
       <ViewOnlyContent
         editor={editor}
