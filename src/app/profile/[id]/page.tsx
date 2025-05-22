@@ -1,6 +1,7 @@
 "use client";
 import BlogCard from "@/components/blog/read/blog-card";
 import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
+import { FollowButton } from "@/components/shared/follow-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
@@ -19,40 +20,11 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
   );
   const { user } = useAuthContext();
   const isProfileOwner = user?.id === params.id;
-
-  const { data: following } = useFollow().useGetFollowing();
-  const followAction = useFollow().useCreateFollow();
-  const unfollowAction = useFollow().useDeleteFollow();
-  const isFollowing = following?.pages[0].data.some((following) => {
-    return following.author.id === params.id;
-  });
-
   const { data: authorFollower } = useFollow().useGetFollower(params.id, 1);
   const { data: authorFollowing } = useFollow().useGetFollowing(params.id, 1);
 
   const router = useRouter();
 
-  const handleFollow = async () => {
-    const authorId = params.id;
-    try {
-      if (isFollowing) {
-        await unfollowAction.mutateAsync({
-          data: {
-            authorId,
-          },
-        });
-        return;
-      } else {
-        await followAction.mutateAsync({
-          data: {
-            authorId,
-          },
-        });
-      }
-    } catch (error) {
-      console.error("Error following user:", error);
-    }
-  };
   return (
     <div className="min-h-screen bg-background">
       <div className="container px-8 py-8 md:py-14 md:pl-8 lg:pl-20 xl:pl-[16.5rem]">
@@ -121,16 +93,7 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                     <h1 className="text-3xl font-bold">
                       {author?.displayName}
                     </h1>
-                    {user && !isProfileOwner && (
-                      <Button
-                        className="rounded-full shadow-none"
-                        size={"sm"}
-                        variant={isFollowing ? "outline" : "default"}
-                        onClick={handleFollow}
-                      >
-                        {isFollowing ? "Following" : "Follow"}
-                      </Button>
-                    )}
+                    {author && <FollowButton userId={author.id}></FollowButton>}
                   </div>
 
                   <div className="flex items-center gap-4 text-sm text-gray-500">

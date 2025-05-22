@@ -21,7 +21,6 @@ const followAction = {
   },
   async getFollowing(userId?: string, page?: number, limit?: number) {
     const route = userId ? `/follow/${userId}/following` : `/follow/following`;
-    console.log("route", route);
     const result = await bloggingApi.get<
       PaginationResponseWrapper<GetFollowResponse[]>
     >(route, {
