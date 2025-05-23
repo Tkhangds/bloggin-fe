@@ -9,7 +9,7 @@ import FullPageLoading from "@/components/loading/full-page-loading";
 import { Button } from "@/components/ui/button";
 import { useReadEditor } from "@/hooks/editor/useReadEditor";
 import "@/styles/index.css";
-import { Play, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { useParams } from "next/navigation";
 
 export default function BlogReadingPage() {
