@@ -51,6 +51,12 @@ const postAction = {
     );
     return result.data.message;
   },
+  async getPostAudioByPostId(postId: string, language: string) {
+    const result = await bloggingApi.get<SuccessResponseWrapper<string>>(
+      `/post/synthesize/${postId}?language=${language}`,
+    );
+    return result.data.data;
+  },
 };
 
 export default postAction;

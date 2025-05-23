@@ -21,6 +21,8 @@ export const postSchema = z.object({
     avatarUrl: z.string(),
     isAdmin: z.boolean(),
   }),
+  enVoiceUrl: z.string().optional(),
+  vnVoiceUrl: z.string().optional(),
 });
 
 export type Post = z.infer<typeof postSchema>;
