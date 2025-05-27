@@ -34,10 +34,9 @@ export async function middleware(request: NextRequest) {
   // Get the session cookie
   const sessionCookie = request.cookies.get("bloggin-session");
   const hasSessionCookie = !!sessionCookie?.value;
-
+  console.log("Session cookie found:", sessionCookie);
   // Validate session with backend
   let isSessionValid = false;
-  console.log("Session validation response:");
   if (hasSessionCookie) {
     try {
       const response = await fetch(
@@ -56,7 +55,7 @@ export async function middleware(request: NextRequest) {
       isSessionValid = false;
     }
   }
-
+  console.log("Is session valid:", isSessionValid);
   // Handle protected routes - redirect to login if session is invalid
   if (isProtectedRoute && !isSessionValid) {
     const url = new URL(`/sign-in`, request.url);
@@ -73,9 +72,8 @@ export async function middleware(request: NextRequest) {
       const userResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/me`,
         {
-          headers: {
-            Cookie: `bloggin-session=${sessionCookie!.value}`,
-          },
+          method: "GET",
+          credentials: "include",
         },
       );
 
@@ -85,9 +83,8 @@ export async function middleware(request: NextRequest) {
       const postResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/${pathname.startsWith("/draft") ? "draft" : "post"}/${postId}`,
         {
-          headers: {
-            Cookie: `bloggin-session=${sessionCookie!.value}`,
-          },
+          method: "GET",
+          credentials: "include",
         },
       );
 
