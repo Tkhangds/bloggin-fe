@@ -37,16 +37,18 @@ export async function middleware(request: NextRequest) {
 
   // Validate session with backend
   let isSessionValid = false;
+  console.log("Session validation response:");
   if (hasSessionCookie) {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/validate-session`,
         {
-          headers: {
-            Cookie: `bloggin-session=${sessionCookie.value}`,
-          },
+          method: "GET",
+          credentials: "include",
         },
       );
+
+      console.log("Session validation response:", response);
 
       isSessionValid = response.ok;
     } catch (error) {
