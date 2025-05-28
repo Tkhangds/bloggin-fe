@@ -2,6 +2,7 @@
 
 import userAction from "@/apis/user.action";
 import { useAuthContext } from "@/context/AuthContext";
+import { QueryUserDto } from "@/types/dtos/query-user.dto";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -45,9 +46,19 @@ export const useUser = () => {
     });
   };
 
+  const useGetUser = (query: Partial<QueryUserDto>) => {
+    return useQuery({
+      queryKey: ["user", query],
+      queryFn: () => {
+        return userAction.getUser(query);
+      },
+    });
+  };
+
   return {
     useUpdateAvatar,
     useUpdateUser,
     useGetUserById,
+    useGetUser,
   };
 };

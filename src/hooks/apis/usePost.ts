@@ -14,10 +14,11 @@ import { toast } from "sonner";
 export const usePost = () => {
   const queryClient = useQueryClient();
 
-  const useGetAllPosts = (limit?: number) => {
+  const useGetAllPosts = (limit?: number, title?: string, tagName?: string) => {
     return useInfiniteQuery({
       queryKey: ["posts"],
-      queryFn: ({ pageParam = 1 }) => postAction.getAllPost(pageParam, limit),
+      queryFn: ({ pageParam = 1 }) =>
+        postAction.getAllPost(pageParam, limit, title, tagName),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
         return lastPage.meta.nextPage ?? undefined;

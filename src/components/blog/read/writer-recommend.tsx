@@ -35,12 +35,15 @@ export default function WriterRecommend(): JSX.Element {
                   </Avatar>
                   <div>
                     <h3 className="font-medium">{writer.displayName}</h3>
-                    <p className="text-sm text-gray-500">
+                    <p className="line-clamp-1 w-full text-sm text-muted-foreground">
                       {writer.specialties}
                     </p>
                   </div>
                 </div>
-                <FollowButton userId={writer.id}></FollowButton>
+                <FollowButton
+                  userId={writer.id}
+                  alwaysShow={true}
+                ></FollowButton>
               </div>
             );
           })}

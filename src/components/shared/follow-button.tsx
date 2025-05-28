@@ -3,11 +3,14 @@ import { useAuthContext } from "@/context/AuthContext";
 import { Button } from "../ui/button";
 import { useFollow } from "@/hooks/apis/useFollow";
 import { twMerge } from "tailwind-merge";
+import { useRouter } from "next/navigation";
 
 export const FollowButton = ({
+  alwaysShow,
   className,
   userId,
 }: {
+  alwaysShow?: boolean;
   className?: string;
   userId: string;
 }) => {
@@ -19,8 +22,13 @@ export const FollowButton = ({
     return following.author.id === userId;
   });
   const ownPost = user?.id === userId;
+  const router = useRouter();
 
   const handleFollow = async () => {
+    if (alwaysShow && !user) {
+      router.push(`/sign-in`);
+      return;
+    }
     const authorId = userId;
     try {
       if (isFollowing) {
@@ -41,7 +49,7 @@ export const FollowButton = ({
       console.error("Error following user:", error);
     }
   };
-  if (!user || ownPost || isLoading) return <div></div>;
+  if (!alwaysShow && (!user || ownPost || isLoading)) return null;
   return (
     <Button
       variant={isFollowing ? "ghost" : "outline"}

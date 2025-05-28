@@ -1,4 +1,5 @@
 import { bloggingApi } from "@/lib/HttpClient/index";
+import { QueryUserDto } from "@/types/dtos/query-user.dto";
 import { User } from "@/types/user";
 
 const userAction = {
@@ -28,6 +29,13 @@ const userAction = {
   async getUserById(userId: string) {
     const result = await bloggingApi.get<SuccessResponseWrapper<User>>(
       `/user/${userId}`,
+    );
+    return result.data.data;
+  },
+  async getUser(query: Partial<QueryUserDto>) {
+    const result = await bloggingApi.get<SuccessResponseWrapper<User[]>>(
+      `/user`,
+      { params: query },
     );
     return result.data.data;
   },

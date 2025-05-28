@@ -1,10 +1,8 @@
 "use client";
 import { statisticsAction } from "@/apis/statistics.action";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const useStatistics = () => {
-  const queryClient = useQueryClient();
-
   const useGetTopFollowedUser = (top?: number) => {
     return useQuery({
       queryKey: ["statistics", "top-followed-user"],
