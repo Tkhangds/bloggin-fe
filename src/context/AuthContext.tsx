@@ -35,6 +35,7 @@ export function AuthProvider({
 
         if (res) {
           const userData = res;
+          console.log("User data fetched:", userData);
           setUser(userData);
         } else {
           setUser(null);

@@ -97,6 +97,19 @@ export const usePost = () => {
     });
   };
 
+  const useGetPostAudioByPostId = () => {
+    return useMutation({
+      mutationFn: ({
+        postId,
+        language,
+      }: {
+        postId: string;
+        language: string;
+      }) => {
+        return postAction.getPostAudioByPostId(postId, language);
+      },
+    });
+  };
   return {
     queryClient,
     useGetAllPosts,
@@ -105,5 +118,6 @@ export const usePost = () => {
     useGetPostById,
     useGetPostByAuthor,
     useDeletePostById,
+    useGetPostAudioByPostId,
   };
 };
