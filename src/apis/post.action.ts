@@ -4,13 +4,20 @@ import { UpdatePostDto } from "@/types/dtos/update-post.dto";
 import { Post } from "@/types/post";
 
 const postAction = {
-  async getAllPost(page?: number, limit?: number) {
+  async getAllPost(
+    page?: number,
+    limit?: number,
+    title?: string,
+    tagName?: string,
+  ) {
     const result = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
-      "/post/all",
+      "/post",
       {
         params: {
           page,
           limit,
+          title,
+          tagName,
         },
       },
     );

@@ -1,46 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { useAuthContext } from "@/context/AuthContext";
-import { useFollow } from "@/hooks/apis/useFollow";
+import { FollowButton } from "@/components/shared/follow-button";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Dot } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function AuthorInfo({ data }: { data: Post }): JSX.Element {
-  const { user } = useAuthContext();
-  const { data: following, isLoading } = useFollow().useGetFollowing();
-  const followAction = useFollow().useCreateFollow();
-  const unfollowAction = useFollow().useDeleteFollow();
-  const isFollowing = following?.pages[0].data.some((following) => {
-    return following.author.id === data.authorId;
-  });
-  const ownPost = user?.id === data.authorId;
-
-  const handleFollow = async () => {
-    const authorId = data.authorId;
-    try {
-      if (isFollowing) {
-        await unfollowAction.mutateAsync({
-          data: {
-            authorId,
-          },
-        });
-        return;
-      } else {
-        await followAction.mutateAsync({
-          data: {
-            authorId,
-          },
-        });
-      }
-    } catch (error) {
-      console.error("Error following user:", error);
-    }
-  };
-
   const router = useRouter();
-
   return (
     <div className="mb-8 flex w-full items-center">
       <div className="flex w-full items-center gap-2">
@@ -63,7 +29,7 @@ export default function AuthorInfo({ data }: { data: Post }): JSX.Element {
           </span>
         </div>
 
-        {user && !ownPost && !isLoading && (
+        {/* {user && !ownPost && !isLoading && (
           <Button
             variant={isFollowing ? "ghost" : "outline"}
             size="sm"
@@ -72,7 +38,8 @@ export default function AuthorInfo({ data }: { data: Post }): JSX.Element {
           >
             {isFollowing ? "Following" : "Follow"}
           </Button>
-        )}
+        )} */}
+        <FollowButton userId={data.authorId}></FollowButton>
         <Dot className="text-gray-500" />
         <div className="flex items-center text-sm text-gray-500">
           <span>

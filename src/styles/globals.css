@@ -6,6 +6,26 @@
 @import "./background/magicpattern.css";
 @import "./background/heropattern.css";
 
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+
+  .text-vertical {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+}
+
 @layer base {
   body {
     @apply bg-white text-neutral-900 dark:bg-neutral-950 dark:text-white;

@@ -5,7 +5,7 @@ import RightSection from "./right-section";
 
 export const Header = () => {
   return (
-    <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-foreground/25 bg-background px-4 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
+    <div className="fixed z-50 mt-[-52px] flex w-full flex-col border-b-[1px] border-foreground/25 bg-background px-7 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/blog">

@@ -25,9 +25,17 @@ export const useAuth = () => {
         queryClient.invalidateQueries({ queryKey: ["login"] });
         queryClient.invalidateQueries({ queryKey: ["favCount"] });
         queryClient.invalidateQueries({ queryKey: ["favorite"] });
+        queryClient.invalidateQueries({
+          queryKey: ["statistics", "top-followed-user"],
+        });
+        queryClient.invalidateQueries({ queryKey: ["statistics", "top-tag"] });
+
         await refetchUser();
         toast.success("Login successfully");
         router.replace("/");
+      },
+      onError: (error: Error) => {
+        toast.error(error.message);
       },
     });
   };
@@ -54,6 +62,11 @@ export const useAuth = () => {
       onSuccess: () => {
         queryClient.removeQueries({ queryKey: ["favCount"] });
         queryClient.removeQueries({ queryKey: ["favorite"] });
+        queryClient.removeQueries({
+          queryKey: ["statistics", "top-followed-user"],
+        });
+        queryClient.removeQueries({ queryKey: ["statistics", "top-tag"] });
+        queryClient.removeQueries({ queryKey: ["following"] });
         queryClient.invalidateQueries({ queryKey: ["logout"] });
         toast.success("Logout successfully");
         router.push("/");
