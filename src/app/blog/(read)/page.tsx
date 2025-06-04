@@ -13,6 +13,7 @@ import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
 export default function BlogBrowsing() {
   const {
     data: posts,
+    isLoading,
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
@@ -43,7 +44,7 @@ export default function BlogBrowsing() {
     };
   }, [fetchNextPage, hasNextPage]);
 
-  if (!posts) {
+  if (isLoading) {
     return <FullPageLoading text="We are preparing everything for you." />;
   }
 

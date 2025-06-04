@@ -25,7 +25,7 @@ function PageContent() {
   useEffect(() => {
     async function fetchDraft() {
       if (!user) {
-        router.replace("/login");
+        router.replace("/sign-in");
         return;
       }
       const content = JSON.stringify(getTemplate(templateName || ""));

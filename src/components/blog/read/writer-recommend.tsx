@@ -1,6 +1,7 @@
 "use client";
 import { FollowButton } from "@/components/shared/follow-button";
 import { Button } from "@/components/ui/button";
+import { CardDescription } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
@@ -47,13 +48,19 @@ export default function WriterRecommend(): JSX.Element {
               </div>
             );
           })}
-        <Button
-          variant="ghost"
-          className="mt-4 w-full text-gray-500 hover:text-gray-700"
-        >
-          See More Authors
-          <ChevronRight className="ml-2 h-4 w-4" />
-        </Button>
+        {filteredData && filteredData?.length > 0 ? (
+          <Button
+            variant="ghost"
+            className="mt-4 w-full text-gray-500 hover:text-gray-700"
+          >
+            See More Authors
+            <ChevronRight className="ml-2 h-4 w-4" />
+          </Button>
+        ) : (
+          <CardDescription className="flex w-full justify-center">
+            No author available
+          </CardDescription>
+        )}
       </div>
     </div>
   );

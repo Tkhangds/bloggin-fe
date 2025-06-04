@@ -95,6 +95,14 @@ export default function ProfilePage() {
     }
   };
 
+  if (!user) {
+    return (
+      <CardDescription className="flex w-full justify-center">
+        Please log in to view your profile.
+      </CardDescription>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>

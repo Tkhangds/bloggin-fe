@@ -4,6 +4,7 @@ import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
 import { FollowButton } from "@/components/shared/follow-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { CardDescription } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import { useFollow } from "@/hooks/apis/useFollow";
 import { usePost } from "@/hooks/apis/usePost";

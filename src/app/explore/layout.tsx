@@ -17,8 +17,8 @@ export default function ExploreLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (data) {
-      router.push(`/explore/${data[0].name}`);
+    if (data && data.length > 0) {
+      router.replace(`/explore/${data[0].name}`);
       setCurrentTopic(data[0]);
     }
   }, [data]);

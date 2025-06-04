@@ -20,7 +20,11 @@ export default function DraftsPage() {
   const { data, isLoading, error } = useDraft().useGetAllDraftsByAuthorId();
 
   if (!user) {
-    return <p>Please log in to view your drafts.</p>;
+    return (
+      <CardDescription className="flex w-full justify-center">
+        Please log in to view your drafts.
+      </CardDescription>
+    );
   }
   if (loading || isLoading)
     return <FullPageLoading text="We are preparing everything for you." />;

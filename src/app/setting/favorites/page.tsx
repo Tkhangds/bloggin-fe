@@ -11,16 +11,24 @@ import {
 import { useFavorite } from "@/hooks/apis/useFavorite";
 import BlogCard from "@/components/blog/read/blog-card";
 import LoadBlogIndicator from "@/components/blog/read/load-blog-indicator";
+import { useAuthContext } from "@/context/AuthContext";
 
 export default function FavoritesPage() {
+  const { user } = useAuthContext();
   const { data, isLoading } = useFavorite().useGetFavoriteers();
   const favs = data?.pages[0].data;
-  console.log("my favs: ", favs);
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <LoadBlogIndicator isLoading={isLoading} />
       </div>
+    );
+  }
+  if (!user) {
+    return (
+      <CardDescription className="flex w-full justify-center">
+        Please log in to view your favorite blogs.
+      </CardDescription>
     );
   }
   return (
