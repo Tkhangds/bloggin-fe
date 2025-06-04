@@ -4,8 +4,9 @@ import { TopicList } from "@/components/explore/topic-list";
 import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { GetTopTagResponseDto } from "@/types/dtos/get-top-tag-response.dto";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Arapey } from "next/font/google";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ExploreLayout({
   children,
@@ -15,17 +16,27 @@ export default function ExploreLayout({
   const { data } = useStatistics().useGetTopTag();
   const [currentTopic, setCurrentTopic] = useState<GetTopTagResponseDto>();
   const router = useRouter();
+  const param = useParams<{ tag?: string }>();
 
-  useEffect(() => {
-    if (data && data.length > 0) {
-      router.replace(`/explore/${data[0].name}`);
-      setCurrentTopic(data[0]);
-    }
+  const arrangedData = useMemo(() => {
+    if (!data) return [];
+    if (!param.tag) return [...data];
+    const initialTopic = data.find((topic) => topic.name === param.tag);
+    if (!initialTopic) return [...data];
+    // Place the initialTopic first, then the rest
+    return [initialTopic, ...data.filter((topic) => topic.name !== param.tag)];
   }, [data]);
 
+  useEffect(() => {
+    if (arrangedData.length > 0) {
+      const initialTopic = arrangedData[0];
+      router.replace(`/explore/${initialTopic?.name}`);
+      setCurrentTopic(initialTopic);
+    }
+  }, [arrangedData]);
   const handleTopicClicked = (topic: GetTopTagResponseDto) => {
     setCurrentTopic(topic);
-    router.push(`/explore/${topic.name}`);
+    router.replace(`/explore/${topic.name}`);
   };
   return (
     <LandingHeaderLayout>
@@ -46,7 +57,7 @@ export default function ExploreLayout({
         {data && data.length > 0 && (
           <>
             <TopicList
-              topicList={data} // Duplicate to ensure enough items for scrolling
+              topicList={arrangedData} // Duplicate to ensure enough items for scrolling
               onTopicClicked={handleTopicClicked}
               currentTopic={currentTopic}
             />

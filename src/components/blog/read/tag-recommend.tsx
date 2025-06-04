@@ -19,6 +19,7 @@ export default function TagRecommend(): JSX.Element {
               key={index}
               variant="outline"
               className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+              onClick={() => router.push(`/explore/${topic.name}`)}
             >
               {topic.name} ({topic.postCount})
             </Badge>
@@ -28,8 +29,9 @@ export default function TagRecommend(): JSX.Element {
         <Button
           variant="ghost"
           className="mt-4 w-full text-gray-500 hover:text-gray-700"
+          onClick={() => router.push("/explore")}
         >
-          See More Authors
+          See More Topics
           <ChevronRight className="ml-2 h-4 w-4" />
         </Button>
       ) : (

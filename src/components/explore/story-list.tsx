@@ -11,12 +11,11 @@ import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
 import { Skeleton } from "../ui/skeleton";
 
-export function StoryList() {
-  const params = useParams<{ tag: string }>();
+export function StoryList({ tag }: { tag?: string }): JSX.Element {
   const { data, isLoading, refetch } = usePost().useGetAllPosts(
     undefined,
     undefined,
-    params.tag,
+    tag,
   );
   const stories = data?.pages[0].data;
   const [firstTwoStories, setFirstTwoStories] = useState<Post[]>();
@@ -24,7 +23,7 @@ export function StoryList() {
 
   useEffect(() => {
     refetch();
-  }, [params.tag]);
+  }, [tag]);
 
   useEffect(() => {
     if (data) {
@@ -34,6 +33,8 @@ export function StoryList() {
       setRestOfStories(rest);
     }
   }, [stories]);
+
+  console.log("stories got topics: ", tag);
   return (
     <div className="w-full">
       <h2 className="mb-6 text-2xl font-bold">Recommended stories</h2>
