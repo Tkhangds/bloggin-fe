@@ -6,10 +6,12 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function WriterRecommend(): JSX.Element {
   const { data, isLoading } = useStatistics().useGetTopFollowedUser(4);
   const { user } = useAuthContext();
+  const router = useRouter();
 
   const filteredData = data
     ?.filter((writer) => writer.id !== user?.id)
@@ -23,7 +25,13 @@ export default function WriterRecommend(): JSX.Element {
           filteredData &&
           filteredData.map((writer, index) => {
             return (
-              <div key={index} className="flex items-center justify-between">
+              <div
+                key={index}
+                className="flex cursor-pointer items-center justify-between py-1"
+                onClick={() => {
+                  router.push(`/profile/${writer.id}`);
+                }}
+              >
                 <div className="flex items-center gap-3">
                   <Avatar>
                     <AvatarImage

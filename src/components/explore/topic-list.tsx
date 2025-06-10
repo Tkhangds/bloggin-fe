@@ -50,7 +50,7 @@ export function TopicList({
         onClick={() => scroll("left")}
         className={twMerge(
           "rounded-full p-2",
-          topicList.length < 12 && "lg:hidden",
+          topicList.length < 13 && "lg:hidden",
         )}
       >
         <ChevronLeft className="h-5 w-5" />
@@ -91,7 +91,7 @@ export function TopicList({
         onClick={() => scroll("right")}
         className={twMerge(
           "rounded-full p-2",
-          topicList.length < 12 && "lg:hidden",
+          topicList.length < 13 && "lg:hidden",
         )}
       >
         <ChevronRight className="h-5 w-5" />

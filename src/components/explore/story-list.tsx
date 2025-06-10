@@ -1,14 +1,13 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dot } from "lucide-react";
-import { useParams } from "next/navigation";
 import { usePost } from "@/hooks/apis/usePost";
 import { Post } from "@/types/post";
-import { useEffect, useState } from "react";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
+import { Dot } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 
 export function StoryList({ tag }: { tag?: string }): JSX.Element {

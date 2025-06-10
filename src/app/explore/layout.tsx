@@ -4,7 +4,6 @@ import { TopicList } from "@/components/explore/topic-list";
 import { LandingHeaderLayout } from "@/components/layouts/landing-header";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { GetTopTagResponseDto } from "@/types/dtos/get-top-tag-response.dto";
-import { Arapey } from "next/font/google";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
@@ -13,7 +12,7 @@ export default function ExploreLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = useStatistics().useGetTopTag();
+  const { data } = useStatistics().useGetTopTag(20);
   const [currentTopic, setCurrentTopic] = useState<GetTopTagResponseDto>();
   const router = useRouter();
   const param = useParams<{ tag?: string }>();
