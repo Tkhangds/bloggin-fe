@@ -4,17 +4,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import { useUser } from "@/hooks/apis/useUser";
-import { useParams } from "next/navigation";
 import { FollowButton } from "../shared/follow-button";
 import { Skeleton } from "../ui/skeleton";
 
-export function RecommendedWriters() {
+export function RecommendedWriters({ tag }: { tag?: string }): JSX.Element {
   const { user } = useAuthContext();
-  const params = useParams<{ tag: string }>();
-  const { data, isLoading } = useUser().useGetUser({ tag: params.tag });
+  const { data, isLoading } = useUser().useGetUser({ tag: tag });
   const filteredData = data?.filter((writer) => {
     return writer.id !== user?.id;
   });
+
+  console.log("writter got topics:", tag);
 
   return (
     <div className="mb-12 w-full">

@@ -11,7 +11,7 @@ export const useStatistics = () => {
   };
   const useGetTopTag = (top?: number) => {
     return useQuery({
-      queryKey: ["statistics", "top-tag"],
+      queryKey: ["statistics", "top-tag", top],
       queryFn: () => statisticsAction.getTopTag(top),
     });
   };

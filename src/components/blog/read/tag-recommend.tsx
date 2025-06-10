@@ -3,6 +3,7 @@ import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { useRouter } from "next/navigation";
+import { CardDescription } from "@/components/ui/card";
 
 export default function TagRecommend(): JSX.Element {
   const { data, isLoading } = useStatistics().useGetTopTag(9);
@@ -18,19 +19,26 @@ export default function TagRecommend(): JSX.Element {
               key={index}
               variant="outline"
               className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+              onClick={() => router.push(`/explore/${topic.name}`)}
             >
               {topic.name} ({topic.postCount})
             </Badge>
           ))}
       </div>
-      <Button
-        variant="ghost"
-        className="mt-4 w-full text-muted-foreground hover:text-gray-700"
-        onClick={() => router.push("/explore")}
-      >
-        See More Topics
-        <ChevronRight className="ml-2 h-4 w-4" />
-      </Button>
+      {data && data?.length > 0 ? (
+        <Button
+          variant="ghost"
+          className="mt-4 w-full text-gray-500 hover:text-gray-700"
+          onClick={() => router.push("/explore")}
+        >
+          See More Topics
+          <ChevronRight className="ml-2 h-4 w-4" />
+        </Button>
+      ) : (
+        <CardDescription className="flex w-full justify-center">
+          No topics available
+        </CardDescription>
+      )}
     </div>
   );
 }
