@@ -1,12 +1,10 @@
 "use client";
-import CommentPagination from "@/components/blog/detail/comment/comment-pagination";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -21,6 +19,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePost } from "@/hooks/apis/usePost";
+import { useStatistics } from "@/hooks/apis/useStatistics";
+import { useTag } from "@/hooks/apis/useTag";
+import { useUser } from "@/hooks/apis/useUser";
+import { Post } from "@/types/post";
+import _, { over } from "lodash";
 import {
   Calendar,
   FileText,
@@ -30,68 +33,39 @@ import {
   Tag,
   Users,
 } from "lucide-react";
-
-const posts = [
-  {
-    id: 1,
-    title: "The Future of Web Development: Trends to Watch in 2024",
-    author: "Sarah Chen",
-    status: "published",
-    views: "12.4K",
-    date: "2024-01-15",
-    readTime: "8 min read",
-    category: "Technology",
-  },
-  {
-    id: 2,
-    title: "Building Scalable React Applications: Best Practices",
-    author: "Mike Johnson",
-    status: "draft",
-    views: "0",
-    date: "2024-01-14",
-    readTime: "12 min read",
-    category: "Development",
-  },
-  {
-    id: 3,
-    title: "Design Systems: Creating Consistency Across Products",
-    author: "Emma Wilson",
-    status: "published",
-    views: "8.7K",
-    date: "2024-01-13",
-    readTime: "6 min read",
-    category: "Design",
-  },
-  {
-    id: 4,
-    title: "The Art of Technical Writing: A Complete Guide",
-    author: "David Park",
-    status: "published",
-    views: "15.2K",
-    date: "2024-01-12",
-    readTime: "10 min read",
-    category: "Writing",
-  },
-  {
-    id: 5,
-    title: "Understanding User Experience: Psychology Behind Design",
-    author: "Lisa Rodriguez",
-    status: "review",
-    views: "0",
-    date: "2024-01-11",
-    readTime: "7 min read",
-    category: "UX",
-  },
-];
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function AdminDashboardPage() {
   const {
     data: posts,
     fetchNextPage,
+    isFetchingNextPage,
+    isFetchingPreviousPage,
     fetchPreviousPage,
-  } = usePost().useGetAllPosts(1);
+  } = usePost().useGetAllPosts(5);
+  const { data: overallStats } = useStatistics().useGetOverallStatistics();
+  console.log("Overall Stats", overallStats);
+  const [currentPage, setCurrentPage] = useState<number>(0);
 
-  console.log("posts: ", posts?.pages);
+  const handleNextPageChange = async () => {
+    await fetchNextPage();
+    if (!isFetchingNextPage) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handlePrevPageChange = async () => {
+    await fetchPreviousPage();
+    if (!isFetchingPreviousPage) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const paginatedPosts = posts?.pages[currentPage].data;
+  const hasNext = posts?.pages[currentPage].meta.nextPage !== null;
+  const hasPrevious = posts?.pages[currentPage].meta.prevPage !== null;
+  const totalPage = posts?.pages[currentPage].meta.totalPages || 0;
 
   const stats = [
     {
@@ -102,34 +76,32 @@ export default function AdminDashboardPage() {
     },
     {
       title: "Total Users",
-      value: "1,234",
-      change: "+8%",
+      value: overallStats?.usersCount || "N/A",
       icon: Users,
       color: "text-green-600",
     },
     {
       title: "Total Topics",
-      value: "45.2K",
-      change: "+23%",
+      value: overallStats?.tagsCount || "N/A",
       icon: Tag,
       color: "text-purple-600",
     },
     {
       title: "Total Interactions",
-      value: "68%",
-      change: "+5%",
+      value: overallStats?.interactionCount || "N/A",
       icon: MousePointer2,
       color: "text-orange-600",
     },
   ];
+
   return (
     <main className="flex w-full p-8">
-      <div className="w-2/3">
+      <div className="w-full">
         {/* Page Header */}
         <div className="mb-8">
           <h2 className="mb-2 text-3xl font-bold text-primary">Dashboard</h2>
           <p className="text-muted-foreground">
-            Welcome back! Here's what's happening.
+            Welcome back! Here's what's been happening.
           </p>
         </div>
 
@@ -165,23 +137,38 @@ export default function AdminDashboardPage() {
           Recent posts
         </h3>
         <section className="">
-          <AdminTable
-            onNextPage={fetchNextPage}
-            onPrevPage={fetchPreviousPage}
-          ></AdminTable>
+          <AdminTable posts={paginatedPosts}></AdminTable>
+          <Pagination>
+            <PaginationContent>
+              {/* prev button */}
+              {hasPrevious && (
+                <PaginationItem onClick={handlePrevPageChange}>
+                  <PaginationPrevious className="cursor-pointer" />
+                </PaginationItem>
+              )}
+
+              {/* items */}
+              <PaginationItem>
+                {currentPage + 1}{" "}
+                <span className="text-muted-foreground">of</span> {totalPage}
+              </PaginationItem>
+
+              {/* next button */}
+              {hasNext && (
+                <PaginationItem onClick={handleNextPageChange}>
+                  <PaginationNext className="cursor-pointer" />
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
         </section>
       </div>
     </main>
   );
 }
 
-const AdminTable = ({
-  onNextPage,
-  onPrevPage,
-}: {
-  onNextPage: () => void;
-  onPrevPage: () => void;
-}) => {
+const AdminTable = ({ posts }: { posts?: Post[] }) => {
+  const router = useRouter();
   return (
     <div>
       <Table>
@@ -198,89 +185,81 @@ const AdminTable = ({
 
         {/* table body */}
         <TableBody>
-          {posts.map((post) => (
-            <TableRow
-              key={post.id}
-              className="cursor-pointer border-muted hover:bg-muted/50"
-            >
-              <TableCell className="py-4">
-                <div>
-                  <h3 className="mb-1 line-clamp-1 font-medium text-primary">
-                    {post.title}
-                  </h3>
-                  <div className="flex items-center">
-                    <Badge variant="secondary" className="text-xs">
-                      {post.category}
-                    </Badge>
+          {posts &&
+            posts.map((post) => (
+              <TableRow
+                key={post.id}
+                className="border-muted hover:bg-muted/50"
+              >
+                <TableCell
+                  className="group cursor-pointer py-4"
+                  onClick={() => {
+                    router.push(`/blog/${post.id}`);
+                  }}
+                >
+                  <div>
+                    <h3 className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2">
+                      {post.title}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      {post.tags.map((tag, index) => (
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {tag.name}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell className="py-4">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                    <AvatarFallback className="text-xs">
-                      {post.author
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium text-gray-900">
-                    {post.author}
-                  </span>
-                </div>
-              </TableCell>
+                </TableCell>
+                <TableCell
+                  className="group cursor-pointer py-4"
+                  onClick={() => {
+                    router.push(`/profile/${post.authorId}`);
+                  }}
+                >
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src="/placeholder.svg?height=24&width=24" />
+                      <AvatarFallback className="text-xs">
+                        {post.author.displayName
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
+                      {post.author.displayName}
+                    </span>
+                  </div>
+                </TableCell>
 
-              <TableCell className="py-4">
-                <div className="flex items-center justify-center text-sm text-gray-500">
-                  <Heart className="mr-1 h-3 w-3" />
-                  <span>10</span>
-                </div>
-              </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Heart className="mr-1 h-3 w-3" />
+                    <span>10</span>
+                  </div>
+                </TableCell>
 
-              <TableCell className="py-4">
-                <div className="flex items-center justify-center text-sm text-gray-500">
-                  <MessageCircle className="mr-1 h-3 w-3" />
-                  <span>10</span>
-                </div>
-              </TableCell>
+                <TableCell className="py-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <MessageCircle className="mr-1 h-3 w-3" />
+                    <span>10</span>
+                  </div>
+                </TableCell>
 
-              <TableCell className="py-4">
-                <div className="flex items-center text-sm text-gray-500">
-                  <Calendar className="mr-1 h-3 w-3" />
-                  {post.date}
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell className="py-4">
+                  <div className="flex items-center text-sm text-gray-500">
+                    <Calendar className="mr-1 h-3 w-3" />
+                    {post.createdAt}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
-
-      {/* pagination */}
-      <Pagination>
-        <PaginationContent>
-          {/* prev button */}
-          <PaginationItem onClick={onPrevPage}>
-            <PaginationPrevious />
-          </PaginationItem>
-
-          {/* items */}
-          <PaginationItem>
-            <PaginationLink>1</PaginationLink>
-          </PaginationItem>
-
-          {/* elipsis */}
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-
-          {/* next button */}
-          <PaginationItem onClick={onNextPage}>
-            <PaginationNext />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </div>
   );
 };

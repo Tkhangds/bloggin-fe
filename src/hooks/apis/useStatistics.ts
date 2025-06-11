@@ -15,8 +15,16 @@ export const useStatistics = () => {
       queryFn: () => statisticsAction.getTopTag(top),
     });
   };
+
+  const useGetOverallStatistics = () => {
+    return useQuery({
+      queryKey: ["statistics", "overall"],
+      queryFn: () => statisticsAction.getTopOverall(),
+    });
+  };
   return {
     useGetTopFollowedUser,
     useGetTopTag,
+    useGetOverallStatistics,
   };
 };

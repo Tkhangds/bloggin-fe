@@ -1,4 +1,5 @@
 import { bloggingApi } from "@/lib/HttpClient";
+import { GetAdminOverallStatResponseDto } from "@/types/dtos/get-admin-overall-stat-response.dto";
 import { GetTopTagResponseDto } from "@/types/dtos/get-top-tag-response.dto";
 import { User } from "@/types/user";
 
@@ -23,6 +24,13 @@ export const statisticsAction = {
         top,
       },
     });
+    return result.data.data;
+  },
+
+  async getTopOverall() {
+    const result = await bloggingApi.get<
+      SuccessResponseWrapper<GetAdminOverallStatResponseDto>
+    >("/statistics/overall");
     return result.data.data;
   },
 };

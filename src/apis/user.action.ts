@@ -32,7 +32,7 @@ const userAction = {
     );
     return result.data.data;
   },
-  async getUser(query: Partial<QueryUserDto>) {
+  async getUser(query?: Partial<QueryUserDto>) {
     const result = await bloggingApi.get<SuccessResponseWrapper<User[]>>(
       `/user`,
       { params: query },
