@@ -7,9 +7,9 @@ type LandingLayoutProps = {
 
 export const LandingHeaderLayout = ({ children }: LandingLayoutProps) => {
   return (
-    <div>
+    <div className="relative">
       <Header />
-      <div className="mt-[52px]">{children}</div>
+      <div className="">{children}</div>
     </div>
   );
 };
