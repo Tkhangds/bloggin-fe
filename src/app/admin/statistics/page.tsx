@@ -16,7 +16,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { useStatistics } from "@/hooks/apis/useStatistics";
-import { title } from "process";
 import {
   Bar,
   BarChart,

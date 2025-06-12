@@ -6,7 +6,6 @@ import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
@@ -20,11 +19,8 @@ import {
 } from "@/components/ui/table";
 import { usePost } from "@/hooks/apis/usePost";
 import { useStatistics } from "@/hooks/apis/useStatistics";
-import { useTag } from "@/hooks/apis/useTag";
-import { useUser } from "@/hooks/apis/useUser";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
-import _, { over } from "lodash";
 import {
   Calendar,
   FileText,

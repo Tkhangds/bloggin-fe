@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GetAdminOverallStatResponseSchema = z.object({
   usersCount: z.number(),
   postsCount: z.number(),
