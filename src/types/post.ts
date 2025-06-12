@@ -23,6 +23,7 @@ export const postSchema = z.object({
   }),
   enVoiceUrl: z.string().optional(),
   vnVoiceUrl: z.string().optional(),
+  thumbnailUrl: z.string().optional(),
 });
 
 export type Post = z.infer<typeof postSchema>;

@@ -43,8 +43,14 @@ export const usePost = () => {
 
   const useCreatePost = () => {
     return useMutation({
-      mutationFn: async ({ data }: { data: CreatePostDto }) => {
-        return await postAction.createPost(data);
+      mutationFn: async ({
+        data,
+        thumbnail,
+      }: {
+        data: CreatePostDto;
+        thumbnail?: File;
+      }) => {
+        return await postAction.createPost(data, thumbnail);
       },
       onSuccess: (result, variable) => {
         queryClient.invalidateQueries({

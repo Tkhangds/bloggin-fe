@@ -29,12 +29,10 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 
 export function MobileMenu() {
-  const { user } = useAuthContext();
-
-  const [loggedIn, setLoggedIn] = useState("false");
-
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  const { user, logout } = useAuthContext();
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -42,31 +40,9 @@ export function MobileMenu() {
     document.documentElement.classList.toggle("dark");
   };
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setLoggedIn(localStorage.getItem("isLoggedIn") ?? "false");
-    }
-  }, []);
-
-  const handleSignOut = () => {
-    // Handle sign out logic here
-    console.log("Signing out...");
-
-    if (typeof window !== "undefined") {
-      localStorage.setItem("isLoggedIn", "false");
-      router.push("/");
-    }
+  const handleSignOut = async () => {
+    await logout();
   };
-
-  // Get initials from name
-  const initials = user?.username
-    ? user.username
-        .split(" ")
-        .map((n) => n[0])
-        .join("")
-        .toUpperCase()
-        .substring(0, 2)
-    : "N/A";
 
   return (
     <Sheet>
@@ -82,12 +58,12 @@ export function MobileMenu() {
         </SheetHeader>
 
         {/* User Profile Section */}
-        {loggedIn == "true" && (
+        {user && (
           <>
             <div className="flex items-center gap-4 py-6">
               <Avatar className="h-10 w-10">
                 <AvatarImage src={user?.avatarUrl} alt={user?.displayName} />
-                <AvatarFallback>{initials}</AvatarFallback>
+                <AvatarFallback>{"N/A"}</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
                 <span className="text-sm font-medium">{user?.displayName}</span>
@@ -117,7 +93,7 @@ export function MobileMenu() {
         </div>
         <Separator className="my-4" />
 
-        {loggedIn == "false" ? (
+        {user == null ? (
           <div className="flex flex-col gap-4">
             <Button variant={"secondary"} className="w-full font-semibold">
               <Link className="h-full w-full" href="/sign-up">
@@ -134,20 +110,37 @@ export function MobileMenu() {
           <>
             {/* User Actions */}
             <div className="flex flex-col gap-2">
-              <Button variant="ghost" className="w-full justify-start gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => router.push(`/profile/${user?.id}`)}
+                className="w-full justify-start gap-2"
+              >
                 <User className="h-5 w-5" />
                 Profile
               </Button>
-              <Button variant="ghost" className="w-full justify-start gap-2">
-                <Bell className="h-5 w-5" />
-                Notifications
-                <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
-                  3
-                </span>
-              </Button>
-              <Button variant="ghost" className="w-full justify-start gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => router.push(`/setting/profile`)}
+                className="w-full justify-start gap-2"
+              >
                 <Settings className="h-5 w-5" />
                 Settings
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => router.push(`/setting/posts`)}
+                className="w-full justify-start gap-2"
+              >
+                <Bell className="h-5 w-5" />
+                Your Blog
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => router.push(`/setting/drafts`)}
+                className="w-full justify-start gap-2"
+              >
+                <Bell className="h-5 w-5" />
+                Your Draft
               </Button>
               <Button
                 variant="ghost"
@@ -160,6 +153,14 @@ export function MobileMenu() {
                   <Sun className="h-5 w-5" />
                 )}
                 {theme === "light" ? "Dark Mode" : "Light Mode"}
+              </Button>
+              <Button
+                onClick={() => router.push(`/`)}
+                variant="ghost"
+                className="w-full justify-start gap-2"
+              >
+                <Bell className="h-5 w-5" />
+                About Us
               </Button>
             </div>
             <Separator className="my-4" />

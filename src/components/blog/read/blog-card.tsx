@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle, Heart } from "lucide-react";
+import { MessageCircle, Heart, ThumbsDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
@@ -92,16 +92,14 @@ export default function BlogCard({
             </div>
           </div>
 
-          {true && (
-            <div className="relative h-48 overflow-hidden rounded-md md:h-32 md:w-1/3">
-              <Image
-                src={"https://placehold.co/600x400/png"}
-                alt={post.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
+          <div className="relative h-48 overflow-hidden rounded-md md:h-32 md:w-1/3">
+            <Image
+              src={post.thumbnailUrl ?? "https://placehold.co/600x400/png"}
+              alt={post.title}
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
       </div>
     </article>

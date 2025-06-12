@@ -49,12 +49,12 @@ export default function BlogBrowsing() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white px-4 pt-5 text-gray-900 sm:px-6 lg:px-20 xl:px-64">
+    <div className="flex min-h-screen flex-col bg-background px-4 pt-5 text-foreground sm:px-6 lg:px-20 xl:px-64">
       {/* Main Content */}
       <main className="container flex flex-1 flex-col gap-8 py-6 md:flex-row md:py-8">
         {/* Blog Posts */}
         <div className="flex-1">
-          <h1 className="mb-6 text-2xl font-bold">For You</h1>
+          <h1 className="mb-6 text-2xl font-bold text-foreground">For You</h1>
           <div className="grid grid-cols-1 gap-8">
             {posts &&
               posts.pages.map((page) =>

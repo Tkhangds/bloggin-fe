@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { TagsSection } from "@/components/publish/tag-section";
@@ -20,12 +20,24 @@ import { useDraft } from "@/hooks/apis/useDraft";
 import { usePost } from "@/hooks/apis/usePost";
 import { useTagsManagement } from "@/hooks/useTagsManagement";
 import { CreatePostDto, CreatePostSchema } from "@/types/dtos/create-post.dto";
+import { Tag, GalleryThumbnails } from "lucide-react";
 
 export default function PublishPage({ params }: { params: { id: string } }) {
   const router = useRouter();
 
   const { mutateAsync: createPost } = usePost().useCreatePost();
   const { mutateAsync: deleteDraft } = useDraft().useDeleteDraftById();
+
+  const [thumbnail, setThumbnail] = useState<File | undefined>();
+
+  const handleThumbnailChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setThumbnail(file);
+    }
+  };
 
   const form = useForm<CreatePostDto>({
     mode: "onSubmit",
@@ -47,8 +59,6 @@ export default function PublishPage({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     if (draft) {
-      console.log("Draft:", draft);
-
       setValue("content", draft.content);
       setValue("authorId", draft.authorId);
     }
@@ -59,7 +69,7 @@ export default function PublishPage({ params }: { params: { id: string } }) {
   }, [tagsManager.tags, setValue]);
 
   const onSubmitHandle = async (data: CreatePostDto) => {
-    const blog = await createPost({ data });
+    const blog = await createPost({ data, thumbnail });
     await deleteDraft(params.id);
     await queryClient.invalidateQueries({ queryKey: ["posts"] });
     await queryClient.invalidateQueries({ queryKey: ["post", blog.id] });
@@ -106,6 +116,16 @@ export default function PublishPage({ params }: { params: { id: string } }) {
               </div>
 
               <TagsSection tagsManager={tagsManager} />
+              <div className="flex items-center">
+                <GalleryThumbnails className="mr-2 h-5 w-5 text-muted-foreground" />
+                <h3 className="text-base font-medium">Thumbnail</h3>
+              </div>
+              <Input
+                id="thumbnail"
+                type="file"
+                onChange={handleThumbnailChange}
+                className="cursor-pointer"
+              ></Input>
 
               <div className="flex items-center justify-end space-x-4 pt-2">
                 <Button

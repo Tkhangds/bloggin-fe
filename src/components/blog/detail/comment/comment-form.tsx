@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { Textarea } from "../../../editor/ui/Textarea";
 import { Button } from "../../../ui/button";
+import { toast } from "sonner";
 
 export default function CommentForm({
   postId,
@@ -36,7 +37,14 @@ export default function CommentForm({
   const { mutateAsync: createComment } = useComment(postId).useCreateComment();
 
   const onSubmitHandle = async (data: CreateCommentDto) => {
-    await createComment({ data });
+    try {
+      await createComment({ data });
+    } catch (e: unknown) {
+      toast.warning(
+        "Your comment is inappropriate. Please use more polite and appropriate language, or you may be banned in the future.",
+      );
+      return;
+    }
     queryClient.invalidateQueries({ queryKey: ["posts"] });
     setValue("content", "");
   };
