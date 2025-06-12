@@ -23,6 +23,7 @@ import { useStatistics } from "@/hooks/apis/useStatistics";
 import { useTag } from "@/hooks/apis/useTag";
 import { useUser } from "@/hooks/apis/useUser";
 import { Post } from "@/types/post";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import _, { over } from "lodash";
 import {
   Calendar,
@@ -239,21 +240,21 @@ const AdminTable = ({ posts }: { posts?: Post[] }) => {
                 <TableCell className="py-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <Heart className="mr-1 h-3 w-3" />
-                    <span>10</span>
+                    <span>{post.likeCount}</span>
                   </div>
                 </TableCell>
 
                 <TableCell className="py-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <MessageCircle className="mr-1 h-3 w-3" />
-                    <span>10</span>
+                    <span>{post.commentCount}</span>
                   </div>
                 </TableCell>
 
                 <TableCell className="py-4">
                   <div className="flex items-center text-sm text-gray-500">
                     <Calendar className="mr-1 h-3 w-3" />
-                    {post.createdAt}
+                    {formatDateFromISOString(post.createdAt)}
                   </div>
                 </TableCell>
               </TableRow>

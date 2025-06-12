@@ -16,7 +16,7 @@ export default function WriterRecommend(): JSX.Element {
   );
 
   return (
-    <div className="rounded-lg bg-gray-50 p-6">
+    <div className="border-muted-background border-t-[0.1rem] p-6">
       <h2 className="mb-4 text-lg font-bold dark:text-black">
         Recommended Writers
       </h2>
