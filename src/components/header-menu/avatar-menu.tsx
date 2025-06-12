@@ -7,6 +7,7 @@ import {
   Moon,
   NotepadTextDashed,
   Settings,
+  Shield,
   Sun,
   User,
 } from "lucide-react";
@@ -80,6 +81,17 @@ export function AvatarMenu({}) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+
+          {user.isAdmin && (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => router.push("/admin/dashboard")}
+            >
+              <Shield className="mr-2 h-4 w-4" />
+              <span>Admin Dashboard</span>
+            </DropdownMenuItem>
+          )}
+          
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => router.push(`/profile/${user.id}`)}

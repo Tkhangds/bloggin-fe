@@ -1,24 +1,22 @@
 "use client";
 import { FollowButton } from "@/components/shared/follow-button";
-import { Button } from "@/components/ui/button";
 import { CardDescription } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import { useStatistics } from "@/hooks/apis/useStatistics";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function WriterRecommend(): JSX.Element {
-  const { data, isLoading } = useStatistics().useGetTopFollowedUser(4);
+  const { data, isLoading } = useStatistics().useGetTopFollowedUser();
   const { user } = useAuthContext();
   const router = useRouter();
 
-  const filteredData = data
-    ?.filter((writer) => writer.id !== user?.id)
-    .slice(0, 3);
+  const filteredData = data?.filter(
+    (writer) => writer.id !== user?.id && writer.displayName !== "admin",
+  );
 
   return (
-    <div className="rounded-lg bg-gray-50 p-6">
+    <div className="border-muted-background border-t-[0.1rem] p-6">
       <h2 className="mb-4 text-lg font-bold dark:text-black">
         Recommended Writers
       </h2>
@@ -59,15 +57,7 @@ export default function WriterRecommend(): JSX.Element {
               </div>
             );
           })}
-        {filteredData && filteredData?.length > 0 ? (
-          <Button
-            variant="ghost"
-            className="mt-4 w-full text-gray-500 hover:text-gray-700"
-          >
-            See More Authors
-            <ChevronRight className="ml-2 h-4 w-4" />
-          </Button>
-        ) : (
+        {!filteredData && (
           <CardDescription className="flex w-full justify-center">
             No author available
           </CardDescription>

@@ -46,7 +46,7 @@ export const useUser = () => {
     });
   };
 
-  const useGetUser = (query: Partial<QueryUserDto>) => {
+  const useGetUser = (query?: Partial<QueryUserDto>) => {
     return useQuery({
       queryKey: ["user", query],
       queryFn: () => {

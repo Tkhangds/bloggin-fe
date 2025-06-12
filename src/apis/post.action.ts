@@ -10,6 +10,7 @@ const postAction = {
     title?: string,
     tagName?: string,
   ) {
+    console.log("page being fetched: ", page);
     const result = await bloggingApi.get<PaginationResponseWrapper<Post[]>>(
       "/post",
       {

@@ -75,8 +75,8 @@ export default function BlogBrowsing() {
 
         {/* Sidebar */}
         <aside className="w-full space-y-8 md:sticky md:top-20 md:w-80 md:self-start lg:w-96">
-          <WriterRecommend />
           <TagRecommend />
+          <WriterRecommend />
         </aside>
       </main>
     </div>

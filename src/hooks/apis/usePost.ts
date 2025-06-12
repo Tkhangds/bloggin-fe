@@ -16,12 +16,12 @@ export const usePost = () => {
 
   const useGetAllPosts = (limit?: number, title?: string, tagName?: string) => {
     return useInfiniteQuery({
-      queryKey: ["posts", tagName],
-      queryFn: ({ pageParam = 1 }) =>
+      queryKey: ["posts", tagName, limit],
+      queryFn: ({ pageParam }) =>
         postAction.getAllPost(pageParam, limit, title, tagName),
       initialPageParam: 1,
       getNextPageParam: (lastPage) => {
-        return lastPage.meta.nextPage ?? undefined;
+        return lastPage.meta.nextPage;
       },
     });
   };
