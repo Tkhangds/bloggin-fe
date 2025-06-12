@@ -39,7 +39,8 @@ export default function CommentForm({
   const onSubmitHandle = async (data: CreateCommentDto) => {
     try {
       await createComment({ data });
-    } catch (_error: unknown) {
+      // eslint-disable-next-line
+    } catch (_: unknown) {
       toast.warning(
         "Your comment is inappropriate. Please use more polite and appropriate language, or you may be banned in the future.",
       );
