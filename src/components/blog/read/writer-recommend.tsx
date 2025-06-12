@@ -11,14 +11,15 @@ export default function WriterRecommend(): JSX.Element {
   const { user } = useAuthContext();
   const router = useRouter();
 
-  const filteredData = data
-    ?.filter((writer) => writer.id !== user?.id && writer.displayName !== "admin");
-
- 
+  const filteredData = data?.filter(
+    (writer) => writer.id !== user?.id && writer.displayName !== "admin",
+  );
 
   return (
-    <div className=" border-t-2 border-muted p-6">
-      <h2 className="mb-4 text-lg font-bold">Recommended Writers</h2>
+    <div className="rounded-lg bg-gray-50 p-6">
+      <h2 className="mb-4 text-lg font-bold dark:text-black">
+        Recommended Writers
+      </h2>
       <div className="space-y-4">
         {!isLoading &&
           filteredData &&
@@ -26,7 +27,7 @@ export default function WriterRecommend(): JSX.Element {
             return (
               <div
                 key={index}
-                className="flex cursor-pointer items-center justify-between py-1"
+                className="flex cursor-pointer items-center justify-between py-1 text-[#171717]"
                 onClick={() => {
                   router.push(`/profile/${writer.id}`);
                 }}
@@ -49,13 +50,14 @@ export default function WriterRecommend(): JSX.Element {
                   </div>
                 </div>
                 <FollowButton
+                  className="dark:text-white"
                   userId={writer.id}
                   alwaysShow={true}
                 ></FollowButton>
               </div>
             );
           })}
-        {(!filteredData) && (
+        {!filteredData && (
           <CardDescription className="flex w-full justify-center">
             No author available
           </CardDescription>

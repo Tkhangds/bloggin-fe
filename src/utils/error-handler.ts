@@ -1,6 +1,5 @@
 import axios from "axios";
 import HttpException from "@/configs/HttpException";
-
 // Định nghĩa kiểu cho phản hồi lỗi
 interface CleanErrorResponseWrapper {
   exceptionCode?: string;

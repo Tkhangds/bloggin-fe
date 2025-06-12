@@ -25,7 +25,7 @@ export default function SettingsLayout({
 
   return (
     <LandingHeaderLayout>
-      <div className="container mx-auto px-4 py-8 xl:px-48">
+      <div className="container mx-auto h-full bg-background px-4 py-8 xl:px-48">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Left Column - Navigation */}
           <div className="relative md:col-span-1">

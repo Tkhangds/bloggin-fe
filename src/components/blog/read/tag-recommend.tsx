@@ -10,7 +10,9 @@ export default function TagRecommend(): JSX.Element {
   const router = useRouter();
   return (
     <div className="rounded-lg bg-gray-50 p-6">
-      <h2 className="mb-4 text-lg font-bold">Topics to Follow</h2>
+      <h2 className="mb-4 text-lg font-bold dark:text-black">
+        Topics to Follow
+      </h2>
       <div className="flex flex-wrap gap-4">
         {!isLoading &&
           data &&
@@ -18,7 +20,7 @@ export default function TagRecommend(): JSX.Element {
             <Badge
               key={index}
               variant="outline"
-              className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100"
+              className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100 dark:text-black"
               onClick={() => router.push(`/explore/${topic.name}`)}
             >
               {topic.name} ({topic.postCount})

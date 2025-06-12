@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full bg-background antialiased">
       <body
         className={`${inter.className} scrollbar-gutter-stable overflow-y-scroll antialiased`}
       >

@@ -38,10 +38,26 @@ const postAction = {
     return result.data.data;
   },
 
-  async createPost(data: CreatePostDto) {
+  async createPost(data: CreatePostDto, thumbnail?: File) {
+    const formData = new FormData();
+
+    if (thumbnail) {
+      formData.append("thumbnail", thumbnail);
+    }
+
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("authorId", data.authorId);
+    data.tags.forEach((tag) => formData.append("tags", tag));
+
     const result = await bloggingApi.post<SuccessResponseWrapper<Post>>(
       "/post",
-      data,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
     );
 
     return result.data.data;
