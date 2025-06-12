@@ -20,7 +20,7 @@ import { useDraft } from "@/hooks/apis/useDraft";
 import { usePost } from "@/hooks/apis/usePost";
 import { useTagsManagement } from "@/hooks/useTagsManagement";
 import { CreatePostDto, CreatePostSchema } from "@/types/dtos/create-post.dto";
-import { Tag, GalleryThumbnails } from "lucide-react";
+import { GalleryThumbnails } from "lucide-react";
 
 export default function PublishPage({ params }: { params: { id: string } }) {
   const router = useRouter();

@@ -39,7 +39,7 @@ export default function CommentForm({
   const onSubmitHandle = async (data: CreateCommentDto) => {
     try {
       await createComment({ data });
-    } catch (e: unknown) {
+    } catch (_error: unknown) {
       toast.warning(
         "Your comment is inappropriate. Please use more polite and appropriate language, or you may be banned in the future.",
       );
