@@ -11,6 +11,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginDto, LoginSchema } from "@/types/dtos/login.dto";
 import { useAuth } from "@/hooks/apis/useAuth";
 import LoginHero from "./login-hero";
+import Link from "next/link";
+import { ENV } from "@/configs/env";
 
 interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -118,7 +120,11 @@ export default function LoginForm({
                   Or continue with
                 </span>
               </div>
-              <div>
+              <Link
+                href={`${ENV.NEXT_PUBLIC_API_BASE_URL}/auth/google/login`}
+                target="_parent"
+                className="w-full"
+              >
                 <Button
                   type="button"
                   onClick={() => onGoogleLoginHandle()}
@@ -133,7 +139,7 @@ export default function LoginForm({
                   </svg>
                   <span className="sr-only">Login with Google</span>
                 </Button>
-              </div>
+              </Link>
               <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
                 <a href="/sign-up" className="underline underline-offset-4">
