@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import RightSection from "./right-section";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { SearchBar } from "@/components/search/search-bar";
 
 export const Header = () => {
   return (
@@ -27,15 +30,8 @@ export const Header = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:justify-end lg:gap-1 lg:pt-2">
-            <Button variant={"ghost"} className="font-semibold">
-              Trending
-            </Button>
-            <Button variant={"ghost"} className="font-semibold">
-              Category
-            </Button>
-          </div>
+          {/* Searchbar */}
+          <SearchBar />
         </div>
         <RightSection />
       </div>
