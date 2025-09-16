@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Pause, LucidePlay } from "lucide-react";
 import AnimatedContent from "@/components/ui/animated-content";
+import Script from "next/script";
 interface ImageItem {
   id: number;
   src: string;
@@ -150,6 +151,21 @@ export default function ImageGallery(): JSX.Element {
           </Button>
         </div>
       </AnimatedContent>
+      <Script id="viewport-animator" strategy="afterInteractive">
+        {`
+          const els = document.querySelectorAll('.animate-drop-in');
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach(e => {
+              if (e.isIntersecting) {
+                e.target.classList.add('play');
+                o.unobserve(e.target);
+              }
+            });
+          }, { threshold: 0.3 });
+
+          els.forEach(el => obs.observe(el));
+        `}
+      </Script>
     </div>
   );
 }

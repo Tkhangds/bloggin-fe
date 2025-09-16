@@ -5,7 +5,7 @@ import RightSection from "./right-section";
 
 export const Header = () => {
   return (
-    <div className="sflex sticky top-0 z-50 w-full flex-col border-b-[1px] border-foreground/25 bg-background px-7 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
+    <div className="flex sticky top-0 z-50 w-full flex-col border-b-[1px] border-foreground/25 bg-background px-7 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link href="/blog">
@@ -37,7 +37,7 @@ export const Header = () => {
             </Button>
           </div>
         </div>
-        <RightSection />
+          <RightSection />
       </div>
     </div>
   );

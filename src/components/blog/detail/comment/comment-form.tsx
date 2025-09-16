@@ -40,7 +40,8 @@ export default function CommentForm({
     try {
       await createComment({ data });
       // eslint-disable-next-line
-    } catch (_: unknown) {
+    } catch (e: Error | any) {
+      console.error(e);
       toast.warning(
         "Your comment is inappropriate. Please use more polite and appropriate language, or you may be banned in the future.",
       );

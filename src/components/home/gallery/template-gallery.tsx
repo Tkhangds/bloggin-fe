@@ -108,9 +108,6 @@ export default function TemplateGallery() {
               <CardContent className="flex-grow p-4 pb-0">
                 <CardTitle className="mb-2 flex items-center justify-between">
                   {template.title}
-                  {/* {selectedTemplate === template.id && (
-                    <Check className="h-5 w-5 text-primary" />
-                  )} */}
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
                   {template.description}
