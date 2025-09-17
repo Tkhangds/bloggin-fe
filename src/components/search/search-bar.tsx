@@ -1,10 +1,46 @@
+"use client";
+
 import { Bookmark, Search, Tag, UserPen } from "lucide-react";
 import { Input } from "../ui/input";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
+import { useRouter } from "next/navigation";
+
+const mockBlogs = [
+  { title: "blog1", authorName: "author1", href: "/" },
+  { title: "blog2", authorName: "author2", href: "/" },
+  { title: "blog3", authorName: "author3", href: "/" },
+];
+
+const mockAuthors = [
+  { authorName: "author1", follewers: 10, href: "/" },
+  { authorName: "author2", follewers: 10, href: "/" },
+  { authorName: "author3", follewers: 10, href: "/" },
+];
+
+const mockTags = [
+  { tagName: "adventure" },
+  { tagName: "royalty" },
+  { tagName: "inspiration" },
+  { tagName: "friendship" },
+  { tagName: "women" },
+];
 
 export const SearchBar = () => {
+  const [query, setQuery] = useState("");
+  const router = useRouter();
+
+  const open = query.length > 0;
+
+  const onInputEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const encodedQuery = encodeURIComponent(query);
+      router.push(`/search?query=${encodedQuery}`);
+    }
+  };
+
   return (
     <div className="relative hidden min-w-80 text-xs text-muted-foreground md:block">
       <Search
@@ -12,54 +48,88 @@ export const SearchBar = () => {
         size={15}
       />
       <Input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        type="text"
         placeholder="Search..."
         className="rounded-full bg-muted py-4 pl-8 shadow-none focus:bg-transparent"
+        onKeyDown={(e) => onInputEnter(e)}
       />
 
-      <SearchResults>
-        <SearchSection name="Blogs" icon={<Bookmark size={13} />}>
-          <BlogResult title="blog1" authorName="author1" href="/"></BlogResult>
-          <BlogResult title="blog2" authorName="author2" href="/"></BlogResult>
-          <BlogResult title="blog3" authorName="author3" href="/"></BlogResult>
-        </SearchSection>
-        <SearchSection name="Authors" icon={<UserPen size={13} />}>
-          <AuthorResult
-            authorName="author1"
-            follewers={10}
-            href="/"
-          ></AuthorResult>
-          <AuthorResult
-            authorName="author2"
-            follewers={10}
-            href="/"
-          ></AuthorResult>
-          <AuthorResult
-            authorName="author2"
-            follewers={10}
-            href="/"
-          ></AuthorResult>
-        </SearchSection>
-        <SearchSection name="Tags" icon={<Tag size={13} />}></SearchSection>
-      </SearchResults>
+      {open && (
+        <SearchResults>
+          {mockBlogs && mockBlogs.length > 0 && (
+            <SearchSection name="Blogs" icon={<Bookmark size={13} />}>
+              {mockBlogs.map((blog, index) => (
+                <BlogResult
+                  key={index}
+                  title={blog.title}
+                  authorName={blog.authorName}
+                  href={blog.href}
+                ></BlogResult>
+              ))}
+            </SearchSection>
+          )}
+
+          {mockAuthors && mockAuthors.length > 0 && (
+            <SearchSection name="Authors" icon={<UserPen size={13} />}>
+              {mockAuthors.map((author, index) => (
+                <AuthorResult
+                  key={index}
+                  authorName={author.authorName}
+                  follewers={author.follewers}
+                  authorId={"authorId"}
+                ></AuthorResult>
+              ))}
+            </SearchSection>
+          )}
+
+          {mockTags && mockTags.length > 0 && (
+            <SearchSection name="Tags" icon={<Tag size={13} />}>
+              <div className="flex flex-wrap gap-2 py-2">
+                {mockTags.map((tag, index) => (
+                  <TagResult key={index} tagName={tag.tagName}></TagResult>
+                ))}
+              </div>
+            </SearchSection>
+          )}
+
+          <SearchSection>
+            <button
+              onClick={() => {
+                const encodedQuery = encodeURIComponent(query);
+                router.push(`/search?query=${encodedQuery}`);
+              }}
+              className="group w-full rounded hover:bg-muted"
+            >
+              <p className="w-full py-1 text-center text-sm">
+                See more results
+              </p>
+            </button>
+          </SearchSection>
+        </SearchResults>
+      )}
     </div>
   );
 };
 
 const SearchResults = ({ children }: { children?: ReactNode }) => {
   return (
-    <div className="absolute top-10 z-10 w-full min-w-[450px] rounded border bg-background px-3 py-1 shadow-sm">
+    <div className="absolute top-10 z-10 w-full min-w-[450px] rounded border bg-background px-3 py-2 shadow-sm">
       {children}
     </div>
   );
 };
 
-interface SearchSectionProps {
+const SearchSection = ({
+  icon,
+  children,
+  name,
+}: {
   icon?: React.ReactNode;
   children?: ReactNode;
   name?: string;
-}
-
-const SearchSection = ({ icon, children, name }: SearchSectionProps) => {
+}) => {
   return (
     <div>
       {name && (
@@ -94,19 +164,19 @@ const BlogResult = ({
 };
 
 const AuthorResult = ({
+  authorId,
   authorName,
   follewers,
   avatarUrl,
-  href,
 }: {
+  authorId: string;
   authorName: string;
   follewers: number;
   avatarUrl?: string;
-  href: string;
 }) => (
   <Link
     className="flex cursor-pointer justify-between p-1 hover:bg-muted"
-    href={href}
+    href={`/profile/${authorId}`}
   >
     <div className="flex items-center gap-2">
       <Avatar className="h-5 w-5 border border-border">
@@ -124,6 +194,13 @@ const AuthorResult = ({
   </Link>
 );
 
-const TagResult = () => {
-  return <div></div>;
+const TagResult = ({ tagName }: { tagName: string }) => {
+  return (
+    <Badge
+      variant="outline"
+      className="min-w-10 cursor-pointer bg-white px-3 py-1 hover:bg-gray-100 dark:text-black"
+    >
+      {tagName}
+    </Badge>
+  );
 };
