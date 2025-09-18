@@ -1,9 +1,6 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import RightSection from "./right-section";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { SearchBar } from "@/components/search/search-bar";
 
 export const Header = () => {
@@ -31,7 +28,7 @@ export const Header = () => {
           </Link>
 
           {/* Searchbar */}
-          <SearchBar />
+          <SearchBar hiddenWhileInSearchPage={true} />
         </div>
         <RightSection />
       </div>

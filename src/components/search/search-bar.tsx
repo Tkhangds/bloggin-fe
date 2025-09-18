@@ -2,16 +2,21 @@
 
 import { Bookmark, Search, Tag, UserPen } from "lucide-react";
 import { Input } from "../ui/input";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 const mockBlogs = [
-  { title: "blog1", authorName: "author1", href: "/" },
-  { title: "blog2", authorName: "author2", href: "/" },
-  { title: "blog3", authorName: "author3", href: "/" },
+  {
+    title: "Witch of the day",
+    authorName: "author1",
+    href: "/",
+  },
+  { title: "Descendant with vigor", authorName: "author2", href: "/" },
+  { title: "Result of greatness", authorName: "author3", href: "/" },
 ];
 
 const mockAuthors = [
@@ -28,32 +33,64 @@ const mockTags = [
   { tagName: "women" },
 ];
 
-export const SearchBar = () => {
+export const SearchBar = ({
+  className,
+  hiddenWhileInSearchPage,
+}: {
+  className?: string;
+  hiddenWhileInSearchPage?: boolean;
+}) => {
   const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(query.length > 0);
+
+  const pathName = usePathname();
+  const searchQuery = useSearchParams().get("query");
+  const isInSearchPage = pathName.toString().indexOf("/search") !== -1;
+
   const router = useRouter();
 
-  const open = query.length > 0;
+  useEffect(() => {
+    if (searchQuery) {
+      setQuery(searchQuery);
+    }
+  }, []);
 
   const onInputEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const encodedQuery = encodeURIComponent(query);
-      router.push(`/search?query=${encodedQuery}`);
+
+      if (!isInSearchPage) {
+        router.push(`/search?query=${encodedQuery}`);
+      } else {
+        router.replace(`/search?query=${encodedQuery}`);
+      }
     }
   };
 
   return (
-    <div className="relative hidden min-w-80 text-xs text-muted-foreground md:block">
+    <div
+      className={twMerge(
+        "relative min-w-80 text-xs text-muted-foreground",
+        className,
+        isInSearchPage && hiddenWhileInSearchPage && "hidden",
+      )}
+    >
       <Search
         className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
         size={15}
       />
       <Input
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setOpen(e.target.value.length > 0);
+        }}
         type="text"
         placeholder="Search..."
         className="rounded-full bg-muted py-4 pl-8 shadow-none focus:bg-transparent"
         onKeyDown={(e) => onInputEnter(e)}
+        onBlur={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
       />
 
       {open && (
@@ -115,7 +152,7 @@ export const SearchBar = () => {
 
 const SearchResults = ({ children }: { children?: ReactNode }) => {
   return (
-    <div className="absolute top-10 z-10 w-full min-w-[450px] rounded border bg-background px-3 py-2 shadow-sm">
+    <div className="absolute top-10 z-10 w-full rounded border bg-background px-3 py-2 shadow-sm md:min-w-[450px]">
       {children}
     </div>
   );
