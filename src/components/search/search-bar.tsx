@@ -35,10 +35,10 @@ const mockTags = [
 
 export const SearchBar = ({
   className,
-  hiddenWhileInSearchPage,
+  showSearchBar = true,
 }: {
   className?: string;
-  hiddenWhileInSearchPage?: boolean;
+  showSearchBar?: boolean;
 }) => {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(query.length > 0);
@@ -72,7 +72,7 @@ export const SearchBar = ({
       className={twMerge(
         "relative min-w-80 text-xs text-muted-foreground",
         className,
-        isInSearchPage && hiddenWhileInSearchPage && "hidden",
+        !showSearchBar && "hidden",
       )}
     >
       <Search
