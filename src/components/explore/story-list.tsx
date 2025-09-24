@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
+import { twMerge } from "tailwind-merge";
 
 export function StoryList({ tag }: { tag?: string }): JSX.Element {
   const { data, isLoading, refetch } = usePost().useGetAllPosts(
@@ -80,13 +81,14 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
   );
 }
 
-const StoryCard = ({
+export const StoryCard = ({
   id,
   title,
   excerpt,
   authorAvatar,
   authorName,
   date,
+  className,
 }: {
   id: string;
   title: string;
@@ -94,49 +96,51 @@ const StoryCard = ({
   authorAvatar: string;
   authorName: string;
   date: string;
+  className?: string;
 }) => {
   return (
-    <div className="group">
-      <Link href={`/story/${id}`} className="lg:grid-row-2 grid gap-4">
-        {/* image */}
-        <div className="overflow-hidden rounded-lg">
-          <Image
-            src="https://placehold.co/600x400/png"
-            alt={title}
-            width={600}
-            height={400}
-            className="aspect-video h-full w-full object-cover"
+    <Link
+      href={`/blog/${id}`}
+      className={twMerge("lg:grid-row-2 group grid gap-4", className)}
+    >
+      {/* image */}
+      <div className="overflow-hidden rounded-lg">
+        <Image
+          src="https://placehold.co/600x400/png"
+          alt={title}
+          width={600}
+          height={400}
+          className="aspect-video h-full w-full object-cover"
+        />
+      </div>
+      {/* author */}
+      <div className="flex items-center text-sm">
+        <Avatar className="mr-3 h-8 w-8">
+          <AvatarImage
+            src={authorAvatar || "/placeholder.svg"}
+            alt={authorName}
           />
-        </div>
-        {/* author */}
+          <AvatarFallback>{authorName[0]}</AvatarFallback>
+        </Avatar>
         <div className="flex items-center text-sm">
-          <Avatar className="mr-3 h-8 w-8">
-            <AvatarImage
-              src={authorAvatar || "/placeholder.svg"}
-              alt={authorName}
-            />
-            <AvatarFallback>{authorName[0]}</AvatarFallback>
-          </Avatar>
-          <div className="flex items-center text-sm">
-            <span className="font-medium">{authorName}</span>
-            <Dot></Dot>
-            <div className="text-gray-500">
-              <span>{date}</span>
-            </div>
+          <span className="font-medium">{authorName}</span>
+          <Dot></Dot>
+          <div className="text-gray-500">
+            <span>{date}</span>
           </div>
         </div>
+      </div>
 
-        {/* title and excerpt */}
-        <div className="flex flex-col justify-between">
-          <div>
-            <h3 className="mb-2 text-xl font-bold leading-tight group-hover:text-gray-700">
-              {title}
-            </h3>
-            <p className="line-clamp-2 text-muted-foreground">{excerpt}</p>
-          </div>
+      {/* title and excerpt */}
+      <div className="flex flex-col justify-between">
+        <div>
+          <h3 className="mb-2 text-xl font-bold leading-tight group-hover:text-gray-700">
+            {title}
+          </h3>
+          <p className="line-clamp-2 text-muted-foreground">{excerpt}</p>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 

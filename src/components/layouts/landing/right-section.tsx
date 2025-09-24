@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import Loading from "@/components/loading/loading";
+import { Search } from "lucide-react";
 
 export default function RightSection() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function RightSection() {
     return <Loading />;
   }
   return (
-    <>
+    <div>
       {user ? (
         <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
           <div className="lg:pt-2">
@@ -56,8 +57,19 @@ export default function RightSection() {
         </div>
       )}
 
-      {/* Mobile Menu */}
+      {/* To search page */}
+      <Button
+        variant={"link"}
+        className="text-muted-foreground md:hidden md:size-0"
+        onClick={() => {
+          router.push("/search");
+        }}
+      >
+        <Search />
+      </Button>
+
+      {/* Mobile menu */}
       <MobileMenu />
-    </>
+    </div>
   );
 }
