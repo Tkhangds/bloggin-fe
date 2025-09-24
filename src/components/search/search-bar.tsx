@@ -3,7 +3,6 @@
 import { Bookmark, Search, Tag, UserPen } from "lucide-react";
 import { Input } from "../ui/input";
 import React, { ReactNode, useEffect, useState } from "react";
-import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -109,7 +108,7 @@ export const SearchBar = ({
                   key={index}
                   authorName={author.displayName}
                   // follewers={author.}
-                  authorId={"authorId"}
+                  authorId={author.id}
                   avatarUrl={author.avatarUrl}
                 ></AuthorResult>
               ))}
@@ -206,14 +205,18 @@ const BlogResult = ({
   authorName: string;
   href: string;
 }) => {
+  const router = useRouter();
   return (
-    <Link
+    <div
       className="flex cursor-pointer justify-between p-1 hover:bg-muted"
-      href={href}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        router.push(href);
+      }}
     >
       <span className="text-sm">{title}</span>
       <span className="italic">by {authorName}</span>
-    </Link>
+    </div>
   );
 };
 
@@ -225,36 +228,50 @@ const AuthorResult = ({
   authorId: string;
   authorName: string;
   avatarUrl?: string;
-}) => (
-  <Link
-    className="flex cursor-pointer justify-between p-1 hover:bg-muted"
-    href={`/profile/${authorId}`}
-  >
-    <div className="flex items-center gap-2">
-      <Avatar className="h-5 w-5 border border-border">
-        <AvatarImage
-          src={
-            avatarUrl ??
-            `https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`
-          }
-          alt="author"
-        />
-        <AvatarFallback className="bg-primary/10 text-primary">
-          {`https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`}
-        </AvatarFallback>
-      </Avatar>
-      <span className="text-sm">{authorName}</span>
+}) => {
+  const router = useRouter();
+  return (
+    <div
+      className="flex cursor-pointer justify-between p-1 hover:bg-muted"
+      onMouseDown={(e) => {
+        e.preventDefault();
+        router.push(`/profile/${authorId}`);
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <Avatar className="h-5 w-5 border border-border">
+          <AvatarImage
+            src={
+              avatarUrl ??
+              `https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`
+            }
+            alt="author"
+          />
+          <AvatarFallback className="bg-primary/10 text-primary">
+            {`https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`}
+          </AvatarFallback>
+        </Avatar>
+        <span className="text-sm">{authorName}</span>
+      </div>
     </div>
-  </Link>
-);
+  );
+};
 
 const TagResult = ({ tagName }: { tagName: string }) => {
+  const router = useRouter();
   return (
-    <Badge
-      variant="outline"
-      className="min-w-10 cursor-pointer bg-white px-3 py-1 hover:bg-gray-100 dark:text-black"
+    <div
+      onMouseDown={(e) => {
+        e.preventDefault();
+        router.push(`/explore/${tagName}`);
+      }}
     >
-      {tagName}
-    </Badge>
+      <Badge
+        variant="outline"
+        className="min-w-10 cursor-pointer bg-white px-3 py-1 hover:bg-gray-100 dark:text-black"
+      >
+        {tagName}
+      </Badge>
+    </div>
   );
 };

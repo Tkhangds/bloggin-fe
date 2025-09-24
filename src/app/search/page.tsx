@@ -1,121 +1,21 @@
-import BlogCard from "@/components/blog/read/blog-card";
+import { SearchAction } from "@/apis/search.action";
 import { StoryCard } from "@/components/explore/story-list";
 import { AuthorResultCard } from "@/components/search/author-result-card";
 import { SearchBar } from "@/components/search/search-bar";
 import { Badge } from "@/components/ui/badge";
-import { User } from "@/types/user";
+import { formatDateFromISOString } from "@/utils/date-convert";
 import { Bookmark, Tag, UserPen } from "lucide-react";
+import Link from "next/link";
 import React, { ReactNode } from "react";
 
-const mockTopics = [
-  { tagName: "adventure", postCount: 10 },
-  { tagName: "royalty", postCount: 10 },
-  { tagName: "inspiration", postCount: 10 },
-  { tagName: "friendship", postCount: 10 },
-  { tagName: "women", postCount: 10 },
-];
+export default async function SearchPage({
+  searchParams,
+}: {
+  searchParams: { query?: string };
+}) {
+  const query = searchParams.query || "";
+  const searchResults = query ? await SearchAction.searchAsync(query) : null;
 
-const mockAuthors: User[] = [
-  {
-    id: "123456",
-    username: "user1",
-    email: "user1@example.com",
-    displayName: "User 1",
-    isAdmin: false,
-    specialties: "Something",
-    about: "Something Something",
-  },
-  {
-    id: "123456",
-    username: "user2",
-    email: "user2@example.com",
-    displayName: "User 2",
-    isAdmin: false,
-    specialties: "Something",
-    about: "Something Something",
-  },
-  {
-    id: "123456",
-    username: "user3",
-    email: "user3@example.com",
-    displayName: "User 3",
-    isAdmin: false,
-    specialties: "Something",
-    about: "Something Something",
-  },
-  {
-    id: "123456",
-    username: "user4",
-    email: "user1@example.com",
-    displayName: "User 4",
-    isAdmin: false,
-    specialties: "Something",
-    about: "Something Something",
-  },
-  {
-    id: "123456",
-    username: "user4",
-    email: "user1@example.com",
-    displayName: "User 4",
-    isAdmin: false,
-    specialties: "Something",
-    about: "Something Something",
-  },
-];
-
-const mockBlogs = [
-  {
-    id: "123456",
-    title: "Blog Title 1",
-    excerpt: "This is a short excerpt of the blog post 1.",
-    authorName: "Author 1",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 2",
-    excerpt: "This is a short excerpt of the blog post 2.",
-    authorName: "Author 2",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 3",
-    excerpt: "This is a short excerpt of the blog post 3.",
-    authorName: "Author 3",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 4",
-    excerpt: "This is a short excerpt of the blog post 4.",
-    authorName: "Author 4",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 5",
-    excerpt: "This is a short excerpt of the blog post 5.",
-    authorName: "Author 5",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 6",
-    excerpt: "This is a short excerpt of the blog post 6.",
-    authorName: "Author 6",
-    date: "Jan 1, 2023",
-  },
-  {
-    id: "123456",
-    title: "Blog Title 7",
-    excerpt: "This is a short excerpt of the blog post 7.",
-    authorName: "Author 7",
-    date: "Jan 1, 2023",
-  },
-];
-
-export default function SearchPage() {
   return (
     <div className="flex flex-col items-center gap-5">
       <h1 className="text-center text-2xl font-bold md:text-3xl">
@@ -124,37 +24,43 @@ export default function SearchPage() {
 
       <SearchBar className="mb-2 w-1/2" />
 
-      <SearchSection sectionTitle="Topics" icon={<Tag size={20} />}>
-        {mockTopics.map((topic, index) => (
-          <TopicItem
-            key={index}
-            topicName={topic.tagName}
-            postCount={topic.postCount}
-          />
-        ))}
-      </SearchSection>
-
-      <SearchSection sectionTitle="Authors" icon={<UserPen size={20} />}>
-        {mockAuthors.map((author) => (
-          <AuthorResultCard writer={author} className="w-full" />
-        ))}
-      </SearchSection>
-
-      <SearchSection sectionTitle="Blogs" icon={<Bookmark size={20} />}>
-        <div className="flex flex-wrap justify-center gap-10 md:justify-start">
-          {mockBlogs.map((blog) => (
-            <StoryCard
-              className="md:max-w-[350px]"
-              id={blog.id}
-              title={blog.title}
-              authorAvatar={""}
-              authorName={blog.authorName}
-              date={blog.date}
-              excerpt={blog.excerpt}
-            ></StoryCard>
+      {searchResults?.Tags && searchResults.Tags.length > 0 && (
+        <SearchSection sectionTitle="Topics" icon={<Tag size={20} />}>
+          {searchResults.Tags.map((topic) => (
+            <TopicItem key={topic.id} topicName={topic.name} />
           ))}
-        </div>
-      </SearchSection>
+        </SearchSection>
+      )}
+
+      {searchResults?.Authors && searchResults.Authors.length > 0 && (
+        <SearchSection sectionTitle="Authors" icon={<UserPen size={20} />}>
+          {searchResults.Authors.map((author) => (
+            <AuthorResultCard
+              key={author.id}
+              writer={author}
+              className="w-full"
+            />
+          ))}
+        </SearchSection>
+      )}
+
+      {searchResults?.Posts && searchResults.Posts.length > 0 && (
+        <SearchSection sectionTitle="Blogs" icon={<Bookmark size={20} />}>
+          <div className="flex flex-wrap justify-center gap-10 md:justify-start">
+            {searchResults.Posts.map((blog) => (
+              <StoryCard
+                key={blog.id}
+                className="md:max-w-[300px]"
+                id={blog.id}
+                title={blog.title}
+                authorAvatar={""}
+                authorName={blog.author.displayName}
+                date={formatDateFromISOString(blog.createdAt)}
+              ></StoryCard>
+            ))}
+          </div>
+        </SearchSection>
+      )}
     </div>
   );
 }
@@ -180,19 +86,15 @@ const SearchSection = ({
   );
 };
 
-const TopicItem = ({
-  topicName,
-  postCount,
-}: {
-  topicName: string;
-  postCount: number;
-}) => {
+const TopicItem = ({ topicName }: { topicName: string }) => {
   return (
-    <Badge
-      variant="outline"
-      className="cursor-pointer bg-white px-3 py-1 hover:bg-gray-100 dark:text-black"
-    >
-      {topicName} ({postCount})
-    </Badge>
+    <Link href={`/explore/${topicName}`}>
+      <Badge
+        variant="outline"
+        className="cursor-pointer bg-background px-3 py-1 text-sm hover:bg-muted"
+      >
+        {topicName}
+      </Badge>
+    </Link>
   );
 };

@@ -100,7 +100,7 @@ export const StoryCard = ({
 }) => {
   return (
     <Link
-      href={`/story/${id}`}
+      href={`/blog/${id}`}
       className={twMerge("lg:grid-row-2 group grid gap-4", className)}
     >
       {/* image */}
