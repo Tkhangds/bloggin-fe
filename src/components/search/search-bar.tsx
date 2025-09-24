@@ -8,30 +8,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-
-const mockBlogs = [
-  {
-    title: "Witch of the day",
-    authorName: "author1",
-    href: "/",
-  },
-  { title: "Descendant with vigor", authorName: "author2", href: "/" },
-  { title: "Result of greatness", authorName: "author3", href: "/" },
-];
-
-const mockAuthors = [
-  { authorName: "author1", follewers: 10, href: "/" },
-  { authorName: "author2", follewers: 10, href: "/" },
-  { authorName: "author3", follewers: 10, href: "/" },
-];
-
-const mockTags = [
-  { tagName: "adventure" },
-  { tagName: "royalty" },
-  { tagName: "inspiration" },
-  { tagName: "friendship" },
-  { tagName: "women" },
-];
+import { useDebouncedCallback } from "use-debounce";
+import { SearchAction } from "@/apis/search.action";
+import { SearchResult } from "@/types/dtos/search-result.dto";
 
 export const SearchBar = ({
   className,
@@ -42,6 +21,8 @@ export const SearchBar = ({
 }) => {
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(query.length > 0);
+  const [searchData, setSearchData] = useState<SearchResult>();
+  const [isSearching, setIsSearching] = useState(false);
 
   const pathName = usePathname();
   const searchQuery = useSearchParams().get("query");
@@ -49,9 +30,14 @@ export const SearchBar = ({
 
   const router = useRouter();
 
+  const debouncedSearch = useDebouncedCallback(async (query) => {
+    handleSeatchAsync(query);
+  }, 1000);
+
   useEffect(() => {
     if (searchQuery) {
       setQuery(searchQuery);
+      handleSeatchAsync(searchQuery);
     }
   }, []);
 
@@ -65,6 +51,11 @@ export const SearchBar = ({
         router.replace(`/search?query=${encodedQuery}`);
       }
     }
+  };
+
+  const handleSeatchAsync = async (query: string) => {
+    const searchResults = await SearchAction.searchAsync(query);
+    setSearchData(searchResults);
   };
 
   return (
@@ -84,76 +75,102 @@ export const SearchBar = ({
         onChange={(e) => {
           setQuery(e.target.value);
           setOpen(e.target.value.length > 0);
+          setIsSearching(true);
+          debouncedSearch(e.target.value);
+          setIsSearching(false);
         }}
         type="text"
         placeholder="Search..."
         className="rounded-full bg-muted py-4 pl-8 shadow-none focus:bg-transparent"
         onKeyDown={(e) => onInputEnter(e)}
         onBlur={() => setOpen(false)}
-        onFocus={() => setOpen(true)}
+        onFocus={() => setOpen(query.length > 0)}
       />
 
       {open && (
-        <SearchResults>
-          {mockBlogs && mockBlogs.length > 0 && (
+        <SearchResults isSearching={isSearching}>
+          {searchData?.Posts && searchData.Posts.length > 0 && (
             <SearchSection name="Blogs" icon={<Bookmark size={13} />}>
-              {mockBlogs.map((blog, index) => (
+              {searchData.Posts.slice(0, 3).map((blog, index) => (
                 <BlogResult
                   key={index}
                   title={blog.title}
-                  authorName={blog.authorName}
-                  href={blog.href}
+                  authorName={blog.author.displayName}
+                  href={`blog/${blog.id}`}
                 ></BlogResult>
               ))}
             </SearchSection>
           )}
 
-          {mockAuthors && mockAuthors.length > 0 && (
+          {searchData?.Authors && searchData.Authors.length > 0 && (
             <SearchSection name="Authors" icon={<UserPen size={13} />}>
-              {mockAuthors.map((author, index) => (
+              {searchData.Authors.slice(0, 3).map((author, index) => (
                 <AuthorResult
                   key={index}
-                  authorName={author.authorName}
-                  follewers={author.follewers}
+                  authorName={author.displayName}
+                  // follewers={author.}
                   authorId={"authorId"}
+                  avatarUrl={author.avatarUrl}
                 ></AuthorResult>
               ))}
             </SearchSection>
           )}
 
-          {mockTags && mockTags.length > 0 && (
+          {searchData?.Tags && searchData.Tags.length > 0 && (
             <SearchSection name="Tags" icon={<Tag size={13} />}>
               <div className="flex flex-wrap gap-2 py-2">
-                {mockTags.map((tag, index) => (
-                  <TagResult key={index} tagName={tag.tagName}></TagResult>
+                {searchData.Tags.slice(0, 6).map((tag, index) => (
+                  <TagResult key={index} tagName={tag.name}></TagResult>
                 ))}
               </div>
             </SearchSection>
           )}
 
-          <SearchSection>
-            <button
-              onClick={() => {
-                const encodedQuery = encodeURIComponent(query);
-                router.push(`/search?query=${encodedQuery}`);
-              }}
-              className="group w-full rounded hover:bg-muted"
-            >
-              <p className="w-full py-1 text-center text-sm">
-                See more results
-              </p>
-            </button>
-          </SearchSection>
+          {searchData?.Posts.length === 0 &&
+            searchData?.Authors.length === 0 &&
+            searchData?.Tags.length === 0 && (
+              <div className="py-2 text-center text-sm italic">
+                No results found
+              </div>
+            )}
+
+          {!isInSearchPage && (
+            <SearchSection>
+              <button
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  const encodedQuery = encodeURIComponent(query);
+                  router.push(`/search?query=${encodedQuery}`);
+                }}
+                className="group w-full rounded hover:bg-muted"
+              >
+                <p className="w-full py-1 text-center text-sm">
+                  See more results
+                </p>
+              </button>
+            </SearchSection>
+          )}
         </SearchResults>
       )}
     </div>
   );
 };
 
-const SearchResults = ({ children }: { children?: ReactNode }) => {
+const SearchResults = ({
+  children,
+  isSearching,
+}: {
+  children?: ReactNode;
+  isSearching: boolean;
+}) => {
   return (
     <div className="absolute top-10 z-10 w-full rounded border bg-background px-3 py-2 shadow-sm md:min-w-[450px]">
-      {children}
+      {!isSearching ? (
+        children
+      ) : (
+        <div className="py-2 text-center">Searching...</div>
+      )}
     </div>
   );
 };
@@ -203,12 +220,10 @@ const BlogResult = ({
 const AuthorResult = ({
   authorId,
   authorName,
-  follewers,
   avatarUrl,
 }: {
   authorId: string;
   authorName: string;
-  follewers: number;
   avatarUrl?: string;
 }) => (
   <Link
@@ -218,16 +233,18 @@ const AuthorResult = ({
     <div className="flex items-center gap-2">
       <Avatar className="h-5 w-5 border border-border">
         <AvatarImage
-          src={`https://api.dicebear.com/9.x/initials/svg?seed=author`}
+          src={
+            avatarUrl ??
+            `https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`
+          }
           alt="author"
         />
         <AvatarFallback className="bg-primary/10 text-primary">
-          {`https://api.dicebear.com/9.x/initials/svg?seed=author`}
+          {`https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`}
         </AvatarFallback>
       </Avatar>
       <span className="text-sm">{authorName}</span>
     </div>
-    <span className="italic">{follewers} follewers</span>
   </Link>
 );
 
