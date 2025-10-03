@@ -9,14 +9,7 @@ import FullPageLoading from "@/components/loading/full-page-loading";
 import { useReadEditor } from "@/hooks/editor/useReadEditor";
 import "@/styles/index.css";
 import { useParams } from "next/navigation";
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  LinkedinShareButton,
-  LinkedinIcon,
-  TwitterShareButton,
-  TwitterIcon,
-} from 'next-share'
+import ShareButton from "@/components/blog/read/share-button";
 
 
 export default function BlogReadingPage() {
@@ -43,27 +36,7 @@ export default function BlogReadingPage() {
 
           |
 
-          <div className={"flex items-center gap-1"}>
-            <FacebookShareButton
-              url={window.location.href}
-              quote={'next-share is a social share buttons for your next React apps.'}
-              hashtag={'#nextshare'}
-            >
-              <FacebookIcon size={32} round />
-            </FacebookShareButton>
-
-            <LinkedinShareButton
-              url={window.location.href}
-            >
-              <LinkedinIcon size={32} round />
-            </LinkedinShareButton>
-
-            <TwitterShareButton
-              url={window.location.href}
-            >
-              <TwitterIcon size={32} round />
-            </TwitterShareButton>
-          </div>
+          <ShareButton></ShareButton>
         </div>
       </div>
 
