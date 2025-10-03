@@ -33,14 +33,9 @@ export function AuthProvider({
       try {
         const res = await getMeFunction();
 
-        if (res) {
-          const userData = res;
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
+        setUser(res);
       } catch (err) {
-        console.error("Failed to fetch user data:", err);
+    console.error("Failed to fetch user data:", err);
         setUser(null);
       } finally {
         setLoading(false);
@@ -63,13 +58,7 @@ export function AuthProvider({
     setLoading(true);
     try {
       const res = await getMeFunction();
-
-      if (res) {
-        const userData = res;
-        setUser(userData);
-      } else {
-        setUser(null);
-      }
+      setUser(res);
     } catch (err) {
       console.error("Failed to fetch user data:", err);
       setUser(null);
