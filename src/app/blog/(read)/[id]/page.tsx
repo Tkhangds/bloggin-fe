@@ -6,11 +6,18 @@ import Metric from "@/components/blog/detail/metric";
 import TextToSpeechModal from "@/components/blog/detail/text-to-speech/TextToSpeechModal";
 import { ViewOnlyContent } from "@/components/blog/ReadOnlyView";
 import FullPageLoading from "@/components/loading/full-page-loading";
-import { Button } from "@/components/ui/button";
 import { useReadEditor } from "@/hooks/editor/useReadEditor";
 import "@/styles/index.css";
-import { Share2 } from "lucide-react";
 import { useParams } from "next/navigation";
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  LinkedinShareButton,
+  LinkedinIcon,
+  TwitterShareButton,
+  TwitterIcon,
+} from 'next-share'
+
 
 export default function BlogReadingPage() {
   const params = useParams<{ id: string }>();
@@ -34,9 +41,29 @@ export default function BlogReadingPage() {
         <div className="flex items-center gap-2">
           <TextToSpeechModal post={post}></TextToSpeechModal>
 
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <Share2 className="h-5 w-5" />
-          </Button>
+          |
+
+          <div className={"flex items-center gap-1"}>
+            <FacebookShareButton
+              url={window.location.href}
+              quote={'next-share is a social share buttons for your next React apps.'}
+              hashtag={'#nextshare'}
+            >
+              <FacebookIcon size={32} round />
+            </FacebookShareButton>
+
+            <LinkedinShareButton
+              url={window.location.href}
+            >
+              <LinkedinIcon size={32} round />
+            </LinkedinShareButton>
+
+            <TwitterShareButton
+              url={window.location.href}
+            >
+              <TwitterIcon size={32} round />
+            </TwitterShareButton>
+          </div>
         </div>
       </div>
 
