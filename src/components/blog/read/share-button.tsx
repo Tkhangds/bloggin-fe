@@ -12,8 +12,6 @@ export default function ShareButton() {
     <div className={"flex items-center gap-1"}>
       <FacebookShareButton
         url={window.location.href}
-        quote={"next-share is a social share buttons for your next React apps."}
-        hashtag={"#nextshare"}
       >
         <FacebookIcon size={32} round />
       </FacebookShareButton>
