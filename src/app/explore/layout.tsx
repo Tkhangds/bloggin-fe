@@ -39,7 +39,7 @@ export default function ExploreLayout({
   };
   return (
     <LandingHeaderLayout>
-      <div className="flex w-full flex-col items-center justify-start px-20 py-10">
+      <div className="flex w-full flex-col items-center justify-start px-5 py-5 md:px-20">
         {data && data.length === 0 && (
           <div className="mb-12 text-center">
             <h1

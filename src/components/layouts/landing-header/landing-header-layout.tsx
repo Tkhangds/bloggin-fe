@@ -1,14 +1,16 @@
 import { ReactNode } from "react";
 import { Header } from "@/components/layouts/landing/header";
 
-type LandingLayoutProps = {
+export const LandingHeaderLayout = ({
+  children,
+  showSearchBar = true,
+}: {
   children: ReactNode;
-};
-
-export const LandingHeaderLayout = ({ children }: LandingLayoutProps) => {
+  showSearchBar?: boolean;
+}) => {
   return (
     <div className="relative">
-      <Header />
+      <Header showSearchBar={showSearchBar} />
       <div className="">{children}</div>
     </div>
   );

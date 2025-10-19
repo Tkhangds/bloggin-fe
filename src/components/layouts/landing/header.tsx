@@ -1,9 +1,13 @@
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import RightSection from "./right-section";
+import { SearchBar } from "@/components/search/search-bar";
 
-export const Header = () => {
+export const Header = ({
+  showSearchBar = true,
+}: {
+  showSearchBar?: boolean;
+}) => {
   return (
     <div className="sflex sticky top-0 z-50 w-full flex-col border-b-[1px] border-foreground/25 bg-background px-7 py-1 sm:px-6 lg:px-20 lg:py-[10px]">
       <div className="flex items-center justify-between">
@@ -27,14 +31,9 @@ export const Header = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:justify-end lg:gap-1 lg:pt-2">
-            <Button variant={"ghost"} className="font-semibold">
-              Trending
-            </Button>
-            <Button variant={"ghost"} className="font-semibold">
-              Category
-            </Button>
+          {/* Searchbar */}
+          <div className="hidden md:block">
+            <SearchBar showSearchBar={showSearchBar} />
           </div>
         </div>
         <RightSection />
