@@ -1,5 +1,8 @@
 "use client";
-import { BarChart3, Presentation } from "lucide-react";
+import { MessageSquareWarning, Presentation } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { twMerge } from "tailwind-merge";
 import {
   Sidebar,
   SidebarContent,
@@ -9,9 +12,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { useRouter } from "next/navigation";
 
 const sidebarItem = [
   {
@@ -20,9 +20,9 @@ const sidebarItem = [
     section: "dashboard",
   },
   {
-    name: "Statistics",
-    icon: BarChart3,
-    section: "statistics",
+    name: "Reports",
+    icon: MessageSquareWarning,
+    section: "reports",
   },
 ];
 

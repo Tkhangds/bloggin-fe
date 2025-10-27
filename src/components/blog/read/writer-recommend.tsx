@@ -2,12 +2,12 @@
 import { FollowButton } from "@/components/shared/follow-button";
 import { CardDescription } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
-import { useStatistics } from "@/hooks/apis/useStatistics";
+import { useAdmin } from "@/hooks/apis/useAdmin";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 
 export default function WriterRecommend(): JSX.Element {
-  const { data, isLoading } = useStatistics().useGetTopFollowedUser();
+  const { data, isLoading } = useAdmin().useGetTopFollowedUser();
   const { user } = useAuthContext();
   const router = useRouter();
 

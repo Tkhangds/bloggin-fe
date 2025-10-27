@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useStatistics } from "@/hooks/apis/useStatistics";
+import { useAdmin } from "@/hooks/apis/useAdmin";
 import { useRouter } from "next/navigation";
 import { CardDescription } from "@/components/ui/card";
 
 export default function TagRecommend(): JSX.Element {
-  const { data, isLoading } = useStatistics().useGetTopTag(9);
+  const { data, isLoading } = useAdmin().useGetTopTag(9);
   const router = useRouter();
   return (
     <div className="rounded-lg bg-gray-50 p-6">

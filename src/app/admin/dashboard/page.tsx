@@ -1,73 +1,64 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  ChartConfig,
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { useAdmin } from "@/hooks/apis/useAdmin";
 import { usePost } from "@/hooks/apis/usePost";
-import { useStatistics } from "@/hooks/apis/useStatistics";
-import { Post } from "@/types/post";
-import { formatDateFromISOString } from "@/utils/date-convert";
+import { FileText, MousePointer2, Tag, Users } from "lucide-react";
 import {
-  Calendar,
-  FileText,
-  Heart,
-  MessageCircle,
-  MousePointer2,
-  Tag,
-  Users,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  XAxis,
+} from "recharts";
+
+const resgistrationChartConfig = {
+  count: {
+    label: "New Users",
+  },
+} satisfies ChartConfig;
+
+const postChartConfig = {
+  count: {
+    label: "Post uploaded",
+  },
+} satisfies ChartConfig;
 
 export default function AdminDashboardPage() {
-  const {
-    data: posts,
-    fetchNextPage,
-    isFetchingNextPage,
-    isFetchingPreviousPage,
-    fetchPreviousPage,
-  } = usePost().useGetAllPosts(5);
-  const { data: overallStats } = useStatistics().useGetOverallStatistics();
-  console.log("Overall Stats", overallStats);
-  const [currentPage, setCurrentPage] = useState<number>(0);
+  const { data: totalPosts } = usePost().useGetAllPosts(1);
 
-  const handleNextPageChange = async () => {
-    await fetchNextPage();
-    if (!isFetchingNextPage) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
+  const { data: overallStats } = useAdmin().useGetOverallStatistics();
 
-  const handlePrevPageChange = async () => {
-    await fetchPreviousPage();
-    if (!isFetchingPreviousPage) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
+  const { data: registrationTraffic } =
+    useAdmin().useGetMonthlyUserRegistration();
 
-  const paginatedPosts = posts?.pages[currentPage].data;
-  const hasNext = posts?.pages[currentPage].meta.nextPage !== null;
-  const hasPrevious = posts?.pages[currentPage].meta.prevPage !== null;
-  const totalPage = posts?.pages[currentPage].meta.totalPages || 0;
+  const { data: postUploadTraffic } = useAdmin().useGetMonthlyPostUpload();
+
+  const { data: tagDistribution } = useAdmin().useGetTagDistribution();
+
+  const { data: posts } = useAdmin().useGetTopInteractivePost();
 
   const stats = [
     {
       title: "Total Posts",
-      value: posts?.pages[0].meta.total,
+      value: totalPosts?.pages[0].meta.total,
       icon: FileText,
       color: "text-blue-600",
     },
@@ -90,6 +81,41 @@ export default function AdminDashboardPage() {
       color: "text-orange-600",
     },
   ];
+
+  const shadesOfBlue = tagDistribution
+    ? generateBlueShades(tagDistribution?.length)
+    : [];
+  const tagChartData =
+    tagDistribution?.map((tag, idx) => ({
+      name: tag.name, // label for the pie
+      count: tag.count, // value for the pie
+      fill: shadesOfBlue[idx], // assign color
+    })) ?? [];
+
+  const tagChartConfig = {
+    count: {
+      label: "Posts",
+    },
+    ...tagChartData?.reduce((acc, tag) => {
+      acc[tag.name] = {
+        label: tag.name,
+        color: tag.fill,
+      };
+      return acc;
+    }, {} as ChartConfig),
+  };
+
+  const postBarChartConfig = {
+    title: {
+      label: "Top Interactive Posts",
+    },
+    commentCount: {
+      label: "Comments",
+    },
+    favoriteCount: {
+      label: "Favorites",
+    },
+  };
 
   return (
     <main className="flex w-full p-8">
@@ -129,134 +155,200 @@ export default function AdminDashboardPage() {
           ))}
         </div>
 
-        {/* content tabs */}
+        {/* statistics tabs */}
         <h3 className="mb-2 mt-8 text-2xl font-bold text-primary">
-          Recent posts
+          Statistics
         </h3>
-        <section className="">
-          <AdminTable posts={paginatedPosts}></AdminTable>
-          <Pagination>
-            <PaginationContent>
-              {/* prev button */}
-              {hasPrevious && (
-                <PaginationItem onClick={handlePrevPageChange}>
-                  <PaginationPrevious className="cursor-pointer" />
-                </PaginationItem>
-              )}
+        <section className="grid grid-flow-row grid-cols-2 gap-5 py-5">
+          {/* user resgistration traffic */}
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle>User Resgistration Traffic</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Newly registered account this month
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer config={resgistrationChartConfig} className="p-3">
+                <LineChart
+                  accessibilityLayer
+                  data={registrationTraffic ?? []}
+                  margin={{
+                    left: 12,
+                    right: 12,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    interval={"preserveStartEnd"}
+                    tickMargin={10}
+                    tickFormatter={(value) =>
+                      new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Line
+                    dataKey="count"
+                    label="New Users"
+                    type="monotone"
+                    stroke="#006400"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
 
-              {/* items */}
-              <PaginationItem>
-                {currentPage + 1}{" "}
-                <span className="text-muted-foreground">of</span> {totalPage}
-              </PaginationItem>
+          {/* post update traffic */}
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle>Post Upload Traffic</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Blogs uploaded this month
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer className="" config={postChartConfig}>
+                <LineChart
+                  accessibilityLayer
+                  data={postUploadTraffic ?? []}
+                  margin={{
+                    left: 12,
+                    right: 12,
+                  }}
+                >
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="date"
+                    tickLine={false}
+                    axisLine={false}
+                    tickMargin={10}
+                    interval={"preserveStartEnd"}
+                    tickFormatter={(value) =>
+                      new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      })
+                    }
+                  />
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Line
+                    dataKey="count"
+                    type="monotone"
+                    stroke="#DC143C"
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                </LineChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
 
-              {/* next button */}
-              {hasNext && (
-                <PaginationItem onClick={handleNextPageChange}>
-                  <PaginationNext className="cursor-pointer" />
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
+          {/* tag distribution */}
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle>Popular Topics</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Number of posts per topic
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer className="" config={tagChartConfig}>
+                <PieChart>
+                  <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                  />
+                  <Pie data={tagDistribution} dataKey="count" nameKey="name">
+                    {tagChartData.map((entry, idx) => (
+                      <Cell key={`cell-${idx}`} fill={entry.fill} />
+                    ))}
+                  </Pie>
+                </PieChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+
+          {/* top interactive post */}
+          <Card className="h-fit">
+            <CardHeader>
+              <CardTitle>Popular Blogs</CardTitle>
+              <CardDescription className="text-muted-foreground">
+                Blogs with the most interactivity
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ChartContainer className="" config={postBarChartConfig}>
+                <BarChart accessibilityLayer data={posts}>
+                  <CartesianGrid vertical={false} />
+                  <XAxis
+                    dataKey="title"
+                    tickLine={false}
+                    interval={"preserveStartEnd"}
+                    tickMargin={10}
+                    axisLine={false}
+                  />
+                  <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                  <ChartLegend content={<ChartLegendContent />} />
+                  <Bar
+                    dataKey="favoriteCount"
+                    stackId="a"
+                    fill="#add8e6"
+                    radius={[0, 0, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="commentCount"
+                    stackId="a"
+                    fill="#87ceeb"
+                    radius={[5, 5, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </CardContent>
+          </Card>
         </section>
       </div>
     </main>
   );
 }
 
-const AdminTable = ({ posts }: { posts?: Post[] }) => {
-  const router = useRouter();
-  return (
-    <div>
-      <Table>
-        {/* table headers */}
-        <TableHeader>
-          <TableRow className="border-gray-200">
-            <TableHead className="font-medium text-primary">Title</TableHead>
-            <TableHead className="font-medium text-primary">Author</TableHead>
-            <TableHead className="font-medium text-primary">Likes</TableHead>
-            <TableHead className="font-medium text-primary">Comments</TableHead>
-            <TableHead className="font-medium text-primary">Date</TableHead>
-          </TableRow>
-        </TableHeader>
+function generateBlueShades(count: number): string[] {
+  const shades: string[] = [];
+  for (let i = 0; i < count; i++) {
+    // Vary the lightness from 40% to 80%
+    const lightness = 40 + (40 * i) / Math.max(count - 1, 1);
+    // HSL for blue is 210 (can adjust for more/less purple)
+    const h = 210,
+      s = 80;
+    // Convert HSL to hex
+    shades.push(hslToHex(h, s, lightness));
+  }
+  return shades;
+}
 
-        {/* table body */}
-        <TableBody>
-          {posts &&
-            posts.map((post) => (
-              <TableRow
-                key={post.id}
-                className="border-muted hover:bg-muted/50"
-              >
-                <TableCell
-                  className="group cursor-pointer py-4"
-                  onClick={() => {
-                    router.push(`/blog/${post.id}`);
-                  }}
-                >
-                  <div>
-                    <h3 className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2">
-                      {post.title}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      {post.tags.map((tag, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {tag.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell
-                  className="group cursor-pointer py-4"
-                  onClick={() => {
-                    router.push(`/profile/${post.authorId}`);
-                  }}
-                >
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6">
-                      <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                      <AvatarFallback className="text-xs">
-                        {post.author.displayName
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
-                      {post.author.displayName}
-                    </span>
-                  </div>
-                </TableCell>
-
-                <TableCell className="py-4">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Heart className="mr-1 h-3 w-3" />
-                    <span>{post.likeCount}</span>
-                  </div>
-                </TableCell>
-
-                <TableCell className="py-4">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <MessageCircle className="mr-1 h-3 w-3" />
-                    <span>{post.commentCount}</span>
-                  </div>
-                </TableCell>
-
-                <TableCell className="py-4">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Calendar className="mr-1 h-3 w-3" />
-                    {formatDateFromISOString(post.createdAt)}
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-};
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100;
+  l /= 100;
+  const k = (n: number) => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) =>
+    Math.round(
+      255 * (l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1))),
+    );
+  return `#${f(0).toString(16).padStart(2, "0")}${f(8)
+    .toString(16)
+    .padStart(2, "0")}${f(4).toString(16).padStart(2, "0")}`;
+}
