@@ -1,10 +1,12 @@
 "use client";
 import { adminAction } from "@/apis/admin.action";
 import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 export const useAdmin = () => {
+  const queryClient = useQueryClient();
+
   const useGetTopFollowedUser = (top?: number) => {
     return useQuery({
       queryKey: ["statistics", "top-followed-user"],
@@ -59,6 +61,16 @@ export const useAdmin = () => {
         return adminAction.flagPost(postId);
       },
       onSuccess: async () => {
+        queryClient.invalidateQueries({
+          queryKey: ["admin", "posts", PostMonitoringStatus.VIOLATED],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [
+            "admin",
+            "posts",
+            PostMonitoringStatus.POTENTIAL_VIOLATION,
+          ],
+        });
         toast.success("Post has been flagged as VIOLATED");
       },
       onError: async () => {
@@ -70,9 +82,19 @@ export const useAdmin = () => {
   const useUnflagPost = () => {
     return useMutation({
       mutationFn: (postId: string) => {
-        return adminAction.flagPost(postId);
+        return adminAction.unflagPost(postId);
       },
       onSuccess: async () => {
+        queryClient.invalidateQueries({
+          queryKey: ["admin", "posts", PostMonitoringStatus.VIOLATED],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [
+            "admin",
+            "posts",
+            PostMonitoringStatus.POTENTIAL_VIOLATION,
+          ],
+        });
         toast.success("Post has been unflagged");
       },
       onError: async () => {

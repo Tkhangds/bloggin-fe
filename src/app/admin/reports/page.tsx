@@ -24,10 +24,30 @@ export default function AdminReportsPage() {
   const { data: violatedPosts, isFetched: violatedFetched } =
     useAdmin().useGetPostByMonitoringStatus(PostMonitoringStatus.VIOLATED);
 
+  const flagPostAction = useAdmin().useFlagPost();
+  const unflagPostAction = useAdmin().useUnflagPost();
+
   const router = useRouter();
 
-  console.log("potential", potentiallyViolatedPosts);
-  console.log("violated", violatedPosts);
+  const handleRouting = (url: string) => {
+    router.push(url);
+  };
+
+  const handleFlagPost = async (postId: string) => {
+    try {
+      await flagPostAction.mutateAsync(postId);
+    } catch (error) {
+      console.log("Error flagging post:", error);
+    }
+  };
+
+  const handleUnflagPost = async (postId: string) => {
+    try {
+      await unflagPostAction.mutateAsync(postId);
+    } catch (error) {
+      console.log("Error flagging post:", error);
+    }
+  };
 
   return (
     <main className="flex w-full flex-col gap-4 p-8">
@@ -57,40 +77,84 @@ export default function AdminReportsPage() {
 
           {/* table body */}
           <TableBody>
-            <TableRow key={"1"} className="border-muted hover:bg-muted/50">
-              <TableCell className="group cursor-pointer py-4">
-                <div>
-                  <h3 className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2">
-                    Post title
-                  </h3>
-                </div>
-              </TableCell>
-
-              <TableCell className="group cursor-pointer py-4">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                    <AvatarFallback className="text-xs">U</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
-                    Username
+            {potentialFetched && potentiallyViolatedPosts?.length === 0 && (
+              <TableRow>
+                <TableCell className="w-full py-3 text-center" colSpan={4}>
+                  <span className="italic text-muted-foreground">
+                    No potentially violated post found yet
                   </span>
-                </div>
-              </TableCell>
+                </TableCell>
+              </TableRow>
+            )}
+            {potentialFetched &&
+              potentiallyViolatedPosts?.length !== 0 &&
+              potentiallyViolatedPosts?.map((post: Post) => {
+                return (
+                  <TableRow
+                    key={post.id}
+                    className="border-muted hover:bg-muted/50"
+                  >
+                    <TableCell className="group max-w-28 cursor-pointer py-4">
+                      <button
+                        onClick={() => handleRouting(`/blog/${post.id}`)}
+                        className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2"
+                      >
+                        {post.title}
+                      </button>
+                    </TableCell>
 
-              <TableCell className="py-4">
-                <div className="flex items-center text-sm text-gray-500">
-                  <Calendar className="mr-1 h-3 w-3" />
-                  Jun 6th, 2024
-                </div>
-              </TableCell>
+                    <TableCell className="group cursor-pointer py-4">
+                      <button
+                        className="flex items-center space-x-2"
+                        onClick={() =>
+                          handleRouting(`/profile/${post.authorId}`)
+                        }
+                      >
+                        <Avatar className="h-6 w-6 border border-border">
+                          <AvatarImage
+                            src={
+                              post.author.avatarUrl ??
+                              `https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`
+                            }
+                            alt={post.author.username}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary">
+                            {`https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
+                          {post.author.displayName}
+                        </span>
+                      </button>
+                    </TableCell>
 
-              <TableCell className="max-w-20">
-                <Button variant="destructive_outline" size="sm">
-                  Mark violated
-                </Button>
-              </TableCell>
-            </TableRow>
+                    <TableCell className="py-4">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Calendar className="mr-1 h-3 w-3" />
+                        {formatDateFromISOString(post.createdAt)}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="max-w-20 gap-2">
+                      <Button
+                        variant="destructive_outline"
+                        size="sm"
+                        onClick={() => handleFlagPost(post.id)}
+                      >
+                        Mark violated
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="ml-2"
+                        onClick={() => handleUnflagPost(post.id)}
+                      >
+                        Unflag post
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </section>
@@ -113,40 +177,78 @@ export default function AdminReportsPage() {
 
           {/* table body */}
           <TableBody>
-            <TableRow key={"1"} className="border-muted hover:bg-muted/50">
-              <TableCell className="group cursor-pointer py-4">
-                <div>
-                  <h3 className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2">
-                    Post title
-                  </h3>
-                </div>
-              </TableCell>
-
-              <TableCell className="group cursor-pointer py-4">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarImage src="/placeholder.svg?height=24&width=24" />
-                    <AvatarFallback className="text-xs">U</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
-                    Username
+            {violatedFetched && violatedPosts?.length === 0 && (
+              <TableRow>
+                <TableCell className="w-full py-3 text-center" colSpan={4}>
+                  <span className="italic text-muted-foreground">
+                    No violated post found yet
                   </span>
-                </div>
-              </TableCell>
+                </TableCell>
+              </TableRow>
+            )}
+            {violatedFetched &&
+              violatedPosts?.length !== 0 &&
+              violatedPosts?.map((post: Post) => {
+                return (
+                  <TableRow
+                    key={post.id}
+                    className="border-muted hover:bg-muted/50"
+                  >
+                    <TableCell className="group max-w-28 cursor-pointer py-4">
+                      <button
+                        onClick={() => handleRouting(`/blog/${post.id}`)}
+                        className="mb-1 line-clamp-1 font-medium text-primary group-hover:underline group-hover:underline-offset-2"
+                      >
+                        {post.title}
+                      </button>
+                    </TableCell>
 
-              <TableCell className="py-4">
-                <div className="flex items-center text-sm text-gray-500">
-                  <Calendar className="mr-1 h-3 w-3" />
-                  Jun 6th, 2024
-                </div>
-              </TableCell>
+                    <TableCell className="group cursor-pointer py-4">
+                      <button
+                        onClick={() =>
+                          handleRouting(`/profile/${post.authorId}`)
+                        }
+                        className="flex items-center space-x-2"
+                      >
+                        <Avatar className="h-6 w-6">
+                          <Avatar className="h-6 w-6 border border-border">
+                            <AvatarImage
+                              src={
+                                post.author.avatarUrl ??
+                                `https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`
+                              }
+                              alt={post.author.username}
+                            />
+                            <AvatarFallback className="bg-primary/10 text-primary">
+                              {`https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Avatar>
+                        <span className="text-sm font-medium text-gray-900 group-hover:underline group-hover:underline-offset-2">
+                          {post.author.displayName}
+                        </span>
+                      </button>
+                    </TableCell>
 
-              <TableCell className="max-w-20">
-                <Button variant="outline" size="sm">
-                  Unflag post
-                </Button>
-              </TableCell>
-            </TableRow>
+                    <TableCell className="py-4">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Calendar className="mr-1 h-3 w-3" />
+                        {formatDateFromISOString(post.createdAt)}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="max-w-20">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleUnflagPost(post.id)}
+                      >
+                        Unflag post
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </section>

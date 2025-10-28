@@ -1,7 +1,6 @@
 "use client";
 import { MessageSquareWarning, Presentation } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import {
   Sidebar,
@@ -27,11 +26,12 @@ const sidebarItem = [
 ];
 
 export const AdminSidebar = () => {
-  const [currentSection, setCurrentSection] = useState("dashboard");
+  const pathname = usePathname();
   const router = useRouter();
 
+  const currentSection = pathname.split("/").pop() || "dashboard";
+
   const handleSidebarItemClick = (section: string) => {
-    setCurrentSection(section);
     router.replace(`/admin/${section}`);
   };
   return (
