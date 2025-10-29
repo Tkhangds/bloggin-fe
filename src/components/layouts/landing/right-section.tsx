@@ -22,17 +22,19 @@ export default function RightSection() {
       {user ? (
         <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
           <div className="lg:pt-2">
-            <Button
-              variant="ghost"
-              onClick={() => {
-                router.push("/draft");
-              }}
-              size={"sm"}
-              className="mr-2 hidden text-foreground lg:flex"
-            >
-              Write
-              <Icon name="Pen" />
-            </Button>
+            {(user.isVerified || user.isAdmin) && (
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  router.push("/draft");
+                }}
+                size={"sm"}
+                className="mr-2 hidden text-foreground lg:flex"
+              >
+                Write
+                <Icon name="Pen" />
+              </Button>
+            )}
           </div>
           <AvatarMenu />
         </div>

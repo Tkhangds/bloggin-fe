@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 
 export default function WriterRecommend(): JSX.Element {
-  const { data, isLoading } = useAdmin().useGetTopFollowedUser();
+  const { data, isLoading } = useAdmin().useGetTopFollowedUser(5);
   const { user } = useAuthContext();
   const router = useRouter();
 

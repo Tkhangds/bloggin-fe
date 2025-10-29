@@ -4,6 +4,7 @@ import {
   BadgeHelp,
   FileText,
   LogOut,
+  MailCheck,
   Moon,
   NotepadTextDashed,
   Settings,
@@ -21,7 +22,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -50,27 +50,8 @@ export function AvatarMenu({}) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="relative hidden h-10 w-10 rounded-full lg:flex"
-        >
-          <Avatar className="h-10 w-10 border border-border">
-            <AvatarImage
-              src={
-                user.avatarUrl ??
-                `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`
-              }
-              alt={user.username}
-            />
-            <AvatarFallback className="bg-primary/10 text-primary">
-              {`https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`}
-            </AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="modal-open w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col space-y-1">
+        <div className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 hover:bg-muted">
+          <div className="flex flex-col space-y-1 text-end">
             <p className="text-sm font-medium leading-none">
               {user.displayName}
             </p>
@@ -78,9 +59,41 @@ export function AvatarMenu({}) {
               {user.email}
             </p>
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
+          <Button
+            variant="ghost"
+            className="relative hidden h-10 w-10 rounded-full lg:flex"
+          >
+            <Avatar className="h-10 w-10 border border-border">
+              <AvatarImage
+                src={
+                  user.avatarUrl ??
+                  `https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`
+                }
+                alt={user.username}
+              />
+              <AvatarFallback className="bg-primary/10 text-primary">
+                {`https://api.dicebear.com/9.x/initials/svg?seed=${user.displayName}`}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
+        </div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="modal-open w-56" align="end" forceMount>
         <DropdownMenuGroup>
+          {!user.isVerified && !user.isAdmin && (
+            <div className="relative">
+              <div className="absolute right-0 z-50 aspect-square size-3 animate-ping rounded-full bg-red-300"></div>
+              <div className="absolute right-0 z-50 aspect-square size-3 rounded-full bg-red-400"></div>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push("/setting/profile")}
+              >
+                <MailCheck className="mr-2 h-4 w-4" />
+                <span className="font-semibold">Verify Account Now!</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </div>
+          )}
 
           {user.isAdmin && (
             <DropdownMenuItem
@@ -91,7 +104,7 @@ export function AvatarMenu({}) {
               <span>Admin Dashboard</span>
             </DropdownMenuItem>
           )}
-          
+
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => router.push(`/profile/${user.id}`)}

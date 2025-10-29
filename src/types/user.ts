@@ -9,6 +9,7 @@ export const userSchema = z.object({
   avatarUrl: z.string().optional(),
   specialties: z.string().optional(),
   about: z.string().optional(),
+  isVerified: z.boolean().optional(),
 });
 
 export type User = z.infer<typeof userSchema>;
