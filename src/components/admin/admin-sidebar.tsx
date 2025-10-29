@@ -1,5 +1,7 @@
 "use client";
-import { BarChart3, Presentation } from "lucide-react";
+import { MessageSquareWarning, Presentation } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 import {
   Sidebar,
   SidebarContent,
@@ -9,9 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "../ui/sidebar";
-import { useState } from "react";
-import { twMerge } from "tailwind-merge";
-import { useRouter } from "next/navigation";
 
 const sidebarItem = [
   {
@@ -20,18 +19,19 @@ const sidebarItem = [
     section: "dashboard",
   },
   {
-    name: "Statistics",
-    icon: BarChart3,
-    section: "statistics",
+    name: "Reports",
+    icon: MessageSquareWarning,
+    section: "reports",
   },
 ];
 
 export const AdminSidebar = () => {
-  const [currentSection, setCurrentSection] = useState("dashboard");
+  const pathname = usePathname();
   const router = useRouter();
 
+  const currentSection = pathname.split("/").pop() || "dashboard";
+
   const handleSidebarItemClick = (section: string) => {
-    setCurrentSection(section);
     router.replace(`/admin/${section}`);
   };
   return (

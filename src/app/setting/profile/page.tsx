@@ -1,8 +1,16 @@
 "use client";
 
 import type React from "react";
-
-import { Camera, ClipboardList, Mail, Sparkles, User } from "lucide-react";
+import {
+  BadgeCheckIcon,
+  Camera,
+  ClipboardList,
+  Info,
+  Loader2,
+  Mail,
+  Sparkles,
+  User,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import FullPageLoading from "@/components/loading/full-page-loading";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,6 +29,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useUser } from "@/hooks/apis/useUser";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
+import { useMailingService } from "@/hooks/apis/useMailingService";
 
 export default function ProfilePage() {
   const { user, loading } = useAuthContext();
@@ -28,6 +37,9 @@ export default function ProfilePage() {
     useUser().useUpdateUser();
   const { mutateAsync: updateAvatar, isPending: isUpdatingAvatar } =
     useUser().useUpdateAvatar();
+
+  const { mutateAsync: sendVerificationEmail, isPending: isSendingEmail } =
+    useMailingService().useSendVerificationEmail();
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatar, setAvatar] = useState<string>(
@@ -95,6 +107,14 @@ export default function ProfilePage() {
     }
   };
 
+  const handleSendVerificationEmail = async (email: string) => {
+    try {
+      await sendVerificationEmail(email);
+    } catch (error) {
+      console.error("Error sending verification email:", error);
+    }
+  };
+
   if (!user) {
     return (
       <CardDescription className="flex w-full justify-center">
@@ -144,11 +164,40 @@ export default function ProfilePage() {
                 />
               </div>
             </div>
-            <div className="space-y-1 text-center sm:text-left">
+            <div className="space-y-2 text-center sm:text-left">
               <h3 className="font-medium">Profile Picture</h3>
               <p className="text-sm text-muted-foreground">
                 Upload a new avatar or keep your current one
               </p>
+              {user.isVerified || user.isAdmin ? (
+                <div className="flex items-center gap-1">
+                  <BadgeCheckIcon color="#22c55e" size={20} />
+                  <span className="text-sm text-green-500">
+                    Your account is verified!
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-1">
+                    <Info color="#2563eb" size={20} />
+                    <span className="text-sm text-blue-600">
+                      Verify your email now and begin writting posts!
+                    </span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size={"sm"}
+                    onClick={() => handleSendVerificationEmail(user.email)}
+                    disabled={isSendingEmail}
+                    className="relative"
+                  >
+                    <span>Verify email</span>
+                    {isSendingEmail && (
+                      <Loader2 className="absolute -right-6 aspect-square size-4 animate-spin"></Loader2>
+                    )}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 

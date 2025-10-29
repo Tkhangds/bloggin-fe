@@ -1,0 +1,5 @@
+export enum PostMonitoringStatus {
+  NORMAL = "NORMAL",
+  POTENTIAL_VIOLATION = "POTENTIAL_VIOLATION",
+  VIOLATED = "VIOLATED",
+}
