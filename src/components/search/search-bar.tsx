@@ -95,7 +95,7 @@ export const SearchBar = ({
                   key={index}
                   title={blog.title}
                   authorName={blog.author.displayName}
-                  href={`blog/${blog.id}`}
+                  href={`/blog/${blog.id}`}
                 ></BlogResult>
               ))}
             </SearchSection>

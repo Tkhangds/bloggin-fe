@@ -2,11 +2,12 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
 import { useFavorite } from "@/hooks/apis/useFavorite";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, MessageSquareWarning } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -45,9 +46,14 @@ export default function BlogCard({
           onClick={() => router.push("/blog/" + post.id)}
         >
           <div className="flex-1">
-            <h2 className="mb-2 text-xl font-bold transition-colors hover:text-gray-700">
-              {post.title}
-            </h2>
+            <div className="mb-2 flex items-center gap-2">
+              <p className="text-xl font-bold transition-colors hover:text-gray-700">
+                {post.title}
+              </p>
+              {post.monitoringStatus === PostMonitoringStatus.VIOLATED && (
+                <MessageSquareWarning size={20} color="#eab308" />
+              )}
+            </div>
 
             <p className="mb-3 line-clamp-3 text-gray-700">
               {firstSentenceJson(post.content)}

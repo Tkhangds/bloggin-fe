@@ -13,6 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { MessageSquareWarning } from "lucide-react";
+import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
 
 export default function PostItemCard({ post }: { post: Post }) {
   const router = useRouter();
@@ -32,6 +34,10 @@ export default function PostItemCard({ post }: { post: Post }) {
           >
             {post.title}
           </CardTitle>
+
+          {post.monitoringStatus === PostMonitoringStatus.VIOLATED && (
+            <MessageSquareWarning size={20} color="#eab308" />
+          )}
         </div>
         <CardDescription>
           Published on {formatDateFromISOString(post.createdAt)}

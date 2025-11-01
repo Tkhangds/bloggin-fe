@@ -4,12 +4,13 @@ import { usePost } from "@/hooks/apis/usePost";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { Dot } from "lucide-react";
+import { Dot, MessageSquareWarning } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { twMerge } from "tailwind-merge";
+import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
 
 export function StoryList({ tag }: { tag?: string }): JSX.Element {
   const { data, isLoading, refetch } = usePost().useGetAllPosts(
@@ -54,6 +55,7 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
               authorAvatar={story.author.avatarUrl}
               authorName={story.author.displayName}
               date={formatDateFromISOString(story.createdAt)}
+              monitoringStatus={story.monitoringStatus}
             ></StoryCard>
           ))}
       </div>
@@ -74,6 +76,7 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
               authorAvatar={story.author.avatarUrl}
               authorName={story.author.displayName}
               date={formatDateFromISOString(story.createdAt)}
+              monitoringStatus={story.monitoringStatus}
             ></StoryCard>
           ))}
       </div>
@@ -89,6 +92,7 @@ export const StoryCard = ({
   authorName,
   date,
   className,
+  monitoringStatus,
 }: {
   id: string;
   title: string;
@@ -96,6 +100,7 @@ export const StoryCard = ({
   authorAvatar: string;
   authorName: string;
   date: string;
+  monitoringStatus: PostMonitoringStatus;
   className?: string;
 }) => {
   return (
@@ -134,9 +139,15 @@ export const StoryCard = ({
       {/* title and excerpt */}
       <div className="flex flex-col justify-between">
         <div>
-          <h3 className="mb-2 text-xl font-bold leading-tight group-hover:text-gray-700">
-            {title}
-          </h3>
+          <div className="mb-2 flex gap-2">
+            <span className="text-xl font-bold leading-tight group-hover:text-gray-700">
+              {title}
+            </span>
+            {monitoringStatus === PostMonitoringStatus.VIOLATED && (
+              <MessageSquareWarning className="size-fit" color="#eab308" />
+            )}
+          </div>
+
           <p className="line-clamp-2 text-muted-foreground">{excerpt}</p>
         </div>
       </div>
