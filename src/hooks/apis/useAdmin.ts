@@ -60,7 +60,7 @@ export const useAdmin = () => {
       mutationFn: (postId: string) => {
         return adminAction.flagPost(postId);
       },
-      onSuccess: async () => {
+      onSuccess: async (_, variable) => {
         queryClient.invalidateQueries({
           queryKey: ["admin", "posts", PostMonitoringStatus.VIOLATED],
         });
@@ -70,6 +70,9 @@ export const useAdmin = () => {
             "posts",
             PostMonitoringStatus.POTENTIAL_VIOLATION,
           ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["post", variable],
         });
         toast.success("Post has been flagged as VIOLATED");
       },
@@ -84,7 +87,7 @@ export const useAdmin = () => {
       mutationFn: (postId: string) => {
         return adminAction.unflagPost(postId);
       },
-      onSuccess: async () => {
+      onSuccess: async (_, variable) => {
         queryClient.invalidateQueries({
           queryKey: ["admin", "posts", PostMonitoringStatus.VIOLATED],
         });
@@ -94,6 +97,9 @@ export const useAdmin = () => {
             "posts",
             PostMonitoringStatus.POTENTIAL_VIOLATION,
           ],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["post", variable],
         });
         toast.success("Post has been unflagged");
       },
