@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useAuthContext } from "@/context/AuthContext";
 import Loading from "@/components/loading/loading";
 import { Search } from "lucide-react";
+import { RoleEnum } from "@/enums/role.enum";
 
 export default function RightSection() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function RightSection() {
       {user ? (
         <div className="hidden lg:flex lg:items-center lg:justify-center lg:gap-5">
           <div className="lg:pt-2">
-            {(user.isVerified || user.isAdmin) && (
+            {(user.isVerified || user.role === RoleEnum.ADMIN) && (
               <Button
                 variant="ghost"
                 onClick={() => {

@@ -1,3 +1,4 @@
+import { RoleEnum } from "@/enums/role.enum";
 import z from "zod";
 
 export const favoriteSchema = z.object({
@@ -21,7 +22,7 @@ export const favoriteSchema = z.object({
       displayName: z.string(),
       email: z.string(),
       avatarUrl: z.string(),
-      isAdmin: z.boolean(),
+      role: z.nativeEnum(RoleEnum),
     }),
   }),
 });

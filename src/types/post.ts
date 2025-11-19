@@ -1,4 +1,5 @@
 import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
+import { RoleEnum } from "@/enums/role.enum";
 import z from "zod";
 
 export const postSchema = z.object({
@@ -20,7 +21,7 @@ export const postSchema = z.object({
     displayName: z.string(),
     email: z.string(),
     avatarUrl: z.string(),
-    isAdmin: z.boolean(),
+    role: z.nativeEnum(RoleEnum),
   }),
   enVoiceUrl: z.string().optional(),
   vnVoiceUrl: z.string().optional(),

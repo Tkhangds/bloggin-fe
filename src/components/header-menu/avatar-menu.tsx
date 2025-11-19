@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
+import { RoleEnum } from "@/enums/role.enum";
 
 export function AvatarMenu({}) {
   const router = useRouter();
@@ -80,7 +81,7 @@ export function AvatarMenu({}) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="modal-open w-56" align="end" forceMount>
         <DropdownMenuGroup>
-          {!user.isVerified && !user.isAdmin && (
+          {!user.isVerified && user.role !== RoleEnum.ADMIN && (
             <div className="relative">
               <div className="absolute right-0 z-50 aspect-square size-3 animate-ping rounded-full bg-red-300"></div>
               <div className="absolute right-0 z-50 aspect-square size-3 rounded-full bg-red-400"></div>
@@ -95,7 +96,7 @@ export function AvatarMenu({}) {
             </div>
           )}
 
-          {user.isAdmin && (
+          {user.role === RoleEnum.ADMIN && (
             <DropdownMenuItem
               className="cursor-pointer"
               onClick={() => router.push("/admin/dashboard")}

@@ -30,6 +30,7 @@ import { useUser } from "@/hooks/apis/useUser";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useMailingService } from "@/hooks/apis/useMailingService";
+import { RoleEnum } from "@/enums/role.enum";
 
 export default function ProfilePage() {
   const { user, loading } = useAuthContext();
@@ -169,7 +170,7 @@ export default function ProfilePage() {
               <p className="text-sm text-muted-foreground">
                 Upload a new avatar or keep your current one
               </p>
-              {user.isVerified || user.isAdmin ? (
+              {user.isVerified || user.role === RoleEnum.ADMIN ? (
                 <div className="flex items-center gap-1">
                   <BadgeCheckIcon color="#22c55e" size={20} />
                   <span className="text-sm text-green-500">

@@ -16,6 +16,7 @@ import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
 import { useAdmin } from "@/hooks/apis/useAdmin";
+import { RoleEnum } from "@/enums/role.enum";
 
 export default function BlogReadingPage() {
   const params = useParams<{ id: string }>();
@@ -63,7 +64,7 @@ export default function BlogReadingPage() {
         <p className="text-wrap text-3xl font-bold tracking-tight text-primary md:text-3xl lg:text-4xl xl:text-5xl">
           {post?.title || "Article Title"}
         </p>
-        {user?.isAdmin &&
+        {user?.role === RoleEnum.ADMIN &&
           (post.monitoringStatus !== PostMonitoringStatus.VIOLATED ? (
             <Button
               variant={"destructive_outline"}
