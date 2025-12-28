@@ -1,5 +1,9 @@
 "use client";
-import { MessageSquareWarning, Presentation } from "lucide-react";
+import {
+  CircleDollarSign,
+  MessageSquareWarning,
+  Presentation,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import {
@@ -22,6 +26,11 @@ const sidebarItem = [
     name: "Reports",
     icon: MessageSquareWarning,
     section: "reports",
+  },
+  {
+    name: "Payments",
+    icon: CircleDollarSign,
+    section: "payments",
   },
 ];
 

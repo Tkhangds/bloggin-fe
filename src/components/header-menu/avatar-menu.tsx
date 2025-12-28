@@ -3,6 +3,7 @@
 import {
   BadgeHelp,
   FileText,
+  Gem,
   LogOut,
   MailCheck,
   Moon,
@@ -53,9 +54,15 @@ export function AvatarMenu({}) {
       <DropdownMenuTrigger asChild>
         <div className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 hover:bg-muted">
           <div className="flex flex-col space-y-1 text-end">
-            <p className="text-sm font-medium leading-none">
-              {user.displayName}
-            </p>
+            <div className="flex items-center justify-end">
+              <p className="text-sm font-medium leading-none">
+                {user.displayName}
+              </p>
+              {user.role === RoleEnum.PRO_USER && <Gem className="max-h-4" />}
+
+              {user.role === RoleEnum.ADMIN && <Shield className="max-h-4" />}
+            </div>
+
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -91,6 +98,19 @@ export function AvatarMenu({}) {
               >
                 <MailCheck className="mr-2 h-4 w-4" />
                 <span className="font-semibold">Verify Account Now!</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </div>
+          )}
+
+          {user.isVerified && user.role === RoleEnum.USER && (
+            <div className="relative">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push("/plans")}
+              >
+                <Gem className="mr-2 max-h-4" />
+                <span className="font-semibold">Upgrade to Pro</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </div>

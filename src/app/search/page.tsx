@@ -57,6 +57,7 @@ export default async function SearchPage({
                 authorName={blog.author.displayName}
                 date={formatDateFromISOString(blog.createdAt)}
                 monitoringStatus={blog.monitoringStatus}
+                authorRole={blog.author.role}
               ></StoryCard>
             ))}
           </div>

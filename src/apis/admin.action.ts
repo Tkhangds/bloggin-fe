@@ -5,6 +5,7 @@ import { GetMonthlyStatisticsResponseDto } from "@/types/dtos/get-monthly-statis
 import { GetTagDistributionResponseDto } from "@/types/dtos/get-tag-distribution-response.dto";
 import { GetTopInteractivePostDto } from "@/types/dtos/get-top-interactive-post.dto";
 import { GetTopTagResponseDto } from "@/types/dtos/get-top-tag-response.dto";
+import { GetUserPaymentAdminResponseDto } from "@/types/dtos/get-user-payment-admin-response.dto";
 import { Post } from "@/types/post";
 import { User } from "@/types/user";
 
@@ -94,5 +95,13 @@ export const adminAction = {
     );
 
     return result.data.data;
+  },
+
+  async getAllUserPaymentsAdminAsync() {
+    const result =
+      await bloggingApi.get<GetUserPaymentAdminResponseDto[]>(
+        "/admin/payments",
+      );
+    return result.data;
   },
 };

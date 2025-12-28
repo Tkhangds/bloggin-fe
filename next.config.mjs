@@ -16,6 +16,12 @@ const nextConfig = {
         pathname: "/**",
         search: "",
       },
+      {
+        protocol: "https",
+        hostname: "qr.sepay.vn",
+        port: "",
+        pathname: "/img",
+      },
     ],
   },
 };
