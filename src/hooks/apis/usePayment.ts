@@ -1,24 +1,25 @@
 "use client";
-import { PaymentAction } from "@/apis/payment.action";
+import { paymentAction } from "@/apis/payment.action";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const usePayment = () => {
   const queryClient = useQueryClient();
-  const getPendingPayment = () => {
+
+  const useGetPendingPayment = () => {
     return useQuery({
       queryKey: ["payment", "pending"],
       queryFn: () => {
-        return PaymentAction.getPendingPaymentAsync();
+        return paymentAction.getPendingPaymentAsync();
       },
       staleTime: 0,
       refetchOnMount: "always",
     });
   };
 
-  const createPendingPayment = () => {
+  const useCreatePendingPayment = () => {
     return useMutation({
       mutationFn: () => {
-        return PaymentAction.createPendingPaymentAsync();
+        return paymentAction.createPendingPaymentAsync();
       },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["payment", "pending"] });
@@ -26,16 +27,20 @@ export const usePayment = () => {
     });
   };
 
-  const getUserPayment = () => {
+  const useGetUserPayment = () => {
     return useQuery({
       queryKey: ["payment", "me"],
       queryFn: () => {
-        return PaymentAction.getUserPaymentAsync();
+        return paymentAction.getUserPaymentAsync();
       },
       staleTime: 0,
       refetchOnMount: "always",
     });
   };
 
-  return { getPendingPayment, createPendingPayment, getUserPayment };
+  return {
+    useGetPendingPayment,
+    useCreatePendingPayment,
+    useGetUserPayment,
+  };
 };

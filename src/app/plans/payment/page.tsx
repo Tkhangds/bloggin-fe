@@ -28,16 +28,16 @@ export default function PaymentPage() {
     data: userPayment,
     refetch: refetchUserPayment,
     isSuccess: isSuccessUserPayment,
-  } = usePayment().getUserPayment();
+  } = usePayment().useGetUserPayment();
 
   const {
     data: pendingPayment,
     isLoading,
     isSuccess: isSuccessPendingPayment,
     refetch: refetchPendingPayment,
-  } = usePayment().getPendingPayment();
+  } = usePayment().useGetPendingPayment();
 
-  const createPendingPaymentAction = usePayment().createPendingPayment();
+  const createPendingPaymentAction = usePayment().useCreatePendingPayment();
 
   const handleCreatePendingPayment = async () => {
     await createPendingPaymentAction.mutateAsync();

@@ -1,3 +1,4 @@
+import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
 import { RoleEnum } from "@/enums/role.enum";
 import z from "zod";
 
@@ -24,6 +25,7 @@ export const favoriteSchema = z.object({
       avatarUrl: z.string(),
       role: z.nativeEnum(RoleEnum),
     }),
+    monitoringStatus: z.nativeEnum(PostMonitoringStatus),
   }),
 });
 

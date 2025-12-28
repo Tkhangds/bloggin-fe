@@ -12,7 +12,7 @@ import {
 import { useAdmin } from "@/hooks/apis/useAdmin";
 import { GetUserPaymentAdminResponseDto } from "@/types/dtos/get-user-payment-admin-response.dto";
 import { formatDateFromISOString } from "@/utils/date-convert";
-import { Calendar, DollarSign } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function PaymentsPage() {
