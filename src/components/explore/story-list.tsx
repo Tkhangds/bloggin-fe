@@ -4,13 +4,14 @@ import { usePost } from "@/hooks/apis/usePost";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { Dot, MessageSquareWarning } from "lucide-react";
+import { Dot, Gem, MessageSquareWarning } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { twMerge } from "tailwind-merge";
 import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
+import { RoleEnum } from "@/enums/role.enum";
 
 export function StoryList({ tag }: { tag?: string }): JSX.Element {
   const { data, isLoading, refetch } = usePost().useGetAllPosts(
@@ -56,6 +57,7 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
               authorName={story.author.displayName}
               date={formatDateFromISOString(story.createdAt)}
               monitoringStatus={story.monitoringStatus}
+              authorRole={story.author.role}
             ></StoryCard>
           ))}
       </div>
@@ -77,6 +79,7 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
               authorName={story.author.displayName}
               date={formatDateFromISOString(story.createdAt)}
               monitoringStatus={story.monitoringStatus}
+              authorRole={story.author.role}
             ></StoryCard>
           ))}
       </div>
@@ -92,6 +95,7 @@ export const StoryCard = ({
   authorName,
   date,
   className,
+  authorRole,
   monitoringStatus,
 }: {
   id: string;
@@ -100,6 +104,7 @@ export const StoryCard = ({
   authorAvatar: string;
   authorName: string;
   date: string;
+  authorRole: RoleEnum;
   monitoringStatus: PostMonitoringStatus;
   className?: string;
 }) => {
@@ -122,13 +127,19 @@ export const StoryCard = ({
       <div className="flex items-center text-sm">
         <Avatar className="mr-3 h-8 w-8">
           <AvatarImage
-            src={authorAvatar || "/placeholder.svg"}
+            src={
+              authorAvatar ||
+              `https://api.dicebear.com/9.x/initials/svg?seed=${authorName}`
+            }
             alt={authorName}
           />
           <AvatarFallback>{authorName[0]}</AvatarFallback>
         </Avatar>
         <div className="flex items-center text-sm">
-          <span className="font-medium">{authorName}</span>
+          <span className="flex items-center gap-1 font-medium">
+            {authorName}
+            {authorRole === RoleEnum.PRO_USER && <Gem className="size-4" />}
+          </span>
           <Dot></Dot>
           <div className="text-gray-500">
             <span>{date}</span>

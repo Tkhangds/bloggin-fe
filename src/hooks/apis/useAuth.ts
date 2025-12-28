@@ -12,8 +12,6 @@ export const useAuth = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { refetchUser } = useAuthContext();
-  // const searchParams = useSearchParams();
-  // const redirect = searchParams.get("redirect") || "/";
 
   const useLogin = () => {
     return useMutation({

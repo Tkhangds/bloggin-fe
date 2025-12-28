@@ -3,6 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { FollowButton } from "../shared/follow-button";
 import { User } from "@/types/user";
 import { twMerge } from "tailwind-merge";
+import { RoleEnum } from "@/enums/role.enum";
+import { Gem } from "lucide-react";
 
 export const AuthorResultCard = ({
   writer,
@@ -24,9 +26,12 @@ export const AuthorResultCard = ({
             href={`/profile/${writer.id}`}
             className="flex items-center space-x-3"
           >
-            <Avatar className="h-12 w-12">
+            <Avatar className="h-10 w-10">
               <AvatarImage
-                src={writer.avatarUrl || "/placeholder.svg"}
+                src={
+                  writer.avatarUrl ||
+                  `https://api.dicebear.com/9.x/initials/svg?seed=${writer?.displayName}`
+                }
                 alt={writer.displayName}
               />
               <AvatarFallback>
@@ -37,8 +42,11 @@ export const AuthorResultCard = ({
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="truncate font-semibold text-primary">
+              <h3 className="flex items-center gap-1 truncate font-semibold text-primary">
                 {writer.displayName}
+                {writer.role === RoleEnum.PRO_USER && (
+                  <Gem className="h-4 w-4" />
+                )}
               </h3>
               <p className="text-sm text-gray-500">{writer.username}</p>
             </div>

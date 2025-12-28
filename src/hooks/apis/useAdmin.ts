@@ -115,6 +115,14 @@ export const useAdmin = () => {
       queryFn: () => adminAction.getPostByMonitoruingStatus(status),
     });
   };
+
+  const useGetAllUserPaymentsAdmin = () => {
+    return useQuery({
+      queryKey: ["admin", "user-payments"],
+      queryFn: () => adminAction.getAllUserPaymentsAdminAsync(),
+    });
+  };
+
   return {
     useGetTopFollowedUser,
     useGetTopTag,
@@ -126,5 +134,6 @@ export const useAdmin = () => {
     useFlagPost,
     useUnflagPost,
     useGetPostByMonitoringStatus,
+    useGetAllUserPaymentsAdmin,
   };
 };

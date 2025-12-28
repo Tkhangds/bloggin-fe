@@ -5,10 +5,11 @@ import { FollowButton } from "@/components/shared/follow-button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuthContext } from "@/context/AuthContext";
+import { RoleEnum } from "@/enums/role.enum";
 import { useFollow } from "@/hooks/apis/useFollow";
 import { usePost } from "@/hooks/apis/usePost";
 import { useUser } from "@/hooks/apis/useUser";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Gem } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -81,7 +82,10 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
               <div className="space-y-4 bg-background pb-2">
                 <Avatar className="h-24 w-24 border-2 border-accent">
                   <AvatarImage
-                    src={`https://api.dicebear.com/9.x/initials/svg?seed=${author?.displayName}`}
+                    src={
+                      author?.avatarUrl ||
+                      `https://api.dicebear.com/9.x/initials/svg?seed=${author?.displayName}`
+                    }
                     alt="Author"
                     className="rounded-full"
                   />
@@ -89,10 +93,15 @@ export default function ProfilePage({ params }: { params: { id: string } }) {
                 </Avatar>
 
                 <div className="space-y-4">
-                  <div className="flex space-x-4">
+                  <div className="flex items-center space-x-3">
                     <h1 className="text-3xl font-bold">
                       {author?.displayName}
                     </h1>
+
+                    {author?.role === RoleEnum.PRO_USER && (
+                      <Gem className="h-6 w-6" />
+                    )}
+
                     {author && <FollowButton userId={author.id}></FollowButton>}
                   </div>
 
