@@ -146,16 +146,18 @@ export default function ProfilePage() {
 
           <CardDescription>Update your profile information</CardDescription>
         </div>
-        <Button
-          variant="outline"
-          className="flex text-sm text-primary"
-          onClick={() => {
-            router.push("/plans");
-          }}
-        >
-          <p>Upgrade to Pro</p>
-          <Gem className="max-h-4" />
-        </Button>
+        {user.role !== RoleEnum.PRO_USER && (
+          <Button
+            variant="outline"
+            className="flex text-sm text-primary"
+            onClick={() => {
+              router.push("/plans");
+            }}
+          >
+            <p>Upgrade to Pro</p>
+            <Gem className="max-h-4" />
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">

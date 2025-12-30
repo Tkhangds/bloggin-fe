@@ -1,9 +1,9 @@
 "use client";
 import { FollowButton } from "@/components/shared/follow-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardDescription } from "@/components/ui/card";
 import { useAuthContext } from "@/context/AuthContext";
 import { useAdmin } from "@/hooks/apis/useAdmin";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { useRouter } from "next/navigation";
 
 export default function WriterRecommend(): JSX.Element {
@@ -33,14 +33,15 @@ export default function WriterRecommend(): JSX.Element {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <Avatar>
+                  <Avatar className="h-6 w-6">
                     <AvatarImage
-                      src={writer.avatarUrl}
-                      alt={writer.displayName}
+                      src={
+                        writer.avatarUrl ??
+                        `https://api.dicebear.com/9.x/initials/svg?seed=${writer.displayName}`
+                      }
+                      alt={"Avatar"}
                     />
-                    <AvatarFallback>
-                      {writer.displayName.charAt(0)}
-                    </AvatarFallback>
+                    <AvatarFallback>{`https://api.dicebear.com/9.x/initials/svg?seed=${writer.displayName}`}</AvatarFallback>
                   </Avatar>
                   <div>
                     <h3 className="font-medium">{writer.displayName}</h3>
