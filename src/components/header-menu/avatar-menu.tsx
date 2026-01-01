@@ -11,6 +11,7 @@ import {
   Shield,
   Sun,
   User,
+  Users,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,7 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 
-export function AvatarMenu({}) {
+export function AvatarMenu({ }) {
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
@@ -132,6 +133,13 @@ export function AvatarMenu({}) {
           >
             <NotepadTextDashed className="mr-2 h-4 w-4" />
             <span>Your Draft</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={() => router.push("/setting/collaborations")}
+          >
+            <Users className="mr-2 h-4 w-4" />
+            <span>Collab Post</span>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer" onClick={toggleTheme}>
             {theme === "light" ? (

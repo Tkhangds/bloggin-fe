@@ -12,6 +12,8 @@ import clsx from "clsx";
 import { useRouter, usePathname } from "next/navigation";
 import { MobileMenu } from "@/components/header-menu/mobile-menu";
 import { useQueryClient } from "@tanstack/react-query";
+import { ShareCollaborateDialog } from "@/components/shared/ShareCollaborateDialog";
+import { useAuthContext } from "@/context/AuthContext";
 
 export type EditorHeaderProps = {
   isSidebarOpen?: boolean;
@@ -19,6 +21,11 @@ export type EditorHeaderProps = {
   editor: Editor;
   isSaving?: boolean;
   mode?: string;
+  draftId?: string;
+  authorId?: string;
+  enableCollaboration?: boolean;
+  onToggleCollaboration?: (enabled: boolean) => void;
+  isConnected?: boolean;
 };
 
 export const EditorHeader = ({
@@ -27,8 +34,14 @@ export const EditorHeader = ({
   toggleSidebar,
   isSaving,
   mode,
+  draftId,
+  authorId,
+  enableCollaboration = false,
+  onToggleCollaboration,
+  isConnected = false,
 }: EditorHeaderProps) => {
   const queryClient = useQueryClient();
+  const { user } = useAuthContext();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -54,21 +67,36 @@ export const EditorHeader = ({
 
       <div className="flex flex-row items-center gap-x-1.5">
         <div className="flex items-center gap-x-1.5">
+          {/* Share & Collaborate button - only show for drafts */}
+          {mode === "draft" && draftId && user && (
+            <ShareCollaborateDialog
+              draftId={draftId}
+              currentUserId={user.id}
+              authorId={authorId}
+              isCollaborative={enableCollaboration}
+              isConnected={isConnected}
+              onEnableCollaboration={() => onToggleCollaboration?.(true)}
+              onDisableCollaboration={() => onToggleCollaboration?.(false)}
+            />
+          )}
+
           {mode === "draft" ? (
-            <Button
-              onClick={() => {
-                queryClient.invalidateQueries({
-                  queryKey: ["draft", pathname.split("/").pop()],
-                });
-                router.push("/publish/" + pathname.split("/").pop());
-              }}
-              size={"sm"}
-              className="mr-2 hidden lg:flex"
-              disabled={isSaving}
-            >
-              Publish
-              <Icon name="CloudUpload" />
-            </Button>
+            user?.id === authorId && (
+              <Button
+                onClick={() => {
+                  queryClient.invalidateQueries({
+                    queryKey: ["draft", pathname.split("/").pop()],
+                  });
+                  router.push("/publish/" + pathname.split("/").pop());
+                }}
+                size={"sm"}
+                className="mr-2 hidden lg:flex"
+                disabled={isSaving}
+              >
+                Publish
+                <Icon name="CloudUpload" />
+              </Button>
+            )
           ) : (
             <Button
               onClick={() => {

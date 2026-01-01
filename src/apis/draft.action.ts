@@ -22,6 +22,18 @@ const draftAction = {
     );
     return result.data.data;
   },
+  async getCollaboratedDrafts(page?: number, limit?: number) {
+    const result = await bloggingApi.get<PaginationResponseWrapper<Draft[]>>(
+      `/draft/collaborated`,
+      {
+        params: {
+          page,
+          limit,
+        },
+      },
+    );
+    return result.data.data;
+  },
   async createDraft(data: CreateDraftDto) {
     const result = await bloggingApi.post<SuccessResponseWrapper<Draft>>(
       "/draft",

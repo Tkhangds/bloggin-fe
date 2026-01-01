@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { FileText, Heart, NotepadTextDashed, User } from "lucide-react";
+import { FileText, Heart, NotepadTextDashed, User, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -72,6 +72,20 @@ export default function SettingsLayout({
                     <Link href="/setting/drafts">
                       <NotepadTextDashed className="mr-2 h-4 w-4" />
                       Draft
+                    </Link>
+                  </Button>
+                  <Button
+                    variant={
+                      pathname === "/setting/collaborations"
+                        ? "default"
+                        : "ghost"
+                    }
+                    className="w-full justify-start"
+                    asChild
+                  >
+                    <Link href="/setting/collaborations">
+                      <Users className="mr-2 h-4 w-4" />
+                      Collaborations
                     </Link>
                   </Button>
                   <Button
