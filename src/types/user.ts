@@ -1,3 +1,4 @@
+import { RoleEnum } from "@/enums/role.enum";
 import z from "zod";
 
 export const userSchema = z.object({
@@ -5,7 +6,7 @@ export const userSchema = z.object({
   username: z.string(),
   email: z.string(),
   displayName: z.string(),
-  isAdmin: z.boolean(),
+  role: z.nativeEnum(RoleEnum),
   avatarUrl: z.string().optional(),
   specialties: z.string().optional(),
   about: z.string().optional(),

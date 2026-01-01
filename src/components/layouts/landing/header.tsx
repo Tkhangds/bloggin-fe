@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import RightSection from "./right-section";
 import { SearchBar } from "@/components/search/search-bar";
+import { Suspense } from "react";
 
 export const Header = ({
   showSearchBar = true,
@@ -33,7 +34,9 @@ export const Header = ({
 
           {/* Searchbar */}
           <div className="hidden md:block">
-            <SearchBar showSearchBar={showSearchBar} />
+            <Suspense>
+              <SearchBar showSearchBar={showSearchBar} />
+            </Suspense>
           </div>
         </div>
         <RightSection />

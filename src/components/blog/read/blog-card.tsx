@@ -3,11 +3,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { PostMonitoringStatus } from "@/enums/post-monitoring-status.enum";
+import { RoleEnum } from "@/enums/role.enum";
 import { useFavorite } from "@/hooks/apis/useFavorite";
 import { Post } from "@/types/post";
 import { formatDateFromISOString } from "@/utils/date-convert";
 import firstSentenceJson from "@/utils/first-sentence-json";
-import { Heart, MessageCircle, MessageSquareWarning } from "lucide-react";
+import { Gem, Heart, MessageCircle, MessageSquareWarning } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -29,12 +30,22 @@ export default function BlogCard({
           onClick={() => router.push("/profile/" + post.authorId)}
         >
           <Avatar className="h-6 w-6">
-            <AvatarImage src={post.author.avatarUrl} alt={"Avatar"} />
-            <AvatarFallback>{post.author.displayName.charAt(0)}</AvatarFallback>
+            <AvatarImage
+              src={
+                post.author.avatarUrl ??
+                `https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`
+              }
+              alt={"Avatar"}
+            />
+            <AvatarFallback>{`https://api.dicebear.com/9.x/initials/svg?seed=${post.author.displayName}`}</AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium group-hover:underline group-hover:underline-offset-4">
             {post.author.displayName}
           </span>
+          {post.author.role === RoleEnum.PRO_USER && (
+            <Gem className="h-4 w-4" />
+          )}
+
           <span className="text-sm text-gray-500">·</span>
           <span className="text-sm text-gray-500">
             {formatDateFromISOString(post.createdAt)}

@@ -5,6 +5,7 @@ import {
   BadgeCheckIcon,
   Camera,
   ClipboardList,
+  Gem,
   Info,
   Loader2,
   Mail,
@@ -30,6 +31,8 @@ import { useUser } from "@/hooks/apis/useUser";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea";
 import { useMailingService } from "@/hooks/apis/useMailingService";
+import { RoleEnum } from "@/enums/role.enum";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, loading } = useAuthContext();
@@ -53,6 +56,8 @@ export default function ProfilePage() {
     user?.specialties,
   );
   const [about, setAbout] = useState<string | undefined>(user?.about);
+
+  const router = useRouter();
 
   const hasChanged =
     user?.about !== about ||
@@ -125,9 +130,34 @@ export default function ProfilePage() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Personal Information</CardTitle>
-        <CardDescription>Update your profile information</CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between">
+        <div className="flex flex-col gap-1">
+          <CardTitle className="flex items-center gap-1">
+            <p>Personal Information</p>
+            {user.role === RoleEnum.PRO_USER && (
+              <div className="group relative cursor-pointer">
+                <Gem className="max-h-4" />
+                <p className="pointer-events-none absolute -top-2 left-7 whitespace-nowrap rounded bg-accent px-2 py-1 text-sm font-normal opacity-0 transition-all duration-75 group-hover:pointer-events-auto group-hover:opacity-80">
+                  You are currently using the Pro plan
+                </p>
+              </div>
+            )}
+          </CardTitle>
+
+          <CardDescription>Update your profile information</CardDescription>
+        </div>
+        {user.role !== RoleEnum.PRO_USER && (
+          <Button
+            variant="outline"
+            className="flex text-sm text-primary"
+            onClick={() => {
+              router.push("/plans");
+            }}
+          >
+            <p>Upgrade to Pro</p>
+            <Gem className="max-h-4" />
+          </Button>
+        )}
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -169,7 +199,7 @@ export default function ProfilePage() {
               <p className="text-sm text-muted-foreground">
                 Upload a new avatar or keep your current one
               </p>
-              {user.isVerified || user.isAdmin ? (
+              {user.isVerified || user.role === RoleEnum.ADMIN ? (
                 <div className="flex items-center gap-1">
                   <BadgeCheckIcon color="#22c55e" size={20} />
                   <span className="text-sm text-green-500">
@@ -218,37 +248,6 @@ export default function ProfilePage() {
                 />
               </div>
             </div>
-
-            {/* <div className="space-y-2">
-              <Label htmlFor="gender">Gender</Label>
-              <Select value={gender} onValueChange={setGender}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="male">Male</SelectItem>
-                  <SelectItem value="female">Female</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                  <SelectItem value="prefer-not-to-say">
-                    Prefer not to say
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="location"
-                  placeholder="City, Country"
-                  className="pl-9"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                />
-              </div>
-            </div> */}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>

@@ -3,6 +3,7 @@
 import {
   BadgeHelp,
   FileText,
+  Gem,
   LogOut,
   MailCheck,
   Moon,
@@ -27,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
+import { RoleEnum } from "@/enums/role.enum";
 
 export function AvatarMenu({ }) {
   const router = useRouter();
@@ -53,9 +55,15 @@ export function AvatarMenu({ }) {
       <DropdownMenuTrigger asChild>
         <div className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 hover:bg-muted">
           <div className="flex flex-col space-y-1 text-end">
-            <p className="text-sm font-medium leading-none">
-              {user.displayName}
-            </p>
+            <div className="flex items-center justify-end">
+              <p className="text-sm font-medium leading-none">
+                {user.displayName}
+              </p>
+              {user.role === RoleEnum.PRO_USER && <Gem className="max-h-4" />}
+
+              {user.role === RoleEnum.ADMIN && <Shield className="max-h-4" />}
+            </div>
+
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
@@ -81,7 +89,7 @@ export function AvatarMenu({ }) {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="modal-open w-56" align="end" forceMount>
         <DropdownMenuGroup>
-          {!user.isVerified && !user.isAdmin && (
+          {!user.isVerified && user.role !== RoleEnum.ADMIN && (
             <div className="relative">
               <div className="absolute right-0 z-50 aspect-square size-3 animate-ping rounded-full bg-red-300"></div>
               <div className="absolute right-0 z-50 aspect-square size-3 rounded-full bg-red-400"></div>
@@ -96,7 +104,20 @@ export function AvatarMenu({ }) {
             </div>
           )}
 
-          {user.isAdmin && (
+          {user.isVerified && user.role === RoleEnum.USER && (
+            <div className="relative">
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => router.push("/plans")}
+              >
+                <Gem className="mr-2 max-h-4" />
+                <span className="font-semibold">Upgrade to Pro</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </div>
+          )}
+
+          {user.role === RoleEnum.ADMIN && (
             <DropdownMenuItem
               className="cursor-pointer"
               onClick={() => router.push("/admin/dashboard")}
