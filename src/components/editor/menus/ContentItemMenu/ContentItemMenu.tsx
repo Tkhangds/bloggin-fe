@@ -41,12 +41,12 @@ export const ContentItemMenu = ({
       editor={editor}
       onNodeChange={data.handleNodeChange}
       tippyOptions={{
-        offset: [-2, 16],
+        offset: [-2, 0],
         zIndex: 99,
       }}
     >
       {isEditable ? (
-        <div className="flex items-center gap-0.5">
+        <div className="flex items-center gap-0.5 pr-5">
           <Toolbar.Button onClick={actions.handleAdd}>
             <Icon name="Plus" />
           </Toolbar.Button>

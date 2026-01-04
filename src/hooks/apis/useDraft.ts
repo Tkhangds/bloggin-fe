@@ -18,6 +18,17 @@ export const useDraft = () => {
     });
   };
 
+  const useGetCollaboratedDrafts = () => {
+    return useQuery({
+      queryKey: ["draft", "collaborated"],
+      queryFn: () => {
+        return draftAction.getCollaboratedDrafts();
+      },
+      staleTime: 0,
+      refetchOnMount: true,
+    });
+  };
+
   const useUpdateDraftById = () => {
     return useMutation({
       mutationFn: ({ id, data }: { id: string; data: UpdateDraftDto }) => {
@@ -60,6 +71,9 @@ export const useDraft = () => {
       queryFn: () => {
         return draftAction.getDraftById(id);
       },
+      enabled: !!id,
+      staleTime: 0,
+      refetchOnMount: true,
     });
   };
 
@@ -70,5 +84,6 @@ export const useDraft = () => {
     useGetDraftById,
     useDeleteDraftById,
     useGetAllDraftsByAuthorId,
+    useGetCollaboratedDrafts,
   };
 };

@@ -2,12 +2,14 @@
 
 import type { AnyExtension, Editor, EditorOptions } from "@tiptap/core";
 import { useEditor } from "@tiptap/react";
+import * as Y from "yjs";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { Socket } from "socket.io-client";
 
 import { useAuthContext } from "@/context/AuthContext";
 import { ExtensionKit } from "@/extensions/extension-kit";
 import getTemplate from "@/utils/getTemplate";
 import debounce from "lodash/debounce";
-import { useCallback, useEffect, useState } from "react";
 import { useDraft } from "../apis/useDraft";
 import { usePost } from "../apis/usePost";
 
@@ -21,8 +23,20 @@ export const useBlockEditor = ({
   id,
   mode,
   templateName,
+  enableCollaboration = false,
+  collaborationYdoc,
+  collaborationProvider,
+  collaborationSocket,
   ...editorOptions
-}: { id: string | undefined; mode: string; templateName?: string } & Partial<
+}: {
+  id: string | undefined;
+  mode: string;
+  templateName?: string;
+  enableCollaboration?: boolean;
+  collaborationYdoc?: Y.Doc;
+  collaborationProvider?: any;
+  collaborationSocket?: Socket;
+} & Partial<
   Omit<EditorOptions, "extensions">
 >) => {
   const { user } = useAuthContext();
@@ -36,22 +50,64 @@ export const useBlockEditor = ({
   const { mutate: updateContent } = updateData();
 
   const [isSaving, setIsSaving] = useState(false);
+  const saveCountRef = useRef(0);
+
+  // Memoize extensions to prevent recreating them on every render
+  const extensions = useMemo(() => {
+    const exts = ExtensionKit({
+      provider: collaborationProvider,
+      ydoc: enableCollaboration ? collaborationYdoc : undefined
+    });
+    console.log("🎯 Creating extensions array", {
+      hasYdoc: !!collaborationYdoc,
+      enableCollaboration,
+      extensionCount: exts.length
+    });
+    return [...exts].filter((e): e is AnyExtension => e !== undefined);
+  }, [enableCollaboration, collaborationSocket, collaborationYdoc]);
 
   const editor = useEditor(
     {
       ...editorOptions,
       immediatelyRender: false,
-      shouldRerenderOnTransaction: false,
+      // Allow re-renders on transaction for collaboration sync
+      shouldRerenderOnTransaction: enableCollaboration,
       autofocus: true,
-      content: contentData
+      content: enableCollaboration ? undefined : (contentData
         ? JSON.parse(contentData.content)
-        : getTemplate(templateName || ""),
-      onUpdate: ({ editor }) => {
-        saveContent(editor);
+        : getTemplate(templateName || "")),
+      onCreate: ({ editor }) => {
+        if (enableCollaboration && collaborationYdoc) {
+          console.log("✅ Editor created with Yjs collaboration", {
+            hasYdoc: !!collaborationYdoc,
+            ydocClientId: collaborationYdoc?.clientID,
+            extensionCount: editor.extensionManager.extensions.length
+          });
+
+          // Debug: Log all transactions to see if remote updates trigger them
+          const originalDispatch = editor.view.dispatch.bind(editor.view);
+          editor.view.dispatch = (tr) => {
+            console.log("🔄 Transaction dispatched:", {
+              docChanged: tr.docChanged,
+              steps: tr.steps.length,
+              meta: Object.keys((tr as any).meta || {}),
+              isRemote: tr.getMeta('y-sync$') !== undefined
+            });
+            return originalDispatch(tr);
+          };
+        }
       },
-      extensions: [...ExtensionKit({})].filter(
-        (e): e is AnyExtension => e !== undefined,
-      ),
+      onUpdate: ({ editor }) => {
+        if (enableCollaboration) {
+          console.log("✏️ Editor updated (collaboration mode)");
+          // Yjs Collaboration extension handles sync automatically
+          // We also save to DB for backup and to trigger the "Saving..." UI state
+          saveContent(editor);
+        } else {
+          saveContent(editor);
+        }
+      },
+      extensions,
       editorProps: {
         attributes: {
           autocomplete: "off",
@@ -68,47 +124,54 @@ export const useBlockEditor = ({
         },
       },
     },
-    [],
+    [extensions],
   );
 
   useEffect(() => {
     console.log("Editor initialized:", contentData);
     console.log("template name", templateName);
-    if (editor && contentData && contentData.content) {
+    // Only set content from database when NOT in collaboration mode
+    // In collaboration mode, the Yjs document is the source of truth
+    if (!enableCollaboration && editor && contentData && contentData.content) {
       const parsedContent = JSON.parse(contentData.content);
 
       if (editor.getJSON() !== parsedContent) {
         editor.commands.setContent(parsedContent);
       }
     }
-  }, [editor, contentData]);
+  }, [editor, contentData, enableCollaboration]);
 
   if (typeof window !== "undefined") {
     window.editor = editor;
   }
 
   useEffect(() => {
-    if (editor?.isEmpty && contentData?.content) {
+    // Only set content from database when NOT in collaboration mode
+    // In collaboration mode, the Yjs document is the source of truth
+    if (!enableCollaboration && editor?.isEmpty && contentData?.content) {
       const parsedContent = JSON.parse(contentData.content);
       editor.commands.setContent(parsedContent);
     }
-  }, [contentData, editor]);
+  }, [contentData, editor, enableCollaboration]);
 
   const debouncedSave = useCallback(
     debounce(
-      async (editor: Editor, contentId: string, userId: string | undefined) => {
+      async (editor: Editor, contentId: string, userId: string | undefined, currentSaveCount: number) => {
         const jsonContent = editor.getJSON();
         const json = JSON.stringify(jsonContent);
 
         try {
-          updateContent({
+          await updateContent({
             id: contentId,
             data: { content: json, authorId: userId },
           });
         } catch (error) {
           console.error("Failed to save content:", error);
         } finally {
-          setIsSaving(false);
+          // Only turn off saving if this is still the latest save request
+          if (saveCountRef.current === currentSaveCount) {
+            setIsSaving(false);
+          }
         }
       },
       2000,
@@ -121,7 +184,11 @@ export const useBlockEditor = ({
       if (!id) return;
 
       setIsSaving(true);
-      debouncedSave(editor, id, user?.id);
+      // Increment save count to track this new request
+      saveCountRef.current += 1;
+      const currentCount = saveCountRef.current;
+
+      debouncedSave(editor, id, user?.id, currentCount);
     },
     [id, user?.id, debouncedSave],
   );
@@ -132,5 +199,9 @@ export const useBlockEditor = ({
     };
   }, [debouncedSave]);
 
-  return { editor, isSaving };
+  return {
+    editor,
+    isSaving,
+    contentData,
+  };
 };
