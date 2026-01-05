@@ -122,7 +122,7 @@ export function useCollaboration({
     console.log("🔧 Created Yjs document & Awareness", { clientId: newYdoc.clientID });
 
     // Create socket connection
-    const socketUrl = wsUrl || process.env.NEXT_PUBLIC_WS_URL || "http://localhost:8080/collaboration";
+    const socketUrl = wsUrl || process.env.NEXT_PUBLIC_WS_URL || "https://api.bloggin.blog/collaboration";
     console.log("🔌 Connecting to:", socketUrl);
 
     const newSocket = io(socketUrl, {
