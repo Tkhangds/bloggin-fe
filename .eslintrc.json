@@ -1,4 +1,7 @@
 {
-  "extends": [],
-  "rules": {}
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
+  }
 }
