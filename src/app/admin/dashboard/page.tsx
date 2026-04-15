@@ -1,4 +1,5 @@
 "use client";
+import { useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/chart";
 import { useAdmin } from "@/hooks/apis/useAdmin";
 import { usePost } from "@/hooks/apis/usePost";
+import { generateBlueShades } from "@/utils/color";
 import { FileText, MousePointer2, Tag, Users } from "lucide-react";
 import {
   Bar,
@@ -29,7 +31,7 @@ import {
   XAxis,
 } from "recharts";
 
-const resgistrationChartConfig = {
+const registrationChartConfig = {
   count: {
     label: "New Users",
   },
@@ -55,55 +57,64 @@ export default function AdminDashboardPage() {
 
   const { data: posts } = useAdmin().useGetTopInteractivePost();
 
-  const stats = [
-    {
-      title: "Total Posts",
-      value: totalPosts?.pages[0].meta.total,
-      icon: FileText,
-      color: "text-blue-600",
-    },
-    {
-      title: "Total Users",
-      value: overallStats?.usersCount || "N/A",
-      icon: Users,
-      color: "text-green-600",
-    },
-    {
-      title: "Total Topics",
-      value: overallStats?.tagsCount || "N/A",
-      icon: Tag,
-      color: "text-purple-600",
-    },
-    {
-      title: "Total Interactions",
-      value: overallStats?.interactionCount || "N/A",
-      icon: MousePointer2,
-      color: "text-orange-600",
-    },
-  ];
+  const stats = useMemo(
+    () => [
+      {
+        title: "Total Posts",
+        value: totalPosts?.pages[0].meta.total,
+        icon: FileText,
+        color: "text-blue-600",
+      },
+      {
+        title: "Total Users",
+        value: overallStats?.usersCount || "N/A",
+        icon: Users,
+        color: "text-green-600",
+      },
+      {
+        title: "Total Topics",
+        value: overallStats?.tagsCount || "N/A",
+        icon: Tag,
+        color: "text-purple-600",
+      },
+      {
+        title: "Total Interactions",
+        value: overallStats?.interactionCount || "N/A",
+        icon: MousePointer2,
+        color: "text-orange-600",
+      },
+    ],
+    [totalPosts, overallStats],
+  );
 
-  const shadesOfBlue = tagDistribution
-    ? generateBlueShades(tagDistribution?.length)
-    : [];
-  const tagChartData =
-    tagDistribution?.map((tag, idx) => ({
-      name: tag.name, // label for the pie
-      count: tag.count, // value for the pie
-      fill: shadesOfBlue[idx], // assign color
-    })) ?? [];
+  const shadesOfBlue = useMemo(
+    () => (tagDistribution ? generateBlueShades(tagDistribution.length) : []),
+    [tagDistribution],
+  );
 
-  const tagChartConfig = {
-    count: {
-      label: "Posts",
-    },
-    ...tagChartData?.reduce((acc, tag) => {
-      acc[tag.name] = {
-        label: tag.name,
-        color: tag.fill,
-      };
-      return acc;
-    }, {} as ChartConfig),
-  };
+  const tagChartData = useMemo(
+    () =>
+      tagDistribution?.map((tag, idx) => ({
+        name: tag.name,
+        count: tag.count,
+        fill: shadesOfBlue[idx],
+      })) ?? [],
+    [tagDistribution, shadesOfBlue],
+  );
+
+  const tagChartConfig = useMemo<ChartConfig>(
+    () => ({
+      count: { label: "Posts" },
+      ...tagChartData.reduce(
+        (acc, tag) => {
+          acc[tag.name] = { label: tag.name, color: tag.fill };
+          return acc;
+        },
+        {} as ChartConfig,
+      ),
+    }),
+    [tagChartData],
+  );
 
   const postBarChartConfig = {
     title: {
@@ -124,7 +135,7 @@ export default function AdminDashboardPage() {
         <div className="mb-8">
           <h2 className="mb-2 text-3xl font-bold text-primary">Dashboard</h2>
           <p className="text-muted-foreground">
-            Welcome back! Here's what's been happening.
+            Welcome back! Here&apos;s what&apos;s been happening.
           </p>
         </div>
 
@@ -163,13 +174,13 @@ export default function AdminDashboardPage() {
           {/* user resgistration traffic */}
           <Card className="h-fit">
             <CardHeader>
-              <CardTitle>User Resgistration Traffic</CardTitle>
+              <CardTitle>User Registration Traffic</CardTitle>
               <CardDescription className="text-muted-foreground">
                 Newly registered account this month
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ChartContainer config={resgistrationChartConfig} className="p-3">
+              <ChartContainer config={registrationChartConfig} className="p-3">
                 <LineChart
                   accessibilityLayer
                   data={registrationTraffic ?? []}
@@ -323,32 +334,4 @@ export default function AdminDashboardPage() {
       </div>
     </main>
   );
-}
-
-function generateBlueShades(count: number): string[] {
-  const shades: string[] = [];
-  for (let i = 0; i < count; i++) {
-    // Vary the lightness from 40% to 80%
-    const lightness = 40 + (40 * i) / Math.max(count - 1, 1);
-    // HSL for blue is 210 (can adjust for more/less purple)
-    const h = 210,
-      s = 80;
-    // Convert HSL to hex
-    shades.push(hslToHex(h, s, lightness));
-  }
-  return shades;
-}
-
-function hslToHex(h: number, s: number, l: number): string {
-  s /= 100;
-  l /= 100;
-  const k = (n: number) => (n + h / 30) % 12;
-  const a = s * Math.min(l, 1 - l);
-  const f = (n: number) =>
-    Math.round(
-      255 * (l - a * Math.max(-1, Math.min(Math.min(k(n) - 3, 9 - k(n)), 1))),
-    );
-  return `#${f(0).toString(16).padStart(2, "0")}${f(8)
-    .toString(16)
-    .padStart(2, "0")}${f(4).toString(16).padStart(2, "0")}`;
 }

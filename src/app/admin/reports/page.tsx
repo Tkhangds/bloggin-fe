@@ -37,7 +37,7 @@ export default function AdminReportsPage() {
     try {
       await flagPostAction.mutateAsync(postId);
     } catch (error) {
-      console.log("Error flagging post:", error);
+      console.error("Error flagging post:", error);
     }
   };
 
@@ -45,7 +45,7 @@ export default function AdminReportsPage() {
     try {
       await unflagPostAction.mutateAsync(postId);
     } catch (error) {
-      console.log("Error flagging post:", error);
+      console.error("Error flagging post:", error);
     }
   };
 

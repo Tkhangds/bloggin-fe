@@ -26,12 +26,10 @@ export default function TextToSpeechModal({ post }: { post: Post }) {
     usePost().useGetPostAudioByPostId();
 
   useEffect(() => {
-    console.log("language", language);
     const fetchAudio = async () => {
       if (language === "en") {
         if (post?.enVoiceUrl) {
           setAudioURL(post.enVoiceUrl);
-          console.log("enAudio", post.enVoiceUrl);
         } else {
           try {
             const res = await getPostAudio({
@@ -39,7 +37,6 @@ export default function TextToSpeechModal({ post }: { post: Post }) {
               language: "en",
             });
             setAudioURL(res);
-            console.log("resEN", res);
           } catch (err) {
             console.error("Failed to fetch audio:", err);
           }
@@ -56,7 +53,6 @@ export default function TextToSpeechModal({ post }: { post: Post }) {
               language: "vn",
             });
             setAudioURL(res);
-            console.log("resVN", res);
           } catch (err) {
             console.error("Failed to fetch audio:", err);
           }

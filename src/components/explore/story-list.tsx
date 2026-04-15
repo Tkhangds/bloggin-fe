@@ -36,7 +36,6 @@ export function StoryList({ tag }: { tag?: string }): JSX.Element {
     }
   }, [stories]);
 
-  console.log("stories got topics: ", tag);
   return (
     <div className="w-full">
       <h2 className="mb-6 text-2xl font-bold">Recommended stories</h2>

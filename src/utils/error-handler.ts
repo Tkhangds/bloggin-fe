@@ -1,6 +1,6 @@
 import axios from "axios";
 import HttpException from "@/configs/HttpException";
-// Định nghĩa kiểu cho phản hồi lỗi
+
 interface CleanErrorResponseWrapper {
   exceptionCode?: string;
   message?: string;
@@ -11,46 +11,46 @@ export const errorHandler = (error: unknown): never => {
   if (axios.isAxiosError(error)) {
     const { response, request, code, config } = error;
 
-    // Xử lý lỗi timeout
+    // Timeout error
     if (code === "ECONNABORTED") {
       console.error("Connection timed out:", config?.url);
       throw new Error("ERR/CONNECTION_TIMEOUT");
     }
 
-    // Xử lý lỗi với phản hồi từ server
+    // Server responded with an error status
     if (response) {
       const data = response.data as CleanErrorResponseWrapper;
       const exceptionCode = data?.exceptionCode;
 
-      // Trả về mã lỗi tùy chỉnh nếu có
+      // Return custom error code if provided
       if (exceptionCode) {
         console.error(`Server returned exception code: ${exceptionCode}`);
         throw new HttpException(exceptionCode);
       }
 
-      // Trường hợp không có exceptionCode, trả về message
+      // Fall back to the server's message field
       if (data?.message) {
         console.error(`Server error message: ${data.message}`);
         throw new Error(data.message);
       }
 
-      // Trường hợp không xác định
+      // Unrecognised response shape
       console.error(`Unexpected server error:`, response);
       throw new Error("ERR/UNEXPECTED_SERVER_ERROR");
     }
 
-    // Xử lý lỗi không có phản hồi (network errors)
+    // Request was made but no response was received (network error)
     if (request) {
       console.error("No response received from server:", request);
       throw new Error("ERR/NO_RESPONSE");
     }
 
-    // Xử lý các lỗi Axios khác
+    // Other Axios errors
     console.error("Axios error:", error.message);
     throw new Error(error.message || "ERR/AXIOS_ERROR");
   }
 
-  // Xử lý các lỗi không phải Axios
+  // Non-Axios errors
   console.error("Non-Axios error:", error);
   if (error instanceof Error) {
     throw new Error(error?.message || "ERR/UNKNOWN_ERROR");

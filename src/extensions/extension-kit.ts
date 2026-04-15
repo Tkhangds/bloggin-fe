@@ -61,19 +61,8 @@ interface ExtensionKitProps {
 
 export const ExtensionKit = ({ provider, ydoc }: ExtensionKitProps) => {
   if (ydoc) {
-    console.log("🔧 ExtensionKit: Initializing with Yjs document", {
-      hasYdoc: !!ydoc,
-      ydocType: ydoc?.constructor?.name,
-      clientId: ydoc?.clientID,
-      shareKeys: ydoc ? Array.from(ydoc.share.keys()) : []
-    });
-
     // Pre-initialize the fragment to ensure it exists
-    const fragment = ydoc.getXmlFragment('default');
-    console.log("🔧 ExtensionKit: XmlFragment 'default' initialized", {
-      fragmentLength: fragment.length,
-      fragmentType: fragment.constructor.name
-    });
+    ydoc.getXmlFragment('default');
   }
 
   return [
@@ -91,7 +80,7 @@ export const ExtensionKit = ({ provider, ydoc }: ExtensionKitProps) => {
       ? [
         CollaborationCursor.configure({
           provider: provider,
-          user: provider.awareness.getLocalState().user || {
+          user: provider.awareness.getLocalState()?.user || {
             name: 'Anonymous',
             color: '#f783ac',
           },

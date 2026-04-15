@@ -16,7 +16,7 @@ export const usePost = () => {
 
   const useGetAllPosts = (limit?: number, title?: string, tagName?: string) => {
     return useInfiniteQuery({
-      queryKey: ["posts", tagName, limit],
+      queryKey: ["posts", tagName, title, limit],
       queryFn: ({ pageParam }) =>
         postAction.getAllPost(pageParam, limit, title, tagName),
       initialPageParam: 1,

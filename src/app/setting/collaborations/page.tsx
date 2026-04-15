@@ -54,7 +54,7 @@ export default function CollaborationsPage() {
                             <h3 className="mt-4 text-lg font-medium"> No collaborations yet </h3>{" "}
                             <p className="mt-2 text-sm text-muted-foreground">
                                 {" "}
-                                You haven't been added to any drafts yet.{" "}
+                                You haven&apos;t been added to any drafts yet.{" "}
                             </p>{" "}
                         </div>
                     )}

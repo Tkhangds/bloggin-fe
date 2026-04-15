@@ -29,7 +29,7 @@ export const useAdmin = () => {
 
   const useGetMonthlyUserRegistration = () => {
     return useQuery({
-      queryKey: ["statistics", "resgistration"],
+      queryKey: ["statistics", "registration"],
       queryFn: () => adminAction.getMonthlyUserRegistration(),
     });
   };
@@ -112,7 +112,7 @@ export const useAdmin = () => {
   const useGetPostByMonitoringStatus = (status: PostMonitoringStatus) => {
     return useQuery({
       queryKey: ["admin", "posts", status],
-      queryFn: () => adminAction.getPostByMonitoruingStatus(status),
+      queryFn: () => adminAction.getPostByMonitoringStatus(status),
     });
   };
 

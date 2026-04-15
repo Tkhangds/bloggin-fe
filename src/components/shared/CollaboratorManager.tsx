@@ -55,11 +55,6 @@ export function CollaboratorManager({
   const userIsOwner = isOwner(currentUserId);
   const userRole = currentUserRole(currentUserId);
 
-  // Debug logging
-  console.log("CollaboratorManager - collaborators:", collaborators);
-  console.log("CollaboratorManager - userIsOwner:", userIsOwner);
-  console.log("CollaboratorManager - currentUserId:", currentUserId);
-
   const handleAddCollaborator = () => {
     if (!newCollabEmail) return;
 
@@ -155,7 +150,7 @@ export function CollaboratorManager({
             </Button>
           </div>
           <p className="text-sm text-center text-muted-foreground py-8">
-            👆 This is what you'll see once the backend is set up
+            👆 This is what you&apos;ll see once the backend is set up
           </p>
         </div>
       </div>

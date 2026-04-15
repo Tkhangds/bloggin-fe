@@ -84,7 +84,7 @@ export const adminAction = {
     return result.data.data;
   },
 
-  async getPostByMonitoruingStatus(status: PostMonitoringStatus) {
+  async getPostByMonitoringStatus(status: PostMonitoringStatus) {
     const result = await bloggingApi.get<SuccessResponseWrapper<Post[]>>(
       "/admin/post",
       {

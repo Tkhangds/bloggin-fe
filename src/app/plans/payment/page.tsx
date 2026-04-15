@@ -47,7 +47,6 @@ export default function PaymentPage() {
   useEffect(() => {
     if (isSuccessUserPayment && !userPayment?.id) {
       interval = setInterval(() => {
-        console.log("Refetching user payment...");
         refetchUserPayment();
         refetchPendingPayment();
       }, 5000);
@@ -60,8 +59,6 @@ export default function PaymentPage() {
     };
   }, [isSuccessUserPayment, userPayment?.id]);
 
-  console.log("user payment:", userPayment?.id);
-
   useEffect(() => {
     if (
       isSuccessPendingPayment &&
@@ -71,7 +68,6 @@ export default function PaymentPage() {
     ) {
       handleCreatePendingPayment();
       setCreatePendingFirstTime(true);
-      console.log("Create pending first time ran");
     }
   }, [isSuccessPendingPayment, pendingPayment?.paymentId, userPayment?.id]);
 

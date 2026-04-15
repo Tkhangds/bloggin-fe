@@ -9,21 +9,19 @@ import {
 import { toast } from "sonner";
 
 export const useFollow = () => {
-  const qerryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const useCreateFollow = () => {
     return useMutation({
       mutationFn: async ({ data }: { data: CreateFollowDto }) => {
         return await followAction.createFollow(data);
       },
-      onSuccess: (result) => {
-        console.log(result);
-        qerryClient.invalidateQueries({ queryKey: ["follower"] });
-        qerryClient.invalidateQueries({ queryKey: ["following"] });
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["follower"] });
+        queryClient.invalidateQueries({ queryKey: ["following"] });
         toast.success("Followed author");
       },
       onError: (error) => {
-        console.log(error);
         toast.error(error.message);
       },
     });
@@ -34,14 +32,12 @@ export const useFollow = () => {
       mutationFn: async ({ data }: { data: RemoveFollowDto }) => {
         return await followAction.deleteFollow(data);
       },
-      onSuccess: (result) => {
-        console.log(result);
-        qerryClient.invalidateQueries({ queryKey: ["follower"] });
-        qerryClient.invalidateQueries({ queryKey: ["following"] });
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["follower"] });
+        queryClient.invalidateQueries({ queryKey: ["following"] });
         toast.success("Unfollowed author");
       },
       onError: (error) => {
-        console.log(error);
         toast.error(error.message);
       },
     });

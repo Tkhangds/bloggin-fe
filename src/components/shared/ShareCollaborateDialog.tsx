@@ -141,7 +141,7 @@ export function ShareCollaborateDialog({
                     <h4 className="font-medium mb-2">How it works</h4>
                     <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• Changes are synced in real-time</li>
-                      <li>• You can see other users' cursors</li>
+                      <li>• You can see other users&apos; cursors</li>
                       <li>• Auto-saves every few seconds</li>
                       <li>• Viewers can only read, not edit</li>
                     </ul>

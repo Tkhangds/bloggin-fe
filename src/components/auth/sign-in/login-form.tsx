@@ -48,7 +48,6 @@ export default function LoginForm({
 
   const onGoogleLoginHandle = async () => {
     // Implement Google login logic here
-    console.log("Google login clicked");
   };
 
   return (

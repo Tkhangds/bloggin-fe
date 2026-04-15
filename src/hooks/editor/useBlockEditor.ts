@@ -58,11 +58,6 @@ export const useBlockEditor = ({
       provider: collaborationProvider,
       ydoc: enableCollaboration ? collaborationYdoc : undefined
     });
-    console.log("🎯 Creating extensions array", {
-      hasYdoc: !!collaborationYdoc,
-      enableCollaboration,
-      extensionCount: exts.length
-    });
     return [...exts].filter((e): e is AnyExtension => e !== undefined);
   }, [enableCollaboration, collaborationSocket, collaborationYdoc]);
 
@@ -77,29 +72,9 @@ export const useBlockEditor = ({
         ? JSON.parse(contentData.content)
         : getTemplate(templateName || "")),
       onCreate: ({ editor }) => {
-        if (enableCollaboration && collaborationYdoc) {
-          console.log("✅ Editor created with Yjs collaboration", {
-            hasYdoc: !!collaborationYdoc,
-            ydocClientId: collaborationYdoc?.clientID,
-            extensionCount: editor.extensionManager.extensions.length
-          });
-
-          // Debug: Log all transactions to see if remote updates trigger them
-          const originalDispatch = editor.view.dispatch.bind(editor.view);
-          editor.view.dispatch = (tr) => {
-            console.log("🔄 Transaction dispatched:", {
-              docChanged: tr.docChanged,
-              steps: tr.steps.length,
-              meta: Object.keys((tr as any).meta || {}),
-              isRemote: tr.getMeta('y-sync$') !== undefined
-            });
-            return originalDispatch(tr);
-          };
-        }
       },
       onUpdate: ({ editor }) => {
         if (enableCollaboration) {
-          console.log("✏️ Editor updated (collaboration mode)");
           // Yjs Collaboration extension handles sync automatically
           // We also save to DB for backup and to trigger the "Saving..." UI state
           saveContent(editor);
@@ -128,8 +103,6 @@ export const useBlockEditor = ({
   );
 
   useEffect(() => {
-    console.log("Editor initialized:", contentData);
-    console.log("template name", templateName);
     // Only set content from database when NOT in collaboration mode
     // In collaboration mode, the Yjs document is the source of truth
     if (!enableCollaboration && editor && contentData && contentData.content) {

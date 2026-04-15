@@ -41,7 +41,7 @@ export default function BlogReadingPage() {
     try {
       await flagPost(postId);
     } catch (error) {
-      console.log("Error flagging post:", error);
+      console.error("Error flagging post:", error);
     }
   };
 
@@ -49,7 +49,7 @@ export default function BlogReadingPage() {
     try {
       await unflagPost(postId);
     } catch (error) {
-      console.log("Error flagging post:", error);
+      console.error("Error flagging post:", error);
     }
   };
 

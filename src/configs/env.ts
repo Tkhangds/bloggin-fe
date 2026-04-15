@@ -4,7 +4,7 @@ import "dotenv/config";
 const createEnv = () => {
   const EnvSchema = z.object({
     NEXT_PUBLIC_API_BASE_URL: z.string(),
-    NEXT_PUBLIC_WS_URL: z.string().optional(),
+    NEXT_PUBLIC_WS_URL: z.string(),
   });
 
   const envVars = {

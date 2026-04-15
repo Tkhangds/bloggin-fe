@@ -1,8 +1,12 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext } from "react";
 import { User } from "@/types/user";
-import { useAuth } from "@/hooks/apis/useAuth";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import authAction from "@/apis/auth.action";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface AuthContextType {
   user: User | null;
@@ -23,63 +27,47 @@ export function AuthProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { mutateAsync: logoutFunction } = useAuth().useLogout();
-  const { mutateAsync: getMeFunction } = useAuth().useGetMe();
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMeFunction();
+  const {
+    data: user = null,
+    isLoading: loading,
+    refetch,
+  } = useQuery({
+    queryKey: ["auth", "me"],
+    queryFn: () => authAction.getMe(),
+    retry: false,
+  });
 
-        if (res) {
-          const userData = res;
-          setUser(userData);
-        } else {
-          setUser(null);
-        }
-      } catch (err) {
-        console.error("Failed to fetch user data:", err);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
+  const { mutateAsync: logoutMutation } = useMutation({
+    mutationFn: () => authAction.logout(),
+    onSuccess: () => {
+      queryClient.setQueryData(["auth", "me"], null);
+      queryClient.removeQueries({ queryKey: ["favCount"] });
+      queryClient.removeQueries({ queryKey: ["favorite"] });
+      queryClient.removeQueries({ queryKey: ["statistics", "top-followed-user"] });
+      queryClient.removeQueries({ queryKey: ["statistics", "top-tag"] });
+      queryClient.removeQueries({ queryKey: ["following"] });
+      toast.success("Logout successfully");
+      router.push("/");
+    },
+  });
 
   const logout = async () => {
     try {
-      await logoutFunction();
-      setUser(null);
+      await logoutMutation();
     } catch (err) {
       console.error("Logout failed", err);
     }
   };
 
   const refetchUser = async () => {
-    setLoading(true);
-    try {
-      const res = await getMeFunction();
-
-      if (res) {
-        const userData = res;
-        setUser(userData);
-      } else {
-        setUser(null);
-      }
-    } catch (err) {
-      console.error("Failed to fetch user data:", err);
-      setUser(null);
-    } finally {
-      setLoading(false);
-    }
+    await refetch();
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, logout, refetchUser }}>
+    <AuthContext.Provider value={{ user: user ?? null, loading, logout, refetchUser }}>
       {children}
     </AuthContext.Provider>
   );

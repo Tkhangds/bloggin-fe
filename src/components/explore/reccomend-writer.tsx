@@ -13,8 +13,6 @@ export function RecommendedWriters({ tag }: { tag?: string }): JSX.Element {
     return writer.id !== user?.id;
   });
 
-  console.log("writter got topics:", tag);
-
   return (
     <div className="mb-12 w-full">
       <div className="mb-6 flex items-center justify-between">

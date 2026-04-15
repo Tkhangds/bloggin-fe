@@ -54,7 +54,7 @@ export default function DraftsPage() {
               <h3 className="mt-4 text-lg font-medium"> No drafts yet </h3>{" "}
               <p className="mt-2 text-sm text-muted-foreground">
                 {" "}
-                You haven't saved any drafts yet. Start creating your
+                You haven&apos;t saved any drafts yet. Start creating your
                 content!{" "}
               </p>{" "}
               <Button className="mt-4"> Create Draft </Button>{" "}

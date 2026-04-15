@@ -39,7 +39,6 @@ export default function SignUpForm({
   const { mutateAsync: register } = useAuth().useRegister();
   const onSubmitHandle = async (data: RegisterDto) => {
     data.displayName = data.username;
-    console.log(data);
     await register({ data });
   };
   return (

@@ -21,6 +21,17 @@ import { useCollaboration } from "@/hooks/useCollaboration";
 import { useAuthContext } from "@/context/AuthContext";
 import { getCollaborators } from "@/apis/collaborator.action";
 
+function EditorLoadingSpinner({ text }: { text: string }) {
+  return (
+    <div className="flex h-full items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+        <p className="text-muted-foreground">{text}</p>
+      </div>
+    </div>
+  );
+}
+
 // Inner component that uses the editor - only rendered when collaboration is ready
 const BlockEditorInner = ({
   id,
@@ -112,6 +123,7 @@ export const BlockEditor = ({
   const { user } = useAuthContext();
   const [isClient, setIsClient] = useState(false);
   const [enableCollaboration, setEnableCollaboration] = useState(false);
+  const [editorKey, setEditorKey] = useState(0);
 
   // Handle client-side only initialization
   useEffect(() => {
@@ -160,38 +172,23 @@ export const BlockEditor = ({
 
   const handleToggleCollaboration = (enabled: boolean) => {
     setEnableCollaboration(enabled);
-    // Reload the page to reinitialize the editor with/without collaboration
-    if (typeof window !== "undefined") {
-      window.location.reload();
-    }
+    // Remount BlockEditorInner to reinitialize the editor cleanly
+    setEditorKey((k) => k + 1);
   };
 
   // Show loading state during SSR or while client is initializing
   if (!isClient) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading editor...</p>
-        </div>
-      </div>
-    );
+    return <EditorLoadingSpinner text="Loading editor..." />;
   }
 
   // Show loading state while collaboration is initializing
   if (enableCollaboration && !collaboration.ydoc) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Initializing collaboration...</p>
-        </div>
-      </div>
-    );
+    return <EditorLoadingSpinner text="Initializing collaboration..." />;
   }
 
   return (
     <BlockEditorInner
+      key={editorKey}
       id={id}
       mode={mode}
       templateName={templateName}

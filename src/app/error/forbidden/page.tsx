@@ -18,12 +18,12 @@ export default function Page() {
             403 - Forbidden
           </CardTitle>
           <CardDescription className="text-center">
-            You don't have permission to access this resource
+            You don&apos;t have permission to access this resource
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <p className="text-center text-sm text-muted-foreground">
-            You are authenticated but don't have the necessary permissions to
+            You are authenticated but don&apos;t have the necessary permissions to
             view this page.
           </p>
         </CardContent>

@@ -53,7 +53,7 @@ export default function PostsPage() {
               <FileText className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-4 text-lg font-medium"> No posts yet </h3>
               <p className="mt-2 text-sm text-muted-foreground">
-                You haven't created any posts yet. Start sharing your content!
+                You haven&apos;t created any posts yet. Start sharing your content!
               </p>
               <Button className="mt-4"> Create Post </Button>
             </div>

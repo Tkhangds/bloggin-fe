@@ -84,8 +84,6 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted");
-
     if (avatarFile) {
       try {
         await updateAvatar({ data: avatarFile });

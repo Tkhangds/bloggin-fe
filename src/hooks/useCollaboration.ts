@@ -12,6 +12,7 @@ import type {
   UserLeftEvent,
   YjsUpdateEvent,
 } from "@/types/collaborator";
+import { ENV } from "@/configs/env";
 import { saveDraftContent } from "@/apis/collaborator.action";
 import { toast } from "sonner";
 
@@ -101,7 +102,6 @@ export function useCollaboration({
       return;
     }
 
-    console.log("🚀 Initializing collaboration for draft:", docId);
     let isMounted = true;
     let cleanupDone = false;
 
@@ -119,11 +119,8 @@ export function useCollaboration({
       id: userId,
     });
 
-    console.log("🔧 Created Yjs document & Awareness", { clientId: newYdoc.clientID });
-
     // Create socket connection
-    const socketUrl = wsUrl || process.env.NEXT_PUBLIC_WS_URL || "https://api.bloggin.blog/collaboration";
-    console.log("🔌 Connecting to:", socketUrl);
+    const socketUrl = wsUrl || ENV.NEXT_PUBLIC_WS_URL;
 
     const newSocket = io(socketUrl, {
       auth: {
@@ -184,7 +181,6 @@ export function useCollaboration({
     // Socket event handlers
     newSocket.on("connect", () => {
       if (!isMounted) return;
-      console.log("✅ Connected!", { socketId: newSocket.id });
       setIsConnected(true);
       setError(null);
 
@@ -201,14 +197,13 @@ export function useCollaboration({
 
     newSocket.on("connect_error", (err) => {
       if (!isMounted) return;
-      console.error("❌ Connection error:", err.message);
+      console.error("Collaboration connection error:", err.message);
       setError(`Connection failed: ${err.message}`);
       setIsConnected(false);
     });
 
     newSocket.on("disconnect", (reason) => {
       if (!isMounted) return;
-      console.log("🔴 Disconnected:", reason);
       setIsConnected(false);
     });
 
@@ -221,7 +216,7 @@ export function useCollaboration({
         Y.applyUpdate(newYdoc, bytes, 'remote');
         setIsReady(true);
       } catch (err) {
-        console.error("❌ Failed to apply sync:", err);
+        console.error("Failed to apply sync:", err);
       }
     });
 
@@ -238,7 +233,7 @@ export function useCollaboration({
         const bytes = Uint8Array.from(atob(update), c => c.charCodeAt(0));
         Y.applyUpdate(newYdoc, bytes, 'remote');
       } catch (err) {
-        console.error("❌ Failed to apply update:", err);
+        console.error("Failed to apply yjs update:", err);
       }
     });
 
@@ -249,7 +244,7 @@ export function useCollaboration({
         const bytes = Uint8Array.from(atob(updateBase64), c => c.charCodeAt(0));
         AwarenessProtocol.applyAwarenessUpdate(awareness, bytes, 'remote');
       } catch (err) {
-        console.error("❌ Failed to apply awareness update:", err);
+        console.error("Failed to apply awareness update:", err);
       }
     });
 
@@ -282,17 +277,15 @@ export function useCollaboration({
     // Error from server
     newSocket.on("error", ({ message }: CollaborationErrorEvent) => {
       if (!isMounted) return;
-      console.error("❌ Server error:", message);
+      console.error("Collaboration server error:", message);
       setError(message);
     });
 
-    // Cleanup function
     return () => {
       if (cleanupDone) return;
       cleanupDone = true;
       isMounted = false;
 
-      console.log("🧹 Cleaning up collaboration");
       newYdoc.off("update", yjsUpdateHandler);
       awareness.off("update", awarenessUpdateHandler);
       awareness.destroy();
